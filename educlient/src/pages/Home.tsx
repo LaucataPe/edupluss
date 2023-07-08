@@ -39,9 +39,9 @@ function Home() {
 
     return (
       <>
-      <h1>¿Qué quieres aprender hoy?</h1>
+      <h1 className="text-3xl font-semibold text-center p-10">¿Qué quieres aprender hoy?</h1>
       <Activities />
-      <p>{error}</p>
+      <p className="text-red-500 font-semibold">{error}</p>
       </>
     );
   }

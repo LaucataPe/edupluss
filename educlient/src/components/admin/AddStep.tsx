@@ -13,15 +13,14 @@ function AddStep() {
     const steps = useSelector((state: RootState) => state.steps.steps)
 
     const [stepNumber, setStepNumber] = useState(1)
-    const [activityId, setActivyId] = useState(1)
     const [step, setStep] = useState<CreateStep>({
       number: stepNumber,
       title: '',
       description: '',
       video: '',
-      activityId
+      activityId: Number(id)
     })
-    const [errors, setErrors] = useState('')
+    //const [errors, setErrors] = useState('')
 
     useEffect(() => {
       if(steps.length === 0){
@@ -35,7 +34,7 @@ function AddStep() {
         }
       }
       NextStep()
-    }, [steps]);
+    }, []);
 
     
 
@@ -96,7 +95,7 @@ function AddStep() {
             title: '',
             description: '',
             video: '',
-            activityId
+            activityId: Number(id)
           })
      
     }
@@ -114,7 +113,8 @@ function AddStep() {
         value={step.description} 
         onChange={(e) => handleDescription(e)}></textarea>
         <label>Agregar video:</label>
-        <input type="file" name="video" onChange={(e) => handleVideo(e)}/>
+        <input type="file" name="video" onChange={(e) => handleVideo(e)}/>or
+        <input type="text" name="video" onChange={(e) => handleInputs(e)} placeholder='Ingrese la url de un video'/>
         <button type='submit' onClick={(e) => handleSubmit(e)}>Crear Paso</button>
       </form>
 

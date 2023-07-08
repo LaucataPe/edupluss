@@ -1,6 +1,6 @@
 import { useSelector} from "react-redux";
 import { RootState } from "../redux/store";
-import { Link, useLocation } from "react-router-dom";
+import { Link} from "react-router-dom";
 
 
 function Activities() {
@@ -9,17 +9,16 @@ function Activities() {
     return (
       <>
       {/*Mapea todas las actividades*/}
-      <div>
-        <ol>
+      <div className="container mx-auto px-20">
           {activities?.map((act) => (
             <Link to={`/activity/${act.id}`}>  
-              <li key={act.id}>
-                <h3>{act.title}</h3>
-              </li>
+                <div key={act.id} className="flex flex-col my-5 bg-white border shadow-sm rounded-xl 
+                p-4 text-lg md:p-5 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]
+                 dark:text-gray-400 hover:bg-slate-100">
+                  {act.title}
+                </div>
             </Link>
           ))}  
-        </ol>
-       
       </div>
       
       </>
