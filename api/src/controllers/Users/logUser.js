@@ -1,4 +1,5 @@
 const { Usuario } = require('../../db')
+const {verified} = require('../../utils/bcryptHandler')
 
 const logUser = async (req, res) =>{
     const { email, password } = req.body
@@ -6,7 +7,7 @@ const logUser = async (req, res) =>{
     try {
         const newUser = await Usuario.findOne({
             where: {
-                username: email,
+                email
             },
         })
         if (!userExist?.email) {
@@ -14,6 +15,13 @@ const logUser = async (req, res) =>{
                 "El correo electrónico que ingresaste no se encuentra registrado."
             );
         }
+
+		// Traigo la password encryptada de la db y comparo con el recibido por body
+		const passwordHash = userExist.password;
+		const isCorrect = await verified(password, passwordHash);
+
+		//Si no coincide
+		if (!isCorrect) throw new Error("Revisá tu contraseña.");
 
 
         res.status(200).json(newUser)

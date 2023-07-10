@@ -3,33 +3,47 @@ const express = require('express')
 const router = express.Router()
 
 //GET Controllers
-const {getEmpresaActivity} = require('../controllers/Empresa/getEmpresaActivity')
+const {getEmpresaAreas} = require('../controllers/Company/getEmpresaArea')
 const {getAllActivities} = require('../controllers/Activities/getAllActivities')
 const {getStepsActivity} = require('../controllers/Steps/getStepsActivity')
 const {SearchActivity} = require('../controllers/Activities/SearchActivity')
-const {getAllEmpresas} = require('../controllers/Empresa/getAllEmpresas')
+const {getAllCompanies} = require('../controllers/Company/getAllEmpresas')
 
-router.get('/empresas', getAllEmpresas)
-router.get('/activities/:empresaId', getEmpresaActivity)
+//USER GET
+const {getAllUsers} = require('../controllers/Users/getAllUsers')
+const {getUserByCompany} = require('../controllers/Users/getUsersByCompany')
+
+router.get('/empresas', getAllCompanies)
+router.get('/areas/:empresaId', getEmpresaAreas)
 router.get('/activities', getAllActivities)
 router.get('/steps/:id', getStepsActivity)
 router.get('/search', SearchActivity)
 
+router.get('/users', getAllUsers) 
+router.get('/users/:empresaId', getUserByCompany) 
+
+
 //POST Controllers
+const {createUser} = require('../controllers/Users/postUser')
+const {createCompany} = require('../controllers/Company/createEmpresa')
+const {createArea} = require('../controllers/Areas/createArea')
 const {createActivity} = require('../controllers/Activities/createActivity')
-const {createEmpresa} = require('../controllers/Empresa/createEmpresa')
 const {createStep} = require('../controllers/Steps/createStep')
 
 //POST
+router.post('/user', createUser)
+router.post('/empresa', createCompany)
+router.post('/area', createArea)
 router.post('/activity', createActivity)
-router.post('/empresa', createEmpresa)
 router.post('/step', createStep)
 
 //PUT Controllers
 const {ActivityState} = require('../controllers/Activities/ActivityState')
+const {UserState} = require('../controllers/Users/userState')
 
 //PUT
 router.put('/activity/state', ActivityState)
+router.put('/user/state', UserState)
 
 
 //DELETE Controllers

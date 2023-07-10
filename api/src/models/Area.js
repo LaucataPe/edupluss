@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize');
 // Luego le injectamos la conexion a sequelize.
 module.exports = (database) => {
   // defino el modelo
-  database.define('Empresa', {
+  database.define('Area', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -12,12 +12,10 @@ module.exports = (database) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
     },
-    nit: {
-      type: DataTypes.INTEGER,
+    active: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      unique: true
     }
   },{
     timestamps: false

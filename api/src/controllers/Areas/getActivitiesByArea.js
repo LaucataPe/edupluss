@@ -1,11 +1,11 @@
 const { Activity } = require('../../db')
 
-const getEmpresaActivity = async (req, res) =>{
-    const {empresaId} = req.params
+const getActivitiesByArea = async (req, res) =>{
+    const {areaId} = req.params
     try {
         const activities = await Activity.findAll({
             where: {
-              empresaId
+              areaId
             },
           });
         return res.status(200).json(activities)
@@ -14,4 +14,4 @@ const getEmpresaActivity = async (req, res) =>{
     }
 }
 
-module.exports = {getEmpresaActivity}
+module.exports = {getActivitiesByArea}

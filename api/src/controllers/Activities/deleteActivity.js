@@ -1,4 +1,4 @@
-const { Activity, Paso } = require('../../db')
+const { Activity, Step } = require('../../db')
 
 const deleteActivity = async (req, res) =>{
     const {id} = req.params
@@ -8,7 +8,7 @@ const deleteActivity = async (req, res) =>{
               id
             }
           });   
-        const deletePasos = await Paso.destroy({
+        const deleteSteps = await Step.destroy({
             where: {
               activityId: id
             }
