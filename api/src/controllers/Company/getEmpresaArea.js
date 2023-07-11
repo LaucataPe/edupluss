@@ -1,13 +1,18 @@
 const { Area } = require('../../db')
+const {getActivitiesByArea} = require('../Areas/getActivitiesByArea')
 
 const getEmpresaAreas = async (req, res) =>{
-    const {empresaId} = req.params
-    try {
+  try {
+      const {companyId} = req.params
+      console.log(companyId);
         const areas = await Area.findAll({
             where: {
-              empresaId
+              companyId
             },
           });
+        const activities = areas.map(area => {
+          
+        });
         return res.status(200).json(areas)
     } catch (error) {
         return res.status(404).send(error.message)

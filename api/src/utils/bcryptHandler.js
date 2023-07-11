@@ -1,4 +1,4 @@
-import { hash, compare } from "bcryptjs";
+const {hash, compare} = require('bcryptjs')
 
 const encrypt = async (password) => {
 	const passwordHash = await hash(password, 8);
@@ -9,5 +9,6 @@ const verified = async (password, passwordHash) => {
 	const isCorrect = await compare(password, passwordHash);
 	return isCorrect;
 };
-
-export { encrypt, verified };
+module.exports = {
+	encrypt, verified
+};

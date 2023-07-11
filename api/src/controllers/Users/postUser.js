@@ -1,18 +1,18 @@
-const { Usuario } = require('../../db');
+const { User, Area } = require('../../db');
 const { encrypt } = require('../../utils/bcryptHandler');
 
 const createUser = async (req, res) => {
-  const { username, email, password, companyId, tipo } = req.body;
+  const { username, email, password, companyId, tipo, areas } = req.body;
 
   try {
-    const userFound = await Usuario.findOne({ where: { email } });
+    const userFound = await User.findOne({ where: { email } });
 
     if (userFound?.email) {
       throw new Error("Ya existe una cuenta creada con ese e-mail");
     }
 
     const passwordHash = await encrypt(password);
-    const newUser = await Usuario.create({
+    const newUser = await User.create({
       username,
       email,
       password: passwordHash,
@@ -20,6 +20,10 @@ const createUser = async (req, res) => {
       active: true,
       tipo
     });
+
+    if(areas){
+      await newUser.addArea(areas);
+    }
 
     res.status(200).json(newUser);
   } catch (error) {

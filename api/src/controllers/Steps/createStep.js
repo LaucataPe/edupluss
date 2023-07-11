@@ -1,4 +1,4 @@
-const { Paso } = require('../../db')
+const { Step } = require('../../db')
 const cloudinary = require('../../utils/cloudinary')
 
 
@@ -6,14 +6,14 @@ const createStep = async (req, res) =>{
     const { number, title, description, video, activityId } = req.body
     console.log(req.body);
     try {
-        const uploadVideo = await cloudinary.uploader.upload(video, {
+        /*const uploadVideo = await cloudinary.uploader.upload(video, {
            resource_type: 'video',
            folder: 'edupluss'
         })
-        const urlVideo = uploadVideo.secure_url
+        const urlVideo = uploadVideo.secure_url*/
 
-        const newStep = await Paso.create({number, title, description, 
-            video: urlVideo, 
+        const newStep = await Step.create({number, title, description, 
+            video, 
             activityId})
         res.status(200).json(newStep)
     } catch (error) {

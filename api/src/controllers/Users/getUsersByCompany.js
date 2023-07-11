@@ -1,12 +1,13 @@
-const { User } = require('../../db')
+const { User, Area } = require('../../db')
 
 const getUserByCompany = async (req, res) =>{
-    const {empresaId} = req.params
+    const {companyId} = req.params
     try {
         const findUsers = await User.findAll({
             where: {
-              empresaId
+              companyId
             },
+            include: Area,
           });
         return res.status(200).json(findUsers)
     } catch (error) {

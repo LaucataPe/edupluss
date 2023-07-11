@@ -39,6 +39,10 @@ Company.hasMany(Area, {
   foreignKey: 'companyId'
 })
 
+Company.hasMany(Activity, {
+  foreignKey: 'companyId'
+})
+
 Company.hasMany(User, {
   foreignKey: 'companyId'
 })

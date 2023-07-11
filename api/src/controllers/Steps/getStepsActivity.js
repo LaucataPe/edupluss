@@ -1,9 +1,9 @@
-const { Paso } = require('../../db')
+const { Step } = require('../../db')
 
 const getStepsActivity = async (req, res) =>{
     const {id} = req.params
     try {
-        const steps = await Paso.findAll({
+        const steps = await Step.findAll({
             where: {
                 activityId: id
             },

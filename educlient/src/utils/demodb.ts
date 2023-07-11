@@ -21,12 +21,20 @@ export interface CreateStep {
     activityId?: number
 }
 
+export interface Area {
+    id?: number
+    name: string
+    companyId: number
+}
+
 export interface Activity {
     id?: number
     title: string
-    empresaId: number
+    areaId: number
     active?: boolean
 }
+
+
 
 export const steps: Step[] = [
     {
