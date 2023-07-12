@@ -25,7 +25,7 @@ const initialState:initState = {
 export const fetchActivities = createAsyncThunk('activities/fetchActivities', async () => {
 	try {
 		const { data } = await axios(`http://localhost:3001/activities`);
-		return data;
+		return data
 	} catch (error: any) {
 		throw new Error(error.message);
 	}
@@ -43,7 +43,7 @@ export const getEmpresaActivities = createAsyncThunk('activities/getEmpresaActiv
 export const getActivitiesByArea = createAsyncThunk('activities/getActivitiesByArea', async (id: number) => {
 	try {
 		const { data } = await axios(`http://localhost:3001/activities/area/${id}`);
-		return data;
+		return data
 	} catch (error: any) {
 		throw new Error(error.message);
 	}

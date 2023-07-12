@@ -5,11 +5,17 @@ import { Area } from "../../utils/interfaces";
 
 interface initState {
 	areas: Array<Area>
+	currentArea: Area
 	status: string
 }
 
 const initialState:initState = {
 	areas: [],
+	currentArea: {
+		id: 0,
+		name: '',
+		companyId: 0,
+	},
 	status: 'idle'
 };
 
@@ -41,6 +47,9 @@ const areasSlice = createSlice({
 		resetAreas: (state) =>{
 			state.areas = [];
 			state.status = 'idle'
+		}, 
+		setCurrentArea: (state, action: PayloadAction<Area>) => {
+			state.currentArea = action.payload;
 		}
 	},
 	extraReducers: (builder) => {
@@ -68,7 +77,8 @@ const areasSlice = createSlice({
 });
 
 export const {
-	resetAreas
+	resetAreas,
+	setCurrentArea
 } = areasSlice.actions;
 export default areasSlice.reducer;
 export const allAreas = (state: RootState) =>	state.areas;

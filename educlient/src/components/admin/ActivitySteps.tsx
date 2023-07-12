@@ -30,7 +30,7 @@ function ActivitySteps() {
         ))}
         <Link to={`/addStep/${id}`}><button>+</button></Link>
       </div>
-      <Link to={`/myActivities`}><button>Atrás</button></Link>
+      <Link to={`/admin`}><button>Atrás</button></Link>
       </>
     );
   }

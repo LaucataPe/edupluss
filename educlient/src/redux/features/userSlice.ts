@@ -9,12 +9,12 @@ interface initState {
 
 const initialState:initState = {
     logUser: {
-        id: 1,
+        id: 3,
         username: '',
         email: '',
         password: '',
         companyId: 0,
-		tipo:'admin'
+		tipo:'empleado'
     },
     status: 'idle'
 };

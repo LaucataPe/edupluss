@@ -79,8 +79,6 @@ function AddStep() {
 
     const handleSubmit = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
       e.preventDefault();
-
-      
           try {
               let response = await axios.post(`http://localhost:3001/step`, step);
               let data = response.data;
@@ -113,8 +111,9 @@ function AddStep() {
         value={step.description} 
         onChange={(e) => handleDescription(e)}></textarea>
         <label>Agregar video:</label>
-        <input type="file" name="video" onChange={(e) => handleVideo(e)}/>or
-        <input type="text" name="video" onChange={(e) => handleInputs(e)} placeholder='Ingrese la url de un video'/>
+        <input type="file" name="video" onChange={(e) => handleVideo(e)} disabled={step.video ? true : false}/>or
+        <input type="text" name="video" onChange={(e) => handleInputs(e)}
+        disabled={step.video ? true : false} placeholder='Ingrese la url de un video'/>
         <button type='submit' onClick={(e) => handleSubmit(e)}>Crear Paso</button>
       </form>
 

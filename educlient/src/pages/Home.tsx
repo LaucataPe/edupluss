@@ -16,7 +16,7 @@ function Home() {
 
     useEffect(() => {
       if(areas.length === 0){
-        Mydispatch(getUserAreas(2));
+        Mydispatch(getUserAreas(3));
         setReady(true)
       }
       

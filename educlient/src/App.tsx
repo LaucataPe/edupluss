@@ -28,7 +28,7 @@ function App() {
         		<Route path="/admin" element={<Admin />} />
         		<Route path="/activities" element={<AdminActivities />} />
 				<Route path="/actvitySteps/:id" element={<ActivitySteps />} />
-				<Route path="/addActivity" element={<AddActivity />} />
+				<Route path="/addActivity/:id" element={<AddActivity />} />
 				<Route path="/addArea" element={<AddArea />} />
 				<Route path="/addStep/:id" element={<AddStep />} />
 		</Routes>

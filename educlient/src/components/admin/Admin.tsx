@@ -19,14 +19,16 @@ function Admin() {
         dispatch(fetchCompanyAreas(1));
         setReady(true)
       }
-      
+    }, []);
+
+    useEffect(() => {
       if(ready && areas.length > 0){
         const firstArea = areas[0].id 
         if(firstArea){
           dispatch(getActivitiesByArea(firstArea))
         }
       }
-    }, [ready]);
+    }, [ready])
 
     return (
       <>

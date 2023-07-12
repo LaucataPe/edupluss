@@ -1,11 +1,15 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
+import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { Area } from '../../utils/interfaces'
+import { RootState } from '../../redux/store'
 
 function AddArea() {
+    const currentEmpresa = useSelector((state: RootState) => state.activities.selectEmpresa)
+
     const [area, setArea] = useState<Area>({
       name: '',
-      companyId: 0     
+      companyId: currentEmpresa.id     
     })
     const [error, setError] = useState({})
 
@@ -20,7 +24,7 @@ function AddArea() {
         }
         setArea({
           name: '',
-          companyId: 0  
+          companyId: currentEmpresa.id 
         })
       } catch (error: any) {
         setError({error})
@@ -32,11 +36,11 @@ function AddArea() {
       <h1>Nueva Área</h1>
       <form onSubmit={(e) => handleSubmit(e)}>
         <label>Nombre:</label>
-        <input type="text" placeholder='Ingrese el nombre de la actividad' value={area.name}
+        <input type="text" placeholder='Ingrese el nombre del área' value={area.name}
         onChange={(e) => setArea({...area, name: e.target.value})}/> <br />
         <label>Empresa:</label>
-        <input type="text" disabled={true} value={area.name} />
-        <button type='submit' disabled={Object.keys(error).length === 0 ? false : true}>Crear Actividad</button>
+        <input type="text" disabled={true} value={currentEmpresa.name} />
+        <button type='submit' disabled={Object.keys(error).length === 0 ? false : true}>Crear Área</button>
       </form>
       </>
     );
