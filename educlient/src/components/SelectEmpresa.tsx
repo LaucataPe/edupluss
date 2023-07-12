@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Empresa } from "../utils/demodb";
+import { Empresa } from "../utils/interfaces";
 import { useDispatch } from "react-redux";
 import { setEmpresa } from "../redux/features/activitiesSlice";
 

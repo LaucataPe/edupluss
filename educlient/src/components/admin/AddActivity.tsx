@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-import { Activity, Empresa } from '../../utils/demodb'
+import { Activity, Empresa } from '../../utils/interfaces'
 
 function AddActivity() {
     const [activity, setActivity] = useState<Activity>({

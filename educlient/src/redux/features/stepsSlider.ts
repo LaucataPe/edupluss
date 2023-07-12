@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
-import { Step } from "../../utils/demodb";
+import { Step } from "../../utils/interfaces";
 
 interface initState {
 	steps: Array<Step>
@@ -33,14 +33,14 @@ const stepsSlice = createSlice({
 		},
 	},
 	extraReducers: (builder) => {
-		builder.addCase(getStepsActivity.pending, (state, action) => {
+		builder.addCase(getStepsActivity.pending, (state) => {
 			state.status = 'loading';
 		});
 		builder.addCase(getStepsActivity.fulfilled, (state, action: PayloadAction<Step[]>) => {
 			state.status = 'success';
 			state.steps = action.payload;
 		});
-		builder.addCase(getStepsActivity.rejected, (state, action) => {
+		builder.addCase(getStepsActivity.rejected, (state) => {
 			state.status = 'rejected';
 		});
 	},

@@ -1,5 +1,5 @@
 import CurrentStep from "../components/Step";
-import { Step} from "../utils/demodb";
+import { Step} from "../utils/interfaces";
 import {useState, useEffect} from 'react'
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";

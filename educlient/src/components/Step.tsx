@@ -1,4 +1,4 @@
-import { Step } from "../utils/demodb";
+import { Step } from "../utils/interfaces";
 
 type props = {
     step: Step

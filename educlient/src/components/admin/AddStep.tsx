@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import { useSelector } from 'react-redux';
-import { CreateStep } from '../../utils/demodb';
+import { CreateStep } from '../../utils/interfaces';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useAppDispatch } from '../../hooks/typedSelectors';

@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-import { Area } from '../../utils/demodb'
+import { Area } from '../../utils/interfaces'
 
-function AddActivity() {
+function AddArea() {
     const [area, setArea] = useState<Area>({
       name: '',
       companyId: 0     
@@ -42,4 +42,4 @@ function AddActivity() {
     );
   }
   
-  export default AddActivity;
+  export default AddArea;

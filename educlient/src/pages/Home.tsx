@@ -1,23 +1,30 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { getEmpresaActivities, setEmpresa } from "../redux/features/activitiesSlice";
+import { useSelector } from "react-redux";
 import Activities from "../components/Activities";
-import { Empresa } from "../utils/demodb";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { RootState } from "../redux/store";
-import { fetchCompanyAreas } from "../redux/features/areaSlice";
+import {getUserAreas } from "../redux/features/areaSlice";
+import LeftMenu from "../components/LeftMenu";
+import { getActivitiesByArea } from "../redux/features/activitiesSlice";
 
 function Home() {
     const Mydispatch = useAppDispatch()
-    const [error, setError] = useState<string>('')
+
     const [ready, setReady ] = useState<boolean>(false)
 
     const areas = useSelector((state: RootState) => state.areas.areas)
 
     useEffect(() => {
       if(areas.length === 0){
-        Mydispatch(fetchCompanyAreas(1));
+        Mydispatch(getUserAreas(2));
+        setReady(true)
+      }
+      
+      if(ready && areas.length > 0){
+        const firstArea = areas[0].id 
+        if(firstArea){
+          Mydispatch(getActivitiesByArea(firstArea))
+        }
       }
     }, [ready]);
 
@@ -25,8 +32,8 @@ function Home() {
       <>
       
       <h1 className="text-3xl font-semibold text-center p-10">¿Qué quieres aprender hoy?</h1>
+      <LeftMenu />
       <Activities />
-      <p className="text-red-500 font-semibold">{error}</p>
       </>
     );
   }

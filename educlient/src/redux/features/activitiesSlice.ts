@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
-import { Activity, Empresa } from "../../utils/demodb";
+import { Activity, Empresa } from "../../utils/interfaces";
 
 interface initState {
 	activities: Array<Activity>
@@ -14,8 +14,8 @@ const initialState:initState = {
 	activities: [],
 	originalCopy: [],
     selectEmpresa: {
-		id: 0,
-		name: '',
+		id: 1,
+		name: 'CONTABILIDADYA',
 		nit: 0
 	},
 	status: 'idle'
@@ -40,7 +40,7 @@ export const getEmpresaActivities = createAsyncThunk('activities/getEmpresaActiv
 	}
 }) ;
 
-export const getAreasActivities = createAsyncThunk('activities/getAreasActivities', async (id: number) => {
+export const getActivitiesByArea = createAsyncThunk('activities/getActivitiesByArea', async (id: number) => {
 	try {
 		const { data } = await axios(`http://localhost:3001/activities/area/${id}`);
 		return data;
@@ -85,15 +85,14 @@ const activitiesSlice = createSlice({
 		builder.addCase(getEmpresaActivities.rejected, (state) => {
 			state.status = 'rejected';
 		});
-		builder.addCase(getAreasActivities.pending, (state) => {
+		builder.addCase(getActivitiesByArea.pending, (state) => {
 			state.status = 'loading';
 		});
-		builder.addCase(getAreasActivities.fulfilled, (state, action: PayloadAction<Activity[]>) => {
+		builder.addCase(getActivitiesByArea.fulfilled, (state, action: PayloadAction<Activity[]>) => {
 			state.status = 'success';
 			state.activities = action.payload;
-			state.originalCopy = action.payload;
 		});
-		builder.addCase(getAreasActivities.rejected, (state) => {
+		builder.addCase(getActivitiesByArea.rejected, (state) => {
 			state.status = 'rejected';
 		});
 	},

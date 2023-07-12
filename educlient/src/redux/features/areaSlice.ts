@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
-import { Area } from "../../utils/demodb";
+import { Area } from "../../utils/interfaces";
 
 interface initState {
 	areas: Array<Area>
@@ -22,7 +22,16 @@ export const fetchCompanyAreas = createAsyncThunk('areas/fetchCompanyAreas', asy
 	} catch (error: any) {
 		throw new Error(error.message);
 	}
-} ) 
+}) 
+
+export const getUserAreas = createAsyncThunk('areas/getUserAreas', async (id: number) => {
+	try {
+		const {data} = await axios(`http://localhost:3001/user/areas/${id}`);
+		return data;
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+}) 
 
 
 const areasSlice = createSlice({
@@ -43,6 +52,16 @@ const areasSlice = createSlice({
 			state.areas = action.payload;
 		});
 		builder.addCase(fetchCompanyAreas.rejected, (state) => {
+			state.status = 'rejected';
+		});
+		builder.addCase(getUserAreas.pending, (state) => {
+			state.status = 'loading';
+		});
+		builder.addCase(getUserAreas.fulfilled, (state, action: PayloadAction<Area[]>) => {
+			state.status = 'success';
+			state.areas = action.payload;
+		});
+		builder.addCase(getUserAreas.rejected, (state) => {
 			state.status = 'rejected';
 		});
 	},
