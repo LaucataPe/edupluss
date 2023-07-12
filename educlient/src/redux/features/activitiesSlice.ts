@@ -40,6 +40,15 @@ export const getEmpresaActivities = createAsyncThunk('activities/getEmpresaActiv
 	}
 }) ;
 
+export const getAreasActivities = createAsyncThunk('activities/getAreasActivities', async (id: number) => {
+	try {
+		const { data } = await axios(`http://localhost:3001/activities/area/${id}`);
+		return data;
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+}) ;
+
 const activitiesSlice = createSlice({
 	name: "activities",
 	initialState,
@@ -54,7 +63,7 @@ const activitiesSlice = createSlice({
 		}
 	},
 	extraReducers: (builder) => {
-		builder.addCase(fetchActivities.pending, (state, action) => {
+		builder.addCase(fetchActivities.pending, (state) => {
 			state.status = 'loading';
 		});
 		builder.addCase(fetchActivities.fulfilled, (state, action: PayloadAction<Activity[]>) => {
@@ -62,10 +71,10 @@ const activitiesSlice = createSlice({
 			state.activities = action.payload;
 			state.originalCopy = action.payload;
 		});
-		builder.addCase(fetchActivities.rejected, (state, action) => {
+		builder.addCase(fetchActivities.rejected, (state) => {
 			state.status = 'rejected';
 		});
-		builder.addCase(getEmpresaActivities.pending, (state, action) => {
+		builder.addCase(getEmpresaActivities.pending, (state) => {
 			state.status = 'loading';
 		});
 		builder.addCase(getEmpresaActivities.fulfilled, (state, action: PayloadAction<Activity[]>) => {
@@ -73,7 +82,18 @@ const activitiesSlice = createSlice({
 			state.activities = action.payload;
 			state.originalCopy = action.payload;
 		});
-		builder.addCase(getEmpresaActivities.rejected, (state, action) => {
+		builder.addCase(getEmpresaActivities.rejected, (state) => {
+			state.status = 'rejected';
+		});
+		builder.addCase(getAreasActivities.pending, (state) => {
+			state.status = 'loading';
+		});
+		builder.addCase(getAreasActivities.fulfilled, (state, action: PayloadAction<Activity[]>) => {
+			state.status = 'success';
+			state.activities = action.payload;
+			state.originalCopy = action.payload;
+		});
+		builder.addCase(getAreasActivities.rejected, (state) => {
 			state.status = 'rejected';
 		});
 	},

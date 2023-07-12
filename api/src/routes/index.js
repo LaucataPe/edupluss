@@ -14,17 +14,19 @@ const {getCompanyActivities} = require('../controllers/Company/getCompanyActivit
 //USER GET
 const {getAllUsers} = require('../controllers/Users/getAllUsers')
 const {getUserByCompany} = require('../controllers/Users/getUsersByCompany')
+const {getUserAreas} = require('../controllers/Users/getUserAreas')
 
 router.get('/empresas', getAllCompanies)
 router.get('/areas/:companyId', getEmpresaAreas)
 router.get('/activities', getAllActivities)
 router.get('/activities/:companyId', getCompanyActivities)
-router.get('/activities/:areaId', getActivitiesByArea)
+router.get('/activities/area/:areaId', getActivitiesByArea)
 router.get('/steps/:id', getStepsActivity)
 router.get('/search', SearchActivity)
 
 router.get('/users', getAllUsers) 
 router.get('/users/:companyId', getUserByCompany) 
+router.get('/user/areas/:id', getUserAreas) 
 
 
 //POST Controllers

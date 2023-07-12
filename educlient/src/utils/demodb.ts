@@ -25,6 +25,7 @@ export interface Area {
     id?: number
     name: string
     companyId: number
+    active?: boolean
 }
 
 export interface Activity {
@@ -32,6 +33,7 @@ export interface Activity {
     title: string
     areaId: number
     active?: boolean
+    companyId: number
 }
 
 

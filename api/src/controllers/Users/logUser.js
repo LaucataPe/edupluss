@@ -1,11 +1,11 @@
-const { Usuario } = require('../../db')
+const { User } = require('../../db')
 const {verified} = require('../../utils/bcryptHandler')
 
 const logUser = async (req, res) =>{
     const { email, password } = req.body
     console.log(req.body);
     try {
-        const newUser = await Usuario.findOne({
+        const logUser = await User.findOne({
             where: {
                 email
             },
@@ -16,15 +16,13 @@ const logUser = async (req, res) =>{
             );
         }
 
-		// Traigo la password encryptada de la db y comparo con el recibido por body
 		const passwordHash = userExist.password;
 		const isCorrect = await verified(password, passwordHash);
 
-		//Si no coincide
-		if (!isCorrect) throw new Error("Revisá tu contraseña.");
+		if (!isCorrect) throw new Error("Contraseña incorrecta");
 
 
-        res.status(200).json(newUser)
+        res.status(200).json(logUser)
     } catch (error) {
         res.status(404).send(error.message)
     }
