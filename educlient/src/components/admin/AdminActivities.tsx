@@ -32,23 +32,26 @@ function AdminActivities() {
     return (
       <>
       {/*Mapea todas las actividades*/}
-      <div>
-        <ol>
+      <div className="w-[90%] relative mx-10">
           {activities?.map((act) => (
             <Link to={`/actvitySteps/${act.id}`}>  
-              <li key={act.id}>
-                <h3>{act.title}</h3>
-                {act.active ? <button onClick={()=>handleState(act.id, act.areaId)}>Desactivar</button> 
-                : <button onClick={()=>handleState(act.id, act.areaId)}>Activar</button>}
-              </li>
+              <div key={act.id} className="flex items-center my-5 relative bg-white border shadow-sm rounded-xl 
+                p-4 text-lg md:p-5 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]
+                 dark:text-gray-400 hover:bg-slate-100">
+                <p className="pr-10">{act.title}</p>
+                {act.active ? <button onClick={()=>handleState(act.id, act.areaId)} 
+                className="absolute right-5 p-1 bg-red-500 rounded text-white hover:bg-red-600">Desactivar</button> 
+                : <button onClick={()=>handleState(act.id, act.areaId)}
+                className="absolute right-5 p-1 bg-green-500 rounded text-white hover:bg-green-600">Activar</button>}
+              </div>
             </Link>
           ))}  
-        </ol>
       </div>
       
-      <Link to={`/addActivity/${areaId}`}><button className="py-2 px-4 flex justify-center items-center rounded-full 
-      font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-all text-2xl
-       dark:focus:ring-offset-gray-800">+</button></Link>
+      <Link to={`/addActivity/${areaId}`}><button className="py-2 px-4 flex absolute bottom-10 right-10
+      justify-center items-center rounded-full 
+      font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-all text-xl
+       dark:focus:ring-offset-gray-800">+ Añadir Actividad</button></Link>
       </>
     );
   }

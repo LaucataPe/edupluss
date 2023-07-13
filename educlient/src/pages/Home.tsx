@@ -31,10 +31,13 @@ function Home() {
 
     return (
       <>
-      
+      <h2 className="text-3xl font-semibold text-center p-10">Hola {logUser.username}</h2>
       <h1 className="text-3xl font-semibold text-center p-10">¿Qué quieres aprender hoy?</h1>
-      <LeftMenu />
-      <Activities />
+      <div className="flex">
+        <LeftMenu />
+        <Activities />
+      </div>
+      
       </>
     );
   }

@@ -5,6 +5,7 @@ import { getActivitiesByArea } from "../redux/features/activitiesSlice";
 import { Link } from "react-router-dom";
 import { setCurrentArea } from "../redux/features/areaSlice";
 import { Area } from "../utils/interfaces";
+import { FaPuzzlePiece, FaPlusCircle, FaChartLine } from "react-icons/fa";
 
 function LeftMenu() {
     const dispatch = useAppDispatch()
@@ -19,19 +20,41 @@ function LeftMenu() {
 
     return (
       <>
-      {logUser.tipo === 'admin' && <div>Dashboard</div>}
-      <div>
+      <div className="sidebar top-0 bottom-0 lg:left-0 p-2 w-[200px] 
+        overflow-y-auto text-center bg-blue-100">
+          {logUser.tipo === 'admin' && 
+          <div className="p-2.5 mt-1 flex items-center cursor-pointer hover:border border-blue-700">
+            <FaChartLine/>
+            <span className="font-bold text-blue-700 text-[15px] ml-3 text-xl">Dashboard</span>
+          </div>}
+          <div className="p-2.5 mt-1 flex items-center">
+              <FaPuzzlePiece clasName="text-blue-700"/>
+              <h1 className="font-bold text-blue-700 text-[15px] ml-3 text-xl">Áreas</h1>
+          </div>
+          <div className="my-2 bg-blue-600 h-[1px]"></div>
+        
+        
         {areas?.map((area) => (
-            <div key={area?.id} onClick={() => changeArea(area)}>
-                <button>{area.name}</button>
+            <div key={area?.id} onClick={() => changeArea(area)}
+              className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 
+              cursor-pointer text-blue-500 hover:bg-blue-600 hover:text-white">
+                 <span className="text-[15px] ml-1  
+                 font-bold ">{area.name}</span>
             </div>
         ))}
+
+        {logUser.tipo === 'admin' && (
+          <Link to='/addArea'>
+            <div className="my-2 bg-blue-600 h-[1px]"></div>
+            <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 
+              cursor-pointer text-blue-500 hover:bg-blue-600 hover:text-white">
+                <FaPlusCircle/>
+                <span className="text-[15px] ml-1 font-bold ">Agregar Área</span>
+            </div>
+          </Link>
+        )}
       </div>
-      {logUser.tipo === 'admin' && (
-        <Link to='/addArea'><button className="py-2 px-4 flex justify-center items-center 
-        font-semibold text-blue-500 bg-white hover:bg-blue-600 transition-all text-2xl
-         dark:focus:ring-offset-gray-800">+</button></Link>
-      )}
+      
       </>
     );
   }

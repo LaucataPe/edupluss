@@ -32,8 +32,10 @@ function Admin() {
 
     return (
       <>
-      <LeftMenu />
-      <AdminActivities />
+      <div className="flex">
+        <LeftMenu />
+        <AdminActivities />
+      </div>
       </>
     );
   }
