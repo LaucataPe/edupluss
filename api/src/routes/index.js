@@ -31,6 +31,7 @@ router.get('/user/areas/:id', getUserAreas)
 
 //POST Controllers
 const {createUser} = require('../controllers/Users/postUser')
+const {logUser} = require('../controllers/Users/logUser')
 const {createCompany} = require('../controllers/Company/createEmpresa')
 const {createArea} = require('../controllers/Areas/createArea')
 const {createActivity} = require('../controllers/Activities/createActivity')
@@ -39,6 +40,7 @@ const {createStep} = require('../controllers/Steps/createStep')
 //POST
 router.post('/empresa', createCompany)
 router.post('/user', createUser)
+router.post('/logUser', logUser)
 router.post('/area', createArea)
 router.post('/activity', createActivity)
 router.post('/step', createStep)

@@ -13,10 +13,11 @@ function Home() {
     const [ready, setReady ] = useState<boolean>(false)
 
     const areas = useSelector((state: RootState) => state.areas.areas)
+    const logUser = useSelector((state: RootState) => state.user.logUser)
 
     useEffect(() => {
-      if(areas.length === 0){
-        Mydispatch(getUserAreas(3));
+      if(areas.length === 0 && logUser.id !== undefined){
+        Mydispatch(getUserAreas(logUser.id));
         setReady(true)
       }
       
@@ -26,7 +27,7 @@ function Home() {
           Mydispatch(getActivitiesByArea(firstArea))
         }
       }
-    }, [ready]);
+    }, [ready, logUser]);
 
     return (
       <>

@@ -1,4 +1,4 @@
-const { User } = require('../../db')
+const { User, Company } = require('../../db')
 const {verified} = require('../../utils/bcryptHandler')
 
 const logUser = async (req, res) =>{
@@ -10,19 +10,27 @@ const logUser = async (req, res) =>{
                 email
             },
         })
-        if (!userExist?.email) {
+        if (!logUser?.email) {
             throw new Error(
                 "El correo electrónico que ingresaste no se encuentra registrado."
             );
         }
 
-		const passwordHash = userExist.password;
+		const passwordHash = logUser.password;
 		const isCorrect = await verified(password, passwordHash);
 
 		if (!isCorrect) throw new Error("Contraseña incorrecta");
 
+		const findCompany = await Company.findByPk(logUser.companyId)
 
-        res.status(200).json(logUser)
+		if(!findCompany) throw new Error("La empresa asociada a este usuario no se encontró");
+
+		const data = {
+			user: logUser,
+			company: findCompany
+		};
+
+        res.status(200).json(data)
     } catch (error) {
         res.status(404).send(error.message)
     }

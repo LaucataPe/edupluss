@@ -14,8 +14,8 @@ const initialState:initState = {
 	activities: [],
 	originalCopy: [],
     selectEmpresa: {
-		id: 1,
-		name: 'CONTABILIDADYA',
+		id: 0,
+		name: '',
 		nit: 0
 	},
 	status: 'idle'

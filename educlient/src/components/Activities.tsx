@@ -10,8 +10,7 @@ function Activities() {
 
     return (
       <>
-      {/*Mapea todas las actividades*/}
-      <div className="container mx-auto px-20">
+      <div className="container mx-auto px-20" key={1}>
           {activeActivities?.map((act) => (
             <Link to={`/activity/${act.id}`}>  
                 <div key={act.id} className="flex flex-col my-5 bg-white border shadow-sm rounded-xl 

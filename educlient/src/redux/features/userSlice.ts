@@ -9,12 +9,12 @@ interface initState {
 
 const initialState:initState = {
     logUser: {
-        id: 3,
+        id: 0,
         username: '',
         email: '',
         password: '',
         companyId: 0,
-		tipo:'empleado'
+		tipo: ''
     },
     status: 'idle'
 };
@@ -35,4 +35,4 @@ export const {
 	setLogUser,
 } = userSlice.actions;
 export default userSlice.reducer;
-export const allUsers = (state: RootState) => state.steps;
+export const allUsers = (state: RootState) => state.user;
