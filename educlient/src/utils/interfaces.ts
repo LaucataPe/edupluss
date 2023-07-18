@@ -12,6 +12,7 @@ export interface User {
     companyId: number
     tipo?: string
     areas?: Area[]
+    active?: boolean
 }
 
 export interface Step {

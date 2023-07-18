@@ -13,6 +13,16 @@ import Landing from "./pages/LandingPage";
 import Admin from "./components/admin/Admin";
 import AdminActivities from "./components/admin/AdminActivities";
 import AddArea from "./components/admin/AddArea";
+import Crud from "./components/admin/Crud";
+
+import './index.css'
+
+/*
+import 'primereact/resources/primereact.css';
+import 'primeflex/primeflex.css';
+import 'primeicons/primeicons.css';
+import './styles/layout/layout.scss';
+import './styles/demo/Demos.scss';*/
 
 function App() {
 
@@ -31,6 +41,7 @@ function App() {
 				<Route path="/addActivity/:id" element={<AddActivity />} />
 				<Route path="/addArea" element={<AddArea />} />
 				<Route path="/addStep/:id" element={<AddStep />} />
+				<Route path="/crud" element={<Crud />} />
 		</Routes>
     </>
   );
