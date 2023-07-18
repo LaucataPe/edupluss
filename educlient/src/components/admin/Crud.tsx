@@ -18,6 +18,7 @@ import { useAppDispatch } from '../../hooks/typedSelectors';
 import { fetchUsers } from '../../redux/features/userSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { fetchCompanyAreas } from '../../redux/features/areaSlice';
 
 const Crud = () => {
   const dispatch = useAppDispatch()
@@ -33,6 +34,8 @@ const Crud = () => {
   };
 
   const currentUsers = useSelector((state: RootState) => state.user.users)
+  const areas = useSelector((state: RootState) => state.areas.areas)
+  const currentEmpresa = useSelector((state: RootState) => state.user.logUser.companyId)
 
   const [users, setUsers] = useState<Demo.User[]>([]);
   const [userDialog, setUserDialog] = useState(false);
@@ -49,6 +52,7 @@ const Crud = () => {
   useEffect(() => {
     if(currentUsers.length === 0){
       dispatch(fetchUsers())
+      dispatch(fetchCompanyAreas(currentEmpresa))
       setReady(true)
     }
   }, [dispatch]);
@@ -176,7 +180,7 @@ const Crud = () => {
     return (
       <React.Fragment>
         <div className="my-2">
-          <Button label="Nuevo" icon="pi pi-plus" className="mr-2" onClick={openNew} />
+          <Button label="Nuevo" icon="pi pi-plus" className="p-button p-component p-button-success mr-2" onClick={openNew} />
           <Button label="Eliminar" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedUsers || !selectedUsers.length} />
         </div>
       </React.Fragment>
@@ -295,13 +299,13 @@ const Crud = () => {
             <Column field="id" header="ID" sortable></Column>
             <Column field="username" header="Nombre de usuario" sortable body={usernameBodyTemplate}></Column>
             <Column field="email" header="Correo electrónico" sortable body={emailBodyTemplate}></Column>
-            <Column field="tipo" header="Tipo" sortable body={tipoBodyTemplate}></Column>
+            <Column field="tipo" header="Tipo" sortable body={tipoBodyTemplate} className='capitalize'></Column>
             <Column field="areas" header="Áreas" body={areasBodyTemplate}></Column>
             <Column field="active" header="Activo" body={activeBodyTemplate}></Column>
             <Column body={actionBodyTemplate}></Column>
           </DataTable>
 
-          <Dialog visible={userDialog} style={{ width: '450px' }} header="Detalles de Usuario" modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
+          <Dialog visible={userDialog} style={{ width: '450px' }} header="Creación de Usuario" modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
             <div className="field">
               <label htmlFor="username">Nombre de usuario</label>
               <InputText
@@ -335,8 +339,9 @@ const Crud = () => {
               <MultiSelect
                 id="areas"
                 value={user.areas}
+                options={areas}
                 onChange={onAreaChange}
-                placeholder="Seleccione áreas"
+                placeholder="Seleccionar áreas"
                 optionLabel="name"
                 optionValue="id"
               />

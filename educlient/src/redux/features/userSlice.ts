@@ -17,7 +17,7 @@ const initialState:initState = {
         username: '',
         email: '',
         password: '',
-        companyId: 0,
+        companyId: 1,
 		tipo: '',
 		areas: [],
 		active: false

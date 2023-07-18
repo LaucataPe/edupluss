@@ -16,13 +16,14 @@ import AddArea from "./components/admin/AddArea";
 import Crud from "./components/admin/Crud";
 
 import './index.css'
+import '../public/tailwind-light/theme.css'
 
-/*
+
 import 'primereact/resources/primereact.css';
 import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import './styles/layout/layout.scss';
-import './styles/demo/Demos.scss';*/
+
 
 function App() {
 
