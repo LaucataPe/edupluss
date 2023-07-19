@@ -48,21 +48,23 @@ router.post('/step', createStep)
 //PUT Controllers
 const {ActivityState} = require('../controllers/Activities/ActivityState')
 const {AreaState} = require('../controllers/Areas/AreaState')
-const {UserState} = require('../controllers/Users/userState')
+const {updateUser} = require('../controllers/Users/updateUser')
 
 //PUT
 router.put('/activity/state', ActivityState)
 router.put('/area/state', AreaState)
-router.put('/user/state', UserState)
+router.put('/user/update', updateUser)
 
 
 //DELETE Controllers
 const {deleteActivity} = require('../controllers/Activities/deleteActivity')
 const {deleteStep} = require('../controllers/Steps/deleteStep')
+const {deleteUser} = require('../controllers/Users/deleteUser')
 
 //DELETE
 router.delete('/activity/:id', deleteActivity)
 router.delete('/step/:id', deleteStep)
+router.delete('/user/:id', deleteUser)
 
 module.exports = {router}
 

@@ -32,7 +32,10 @@ const Crud = () => {
     companyId: 0,
     areas: []
   };
-
+  interface InputValue {
+    name: string;
+    code: string;
+  }
   const currentUsers = useSelector((state: RootState) => state.user.users)
   const areas = useSelector((state: RootState) => state.areas.areas)
   const currentEmpresa = useSelector((state: RootState) => state.user.logUser.companyId)
@@ -81,6 +84,14 @@ const Crud = () => {
   const hideDeleteUsersDialog = () => {
     setDeleteUsersDialog(false);
   };
+
+  const dropdownValues: InputValue[] = [
+    { name: 'New York', code: 'NY' },
+    { name: 'Rome', code: 'RM' },
+    { name: 'London', code: 'LDN' },
+    { name: 'Istanbul', code: 'IST' },
+    { name: 'Paris', code: 'PRS' }
+];
 
   const saveUser = () => {
     setSubmitted(true);
@@ -186,6 +197,15 @@ const Crud = () => {
       </React.Fragment>
     );
   };
+
+  const itemTemplate = (option: InputValue) => {
+    return (
+        <div className="flex align-items-center">
+            <span className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px', height: '12px' }} />
+            <span>{option.name}</span>
+        </div>
+    );
+};
 
 
   const usernameBodyTemplate = (rowData: Demo.User) => {
@@ -330,8 +350,20 @@ const Crud = () => {
               {submitted && !user.email && <small className="p-error">El correo electrónico es obligatorio.</small>}
             </div>
             <div className="field">
+              <label htmlFor="email">Contraseña</label>
+              <InputText
+                id="password"
+                type='password'
+                value={user.password}
+                onChange={(e) => onInputChange(e, 'password')}
+                required
+                className={classNames({ 'p-invalid': submitted && !user.password })}
+              />
+              {submitted && !user.password && <small className="p-error">Ingrese una contraseña</small>}
+            </div>
+            <div className="field">
               <label htmlFor="tipo">Tipo</label>
-              <InputText id="tipo" value={user.tipo} onChange={onTypeChange} required className={classNames({ 'p-invalid': submitted && !user.tipo })} />
+              {/* <Dropdown value={user.tipo} onChange={(e) => onInputChange(e.value)} options={dropdownValues} optionLabel="name" placeholder="Select" /> */}
               {submitted && !user.tipo && <small className="p-error">El tipo es obligatorio.</small>}
             </div>
             <div className="field">

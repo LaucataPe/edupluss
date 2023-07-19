@@ -1,5 +1,5 @@
-import { Routes, Route, useNavigate } from "react-router";
-import { useEffect } from "react";
+import { Routes, Route } from "react-router";
+//import { useEffect } from "react";
 
 import Activity from "./pages/Activity";
 import NavBar from "./components/Navbar";
