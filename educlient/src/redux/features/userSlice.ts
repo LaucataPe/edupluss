@@ -13,7 +13,7 @@ interface initState {
 const initialState:initState = {
 	users: [],
     logUser: {
-        id: 0,
+        id: 1,
         username: '',
         email: '',
         password: '',
@@ -51,7 +51,8 @@ const userSlice = createSlice({
 		});
 		builder.addCase(fetchUsers.fulfilled, (state, action: PayloadAction<Demo.User[]>) => {
 			state.status = 'success';
-			state.users = action.payload;
+			const filtUsers = action.payload.filter((user) => user.id !== state.logUser.id)
+			state.users = filtUsers;
 		});
 		builder.addCase(fetchUsers.rejected, (state) => {
 			state.status = 'rejected';

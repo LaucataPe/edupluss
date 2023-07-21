@@ -23,13 +23,13 @@ function LeftMenu() {
       <div className="sidebar top-0 bottom-0 lg:left-0 p-2 w-[200px] 
         overflow-y-auto text-center bg-blue-100">
           {logUser.tipo === 'admin' && 
-          <div className="p-2.5 mt-1 flex items-center cursor-pointer hover:border border-blue-700">
+          <div className="p-2.5 mt-1 flex items-center cursor-pointer hover:border border-blue-500">
             <FaChartLine/>
-            <span className="font-bold text-blue-700 text-[15px] ml-3 text-xl">Dashboard</span>
+            <span className="font-bold text-blue-500 text-[15px] ml-3 text-xl">Dashboard</span>
           </div>}
           <div className="p-2.5 mt-1 flex items-center">
-              <FaPuzzlePiece clasName="text-blue-700"/>
-              <h1 className="font-bold text-blue-700 text-[15px] ml-3 text-xl">Áreas</h1>
+              <FaPuzzlePiece className="text-blue-500 text-2xl"/>
+              <h1 className="font-bold text-blue-500 text-[15px] ml-3 text-xl">Áreas</h1>
           </div>
           <div className="my-2 bg-blue-600 h-[1px]"></div>
         

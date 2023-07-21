@@ -2,6 +2,7 @@ import React, { ReactElement, Dispatch, SetStateAction, HTMLAttributeAnchorTarge
 import { NextPage } from 'next';
 import { Demo } from './demo';
 import { Toast } from 'primereact/toast';
+import { Area } from '../interfaces';
 
 /* Next & Layout Types */
 type Page<P = {}> = NextPage<P> & {
@@ -88,6 +89,7 @@ export interface MenuModel {
     url?: string;
     target?: HTMLAttributeAnchorTarget;
     seperator?: boolean;
+    area?: Area
 }
 
 export interface AppMenuItem extends MenuModel {

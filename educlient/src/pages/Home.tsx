@@ -4,8 +4,8 @@ import Activities from "../components/Activities";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { RootState } from "../redux/store";
 import {getUserAreas } from "../redux/features/areaSlice";
-import LeftMenu from "../components/LeftMenu";
 import { getActivitiesByArea } from "../redux/features/activitiesSlice";
+import AppMenu from "../components/SideMenu";
 
 function Home() {
     const Mydispatch = useAppDispatch()
@@ -31,11 +31,13 @@ function Home() {
 
     return (
       <>
-      <h2 className="text-3xl font-semibold text-center p-10">Hola {logUser.username}</h2>
-      <h1 className="text-3xl font-semibold text-center p-10">¿Qué quieres aprender hoy?</h1>
-      <div className="flex">
-        <LeftMenu />
-        <Activities />
+       <div className="flex">
+        <AppMenu />
+        <div className="w-[100%]">
+          <h2 className="text-3xl font-semibold text-center p-5">Hola {logUser.username}</h2>
+          <h1 className="text-3xl font-semibold text-center">¿Qué quieres aprender hoy?</h1>
+          <Activities />
+        </div>
       </div>
       
       </>

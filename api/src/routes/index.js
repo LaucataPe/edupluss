@@ -15,6 +15,8 @@ const {getCompanyActivities} = require('../controllers/Company/getCompanyActivit
 const {getAllUsers} = require('../controllers/Users/getAllUsers')
 const {getUserByCompany} = require('../controllers/Users/getUsersByCompany')
 const {getUserAreas} = require('../controllers/Users/getUserAreas')
+const {getByToken} = require('../controllers/Users/getUserToken')
+const { checkSession } = require('../Middlewares/session')
 
 router.get('/empresas', getAllCompanies)
 router.get('/areas/:companyId', getEmpresaAreas)
@@ -27,6 +29,9 @@ router.get('/search', SearchActivity)
 router.get('/users', getAllUsers) 
 router.get('/users/:companyId', getUserByCompany) 
 router.get('/user/areas/:id', getUserAreas) 
+
+//Session
+router.get('/auth/token', checkSession, getByToken)
 
 
 //POST Controllers
@@ -60,6 +65,7 @@ router.put('/user/update', updateUser)
 const {deleteActivity} = require('../controllers/Activities/deleteActivity')
 const {deleteStep} = require('../controllers/Steps/deleteStep')
 const {deleteUser} = require('../controllers/Users/deleteUser')
+
 
 //DELETE
 router.delete('/activity/:id', deleteActivity)

@@ -33,6 +33,9 @@ function Login() {
           const {data} = await axios.post('http://localhost:3001/logUser', inputs)
           console.log(data);          
           if(data){
+            const token = data.token;
+			      window.localStorage.setItem("token", token);
+            
             dispatch(setLogUser(data.user))
             dispatch(setEmpresa(data.company))
           }

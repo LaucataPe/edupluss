@@ -6,6 +6,7 @@ import { useAppDispatch } from "../../hooks/typedSelectors";
 import { fetchCompanyAreas } from "../../redux/features/areaSlice";
 import { getActivitiesByArea } from "../../redux/features/activitiesSlice";
 import AdminActivities from "./AdminActivities";
+import AppMenu from "../SideMenu";
 
 
 function Admin() {
@@ -33,7 +34,8 @@ function Admin() {
     return (
       <>
       <div className="flex">
-        <LeftMenu />
+        {/* <LeftMenu /> */}
+        <AppMenu/>
         <AdminActivities />
       </div>
       </>

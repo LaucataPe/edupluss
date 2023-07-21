@@ -3,8 +3,10 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-//import { InputTextarea } from 'primereact/inputtextarea';
+import { Dropdown } from 'primereact/dropdown';
+import { InputSwitch } from 'primereact/inputswitch';
 import { MultiSelect } from 'primereact/multiselect';
+import { Password } from 'primereact/password';
 //import { RadioButton } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
@@ -19,9 +21,14 @@ import { fetchUsers } from '../../redux/features/userSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { fetchCompanyAreas } from '../../redux/features/areaSlice';
+import axios from 'axios';
 
 const Crud = () => {
   const dispatch = useAppDispatch()
+  const currentUsers = useSelector((state: RootState) => state.user.users)
+  const areas = useSelector((state: RootState) => state.areas.areas)
+  const currentEmpresa = useSelector((state: RootState) => state.user.logUser.companyId)
+
   const emptyUser: Demo.User = {
     id: 0,
     username: '',
@@ -29,16 +36,14 @@ const Crud = () => {
     password: '',
     active: false,
     tipo: '',
-    companyId: 0,
+    companyId: currentEmpresa,
     areas: []
   };
   interface InputValue {
     name: string;
-    code: string;
+    value: string;
   }
-  const currentUsers = useSelector((state: RootState) => state.user.users)
-  const areas = useSelector((state: RootState) => state.areas.areas)
-  const currentEmpresa = useSelector((state: RootState) => state.user.logUser.companyId)
+  
 
   const [users, setUsers] = useState<Demo.User[]>([]);
   const [userDialog, setUserDialog] = useState(false);
@@ -66,6 +71,11 @@ const Crud = () => {
     }
   }, [ready, currentUsers]);
 
+  const ExistingAreas = () => {
+    const areasId = user.areas.map((area) => area.id)
+    return areasId
+  }
+
   const openNew = () => {
     setUser(emptyUser);
     setSubmitted(false);
@@ -86,32 +96,36 @@ const Crud = () => {
   };
 
   const dropdownValues: InputValue[] = [
-    { name: 'New York', code: 'NY' },
-    { name: 'Rome', code: 'RM' },
-    { name: 'London', code: 'LDN' },
-    { name: 'Istanbul', code: 'IST' },
-    { name: 'Paris', code: 'PRS' }
+    { name: 'Admin', value: 'admin' },
+    { name: 'Empleado', value: 'empleado' }
 ];
 
-  const saveUser = () => {
+  const saveUser = async () => {
     setSubmitted(true);
 
     if (user.username.trim() && user.email.trim() && user.tipo.trim()) {
-      let _users = [...users];
-      let _user = { ...user };
-
-      if (user.id) {
-        const index = findIndexById(user.id);
-
-        _users[index] = _user;
-        toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado', life: 3000 });
+      if(user.id !== 0){
+        try {
+          const {data} = await axios.put('http://localhost:3001/user/update', user)
+          if(data){
+          dispatch(fetchUsers())
+          toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado', life: 3000 });
+          }           
+        } catch (error: any) {
+          console.log(error);
+        
+        }
       } else {
-        _user.id = createId();
-        _users.push(_user);
-        toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado', life: 3000 });
+        try {
+          const {data} = await axios.post('http://localhost:3001/user', user)
+          if(data){
+            dispatch(fetchUsers())
+            toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado', life: 3000 });
+          }           
+        } catch (error: any) {
+          console.log(error);
+        }
       }
-
-      setUsers(_users);
       setUserDialog(false);
       setUser(emptyUser);
     }
@@ -135,23 +149,6 @@ const Crud = () => {
     toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario eliminado', life: 3000 });
   };
 
-  const findIndexById = (id: number) => {
-    let index = -1;
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].id === id) {
-        index = i;
-        break;
-      }
-    }
-
-    return index;
-  };
-
-  const createId = () => {
-    return Math.max(...users.map((user) => user.id)) + 1;
-  };
-
-
   const confirmDeleteSelected = () => {
     setDeleteUsersDialog(true);
   };
@@ -172,11 +169,19 @@ const Crud = () => {
     }));
   };
 
-  const onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onTypeChange = (e: any) => {
     const { value } = e.target;
     setUser((prevState: Demo.User) => ({
       ...prevState,
       tipo: value
+    }));
+  };
+
+  const onSwitchChange = (e: any) => {
+    const { value } = e.target;
+    setUser((prevState: Demo.User) => ({
+      ...prevState,
+      active: value
     }));
   };
 
@@ -191,21 +196,12 @@ const Crud = () => {
     return (
       <React.Fragment>
         <div className="my-2">
-          <Button label="Nuevo" icon="pi pi-plus" className="p-button p-component p-button-success mr-2" onClick={openNew} />
+          <Button label="Nuevo" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
           <Button label="Eliminar" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedUsers || !selectedUsers.length} />
         </div>
       </React.Fragment>
     );
   };
-
-  const itemTemplate = (option: InputValue) => {
-    return (
-        <div className="flex align-items-center">
-            <span className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px', height: '12px' }} />
-            <span>{option.name}</span>
-        </div>
-    );
-};
 
 
   const usernameBodyTemplate = (rowData: Demo.User) => {
@@ -257,8 +253,8 @@ const Crud = () => {
   const actionBodyTemplate = (rowData: Demo.User) => {
     return (
       <>
-        <Button icon="pi pi-pencil" rounded className="mr-2" onClick={() => editUser(rowData)} />
-        <Button icon="pi pi-trash" rounded className="p-button-warning" onClick={() => confirmDeleteUser(rowData)} />
+        <Button icon="pi pi-pencil" rounded className="mr-1 p-button-success" onClick={() => editUser(rowData)} />
+        <Button icon="pi pi-trash" rounded className="p-button-danger" onClick={() => confirmDeleteUser(rowData)} />
       </>
     );
   };
@@ -325,7 +321,9 @@ const Crud = () => {
             <Column body={actionBodyTemplate}></Column>
           </DataTable>
 
-          <Dialog visible={userDialog} style={{ width: '450px' }} header="Creación de Usuario" modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
+          <Dialog visible={userDialog} style={{ width: '450px' }} 
+            header={user.id !== 0 ? 'Edición de Usuario' : 'Creación de Usuario'} 
+            modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
             <div className="field">
               <label htmlFor="username">Nombre de usuario</label>
               <InputText
@@ -351,32 +349,31 @@ const Crud = () => {
             </div>
             <div className="field">
               <label htmlFor="email">Contraseña</label>
-              <InputText
-                id="password"
-                type='password'
-                value={user.password}
-                onChange={(e) => onInputChange(e, 'password')}
-                required
-                className={classNames({ 'p-invalid': submitted && !user.password })}
-              />
+              <Password inputId="password1" value={user.password} onChange={(e) => onInputChange(e, 'password')}
+               toggleMask className="w-full mb-5" promptLabel='Ingresa una contraseña' weakLabel='Poco Segura' mediumLabel='Segura' strongLabel='Muy Segura'></Password>
               {submitted && !user.password && <small className="p-error">Ingrese una contraseña</small>}
             </div>
             <div className="field">
-              <label htmlFor="tipo">Tipo</label>
-              {/* <Dropdown value={user.tipo} onChange={(e) => onInputChange(e.value)} options={dropdownValues} optionLabel="name" placeholder="Select" /> */}
-              {submitted && !user.tipo && <small className="p-error">El tipo es obligatorio.</small>}
+              <label>Tipo de Usuario</label>  
+              <Dropdown value={user.tipo} onChange={(e) => onTypeChange(e)} options={dropdownValues} optionLabel="name"
+              placeholder="Seleccionar tipo" /> 
+              {submitted && !user.tipo && <small className="p-error">Debe seleccionar el tipo</small>}
             </div>
             <div className="field">
-              <label htmlFor="areas">Áreas</label>
+              <label>Áreas</label>
               <MultiSelect
                 id="areas"
-                value={user.areas}
+                value={typeof user.areas[0] !== 'number' ? ExistingAreas() : user.areas}
                 options={areas}
                 onChange={onAreaChange}
                 placeholder="Seleccionar áreas"
                 optionLabel="name"
                 optionValue="id"
               />
+            </div>
+            <div className="field flex">
+              <label className='pr-3'>Activo</label>
+              <InputSwitch checked={user.active} onChange={(e) => onSwitchChange(e)}/> 
             </div>
           </Dialog>
 

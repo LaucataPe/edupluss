@@ -1,5 +1,6 @@
 const { User, Company } = require('../../db')
-const {verified} = require('../../utils/bcryptHandler')
+const {verified} = require('../../utils/bcryptHandler');
+const { generateToken } = require('../../utils/jwtHandler');
 
 const logUser = async (req, res) =>{
     const { email, password } = req.body
@@ -16,6 +17,12 @@ const logUser = async (req, res) =>{
             );
         }
 
+		if (!logUser?.active) {
+            throw new Error(
+                "El usuario se encuentra desactivado"
+            );
+        }
+
 		const passwordHash = logUser.password;
 		const isCorrect = await verified(password, passwordHash);
 
@@ -25,8 +32,11 @@ const logUser = async (req, res) =>{
 
 		if(!findCompany) throw new Error("La empresa asociada a este usuario no se encontró");
 
+		const token = await generateToken(logUser);
+
 		const data = {
 			user: logUser,
+			token,
 			company: findCompany
 		};
 
