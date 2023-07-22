@@ -3,17 +3,26 @@ const cloudinary = require('../../utils/cloudinary')
 
 
 const createStep = async (req, res) =>{
-    const { number, title, description, video, activityId } = req.body
-    console.log(req.body);
+    const {title, description, video, activityId } = req.body
+    //console.log(req.body);
     try {
-        /*const uploadVideo = await cloudinary.uploader.upload(video, {
+        const uploadVideo = await cloudinary.uploader.upload(video, {
            resource_type: 'video',
            folder: 'edupluss'
         })
-        const urlVideo = uploadVideo.secure_url*/
+        const urlVideo = uploadVideo.secure_url
 
-        const newStep = await Step.create({number, title, description, 
-            video, 
+        const activitySteps = await Step.findAll({ where: { activityId } });
+        const stepsOrder = [...activitySteps].sort((a, b) => b.number - a.number)
+
+        let nextNumber = 1;
+
+        if(stepsOrder.length > 0){
+            nextNumber = stepsOrder[0].number + 1
+          }
+
+        const newStep = await Step.create({number: nextNumber, title, description, 
+            video: urlVideo, 
             activityId})
         res.status(200).json(newStep)
     } catch (error) {

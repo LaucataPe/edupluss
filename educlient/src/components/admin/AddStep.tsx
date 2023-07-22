@@ -1,16 +1,27 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import { useSelector } from 'react-redux';
 import { CreateStep } from '../../utils/interfaces';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAppDispatch } from '../../hooks/typedSelectors';
 import { getStepsActivity } from '../../redux/features/stepsSlider';
 import { RootState } from '../../redux/store';
 
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
+//import { FileUpload, FileUploadState } from 'primereact/fileupload';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { Button } from 'primereact/button';
+
+import { StepErrors, validate } from '../../utils/validateSteps';
+
 function AddStep() {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const {id} = useParams()
     const steps = useSelector((state: RootState) => state.steps.steps)
+    
+    const toast = useRef<Toast>(null);
 
     const [stepNumber, setStepNumber] = useState(1)
     const [step, setStep] = useState<CreateStep>({
@@ -20,14 +31,14 @@ function AddStep() {
       video: '',
       activityId: Number(id)
     })
-    //const [errors, setErrors] = useState('')
+    const [errors, setErrors] = useState<StepErrors>({title: ''});
 
     useEffect(() => {
       if(steps.length === 0){
         dispatch(getStepsActivity(Number(id)));
       }
       const NextStep = () => {
-        const stepsOrder = [...steps].sort((a, b) => a.number - b.number)
+        const stepsOrder = [...steps].sort((a, b) => b.number - a.number)        
         if(stepsOrder.length > 0){
           const nextNumber = stepsOrder[0].number + 1
           setStepNumber(nextNumber)
@@ -42,20 +53,20 @@ function AddStep() {
       setStep({...step, 
           [event.target.name]: event.target.value})
       
-      /*setErrors(validate({
-          ...input,
-          [event.target.name]: event.target.value,
-      }))*/
+      setErrors(validate({
+          ...step,
+          title: event.target.value,
+      }))
     }
 
     const handleDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{
       setStep({...step, 
           [event.target.name]: event.target.value})
       
-      /*setErrors(validate({
-          ...input,
+      setErrors(validate({
+          ...step,
           [event.target.name]: event.target.value,
-      }))*/
+      }))
     }
 
     const handleVideo = (e: React.ChangeEvent<HTMLInputElement>) =>{
@@ -74,6 +85,11 @@ function AddStep() {
       reader.onloadend = () =>{
           setStep({...step, 
               video: reader.result});
+
+          setErrors(validate({
+                ...step,
+                video: reader.result,
+          }))
       }
     }
 
@@ -83,41 +99,62 @@ function AddStep() {
               let response = await axios.post(`http://localhost:3001/step`, step);
               let data = response.data;
               if(data){
-                  return alert('El paso fue creado correctamente')
+                toast.current?.show({ severity: 'info', summary: 'Success', detail: 'Paso creado', life: 3000 });
+                navigate(`/actvitySteps/${id}`)
+                setStep({
+                  number: stepNumber,
+                  title: '',
+                  description: '',
+                  video: '',
+                  activityId: Number(id)
+                })
               } 
-           } catch (error) {
-           console.log(error);       
-           }
-          setStep({
-            number: stepNumber,
-            title: '',
-            description: '',
-            video: '',
-            activityId: Number(id)
-          })
-     
+           } catch (error: any) {
+            console.log(error);
+            
+            setErrors({...errors, send: `Se presentó el siguiente error al enviar ${error.message}`})  
+           }     
     }
 
     return (
       <>
+      <Link to={`/actvitySteps/${id}`}><Button icon="pi pi-angle-double-left" label='Atrás' rounded 
+        severity="secondary" className='m-2' /></Link>
       <form action="">
-        <label>Paso #</label>
-        <input type="text" name='number' disabled={true} value={stepNumber} />
-        <label>Título:</label>
-        <input type="text" name='title' placeholder='Ingrese el titulo para este paso' value={step.title} 
-        onChange={(e) => handleInputs(e)}/>
-        <label>Descripción:</label>
-        <textarea name="description" cols={30} rows={10} placeholder='Ingrese una breve descripción'
-        value={step.description} 
-        onChange={(e) => handleDescription(e)}></textarea>
-        <label>Agregar video:</label>
-        <input type="file" name="video" onChange={(e) => handleVideo(e)} disabled={step.video ? true : false}/>or
-        <input type="text" name="video" onChange={(e) => handleInputs(e)}
-        disabled={step.video ? true : false} placeholder='Ingrese la url de un video'/>
-        <button type='submit' onClick={(e) => handleSubmit(e)}>Crear Paso</button>
+      <div className="card p-fluid mx-5">
+        <h5>Paso #{stepNumber}</h5>
+          <div className="field">
+            <label>Título:</label>
+            <InputText name="title" type="text" placeholder='Ingrese el título para este paso' value={step.title} 
+              onChange={(e) => handleInputs(e)} className={errors.title ? 'p-invalid' : ''}/>
+            <p className='font-semibold text-red-600'>{errors.title ? errors.title : ''}</p>
+          </div>
+                    <div className="field"> 
+                        <label>Descripción:</label>
+                        <InputTextarea 
+                          name="description" 
+                          rows={2} 
+                          placeholder='Ingrese una breve descripción'
+                          value={step.description} 
+                          onChange={(e) => handleDescription(e)}
+                          className={errors.description ? 'p-invalid' : ''}
+                          />
+                        <p className='font-semibold text-red-600'>{errors.description ? errors.description : ''}</p>
+                    </div>
+                    <div className="field">
+                      <h5>Agregar Video</h5>
+                      {/* <FileUpload name="video" onUpload={handleFileUpload} accept="video/*"
+                      maxFileSize={16000000} chooseLabel='Adjuntar' uploadLabel='Subir' cancelLabel='Cancelar'
+                      disabled={step.video ? true : false}/> */}
+                      <input type="file" name="video" onChange={(e) => handleVideo(e)} accept='video/*' size={16000000}/>
+                      <p className='font-semibold text-red-600'>{errors.video ? errors.video : ''}</p>
+                    </div> 
+        <Button label="Crear Paso" severity="info" outlined type='submit' onClick={(e) => handleSubmit(e)}
+          disabled={Object.keys(errors).length > 0 ? true : false}/>              
+      </div>   
       </form>
 
-      <Link to={`/actvitySteps/${id}`}><button>Atrás</button></Link>
+      <p className='font-semibold text-red-600'>{errors.send ? errors.send : ''}</p>    
       </>
     );
   }

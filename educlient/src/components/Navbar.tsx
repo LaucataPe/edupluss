@@ -21,7 +21,7 @@ function NavBar() {
     return (
       <>
       <nav className=" py-3 bg-blue-500 flex justify-center relative">
-        <h1 className="text-3xl font-bold">{currentEmpresa ? currentEmpresa : 'Selecciona la empresa'}</h1>
+        <p className="text-3xl font-bold text-white">{currentEmpresa ? currentEmpresa : 'Selecciona la empresa'}</p>
         {pathname !== '/' && pathname !== '/login' ? <Button icon="pi pi-sign-out" className="absolute right-3 top-4" rounded severity="danger" 
         onClick={logOut}/> : '' }
       </nav>
