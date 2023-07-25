@@ -31,7 +31,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
 
-const { Company, Step, Activity, User, Area } = sequelize.models;
+const { Company, Step, Activity, User, Area, Role } = sequelize.models;
 console.log(sequelize.models);
 
 // Aca vendrian las relaciones
@@ -39,7 +39,7 @@ Company.hasMany(Area, {
   foreignKey: 'companyId'
 })
 
-Company.hasMany(Activity, {
+Company.hasMany(Role, {
   foreignKey: 'companyId'
 })
 
@@ -47,16 +47,27 @@ Company.hasMany(User, {
   foreignKey: 'companyId'
 })
 
-Area.hasMany(Activity, {
+Area.hasMany(Role, {
   foreignKey: 'areaId'
+})
+
+Role.hasMany(Activity, {
+  foreignKey: 'roleId'
 })
 
 Activity.hasMany(Step, {
   foreignKey: 'activityId'
 });
 
-User.belongsToMany(Area, { through: 'User_Areas' });
-Area.belongsToMany(User, { through: 'User_Areas' });
+Role.hasOne(User,{
+  foreignKey: 'roleId'
+})
+
+User.beforeUpdate((user) => {
+  if (user.tipo !== 'empleado' && user.roleId) {
+    throw new Error('Solo los usuarios de tipo: empleado pueden tener un rol');
+  }
+});
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');

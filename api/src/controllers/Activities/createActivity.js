@@ -1,14 +1,14 @@
-const { Activity, Area } = require('../../db');
+const { Activity, Role } = require('../../db');
 
 const createActivity = async (req, res) => {
-  const { title, areaId } = req.body;
+  const { title, roleId } = req.body;
   try {
-    const area = await Area.findByPk(areaId)
-    if(area){
-      const newActivity = await Activity.create({ title, areaId, active: true, companyId: area.companyId });
+    const role = await Role.findByPk(roleId)
+    if(role){
+      const newActivity = await Activity.create({ title, roleId, active: true});
       res.status(200).json(newActivity);
     }else{
-      throw new Error("No se encontró el área especificada");
+      throw new Error("No se encontró el rol especificado");
     }
   } catch (error) {
     res.status(404).send(error.message);

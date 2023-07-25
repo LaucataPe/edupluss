@@ -2,7 +2,7 @@ const { User, Area } = require('../../db');
 const { encrypt } = require('../../utils/bcryptHandler');
 
 const createUser = async (req, res) => {
-  const { username, email, password, companyId, tipo, areas } = req.body;
+  const { username, email, password, companyId, tipo, roleId } = req.body;
 
   try {
     const userFound = await User.findOne({ where: { email } });
@@ -18,12 +18,9 @@ const createUser = async (req, res) => {
       password: passwordHash,
       companyId,
       active: true,
+      roleId,
       tipo
     });
-
-    if(areas){
-      await newUser.addArea(areas);
-    }
 
     res.status(200).json(newUser);
   } catch (error) {
