@@ -5,8 +5,9 @@ import { classNames } from 'primereact/utils';
 import { CSSTransition } from 'react-transition-group';
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { AppMenuItem, AppMenuItemProps } from '../utils/types/types';
-import { getActivitiesByArea } from '../redux/features/activitiesSlice';
+//import { getActivitiesByArea } from '../redux/features/activitiesSlice';
 import { setCurrentArea } from '../redux/features/areaSlice';
+import { getRolesByArea } from '../redux/features/roleSlice';
 const AppMenuitem = (props: AppMenuItemProps) => {
     const navigate = useNavigate()
     //const { activeMenu, setActiveMenu } = useContext(MenuContext);
@@ -17,8 +18,8 @@ const AppMenuitem = (props: AppMenuItemProps) => {
    const dispatch = useAppDispatch()
 
     const itemClick = (item: AppMenuItem | null) => {
-        if(item && item.area){
-            dispatch(getActivitiesByArea(item.area?.id ?? 0))
+        if(item && item.area && item.area.id){
+            dispatch(getRolesByArea(item.area.id))
             dispatch(setCurrentArea(item.area))
         }else{
             if(item?.to)

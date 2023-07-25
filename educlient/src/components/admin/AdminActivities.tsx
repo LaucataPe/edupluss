@@ -4,7 +4,7 @@ import { RootState } from "../../redux/store";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAppDispatch } from "../../hooks/typedSelectors";
-import { getActivitiesByArea } from "../../redux/features/activitiesSlice";
+import { getActivitiesByRole } from "../../redux/features/activitiesSlice";
 
 function AdminActivities() {
     const dispatch = useAppDispatch()
@@ -22,7 +22,7 @@ function AdminActivities() {
     const handleState = async (id: number = 1, areaId: number) => {
       try {
         const {data} = await axios.put(`http://localhost:3001/activity/state?id=${id}`)
-        dispatch(getActivitiesByArea(areaId))
+        dispatch(getActivitiesByRole(areaId))
         return data 
       } catch (error) {
         console.log(error);

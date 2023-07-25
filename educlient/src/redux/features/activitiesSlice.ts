@@ -40,9 +40,9 @@ export const getEmpresaActivities = createAsyncThunk('activities/getEmpresaActiv
 	}
 }) ;
 
-export const getActivitiesByArea = createAsyncThunk('activities/getActivitiesByArea', async (id: number) => {
+export const getActivitiesByRole = createAsyncThunk('activities/getActivitiesByRole', async (id: number) => {
 	try {
-		const { data } = await axios(`http://localhost:3001/activities/area/${id}`);
+		const { data } = await axios(`http://localhost:3001/activities/role/${id}`);
 		return data
 	} catch (error: any) {
 		throw new Error(error.message);
@@ -85,14 +85,14 @@ const activitiesSlice = createSlice({
 		builder.addCase(getEmpresaActivities.rejected, (state) => {
 			state.status = 'rejected';
 		});
-		builder.addCase(getActivitiesByArea.pending, (state) => {
+		builder.addCase(getActivitiesByRole.pending, (state) => {
 			state.status = 'loading';
 		});
-		builder.addCase(getActivitiesByArea.fulfilled, (state, action: PayloadAction<Activity[]>) => {
+		builder.addCase(getActivitiesByRole.fulfilled, (state, action: PayloadAction<Activity[]>) => {
 			state.status = 'success';
 			state.activities = action.payload;
 		});
-		builder.addCase(getActivitiesByArea.rejected, (state) => {
+		builder.addCase(getActivitiesByRole.rejected, (state) => {
 			state.status = 'rejected';
 		});
 	},

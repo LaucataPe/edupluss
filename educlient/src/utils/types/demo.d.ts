@@ -110,7 +110,7 @@ declare namespace Demo {
         password: string
         companyId: number
         tipo: string
-        areas: Array<Area>
+        roleId?: number
         active: boolean
     }
 

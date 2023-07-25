@@ -39,6 +39,18 @@ export interface Area {
     active?: boolean
 }
 
+export interface Role {
+    id?: number
+    name: string
+    hardSkills: Array<String>
+    softSkills?: Array<String>
+    schedule?: string
+    salary?: string
+    experience?: Array<Number>
+    remote?: boolean
+    areaId?: number
+}
+
 export interface Activity {
     id?: number
     title: string

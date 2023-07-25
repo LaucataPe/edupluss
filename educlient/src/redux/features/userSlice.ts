@@ -19,7 +19,7 @@ const initialState:initState = {
         password: '',
         companyId: 1,
 		tipo: '',
-		areas: [],
+		roleId: 0,
 		active: false
     },
     status: 'idle'

@@ -359,18 +359,7 @@ const Crud = () => {
               placeholder="Seleccionar tipo" /> 
               {submitted && !user.tipo && <small className="p-error">Debe seleccionar el tipo</small>}
             </div>
-            <div className="field">
-              <label>Áreas</label>
-              <MultiSelect
-                id="areas"
-                value={typeof user.areas[0] !== 'number' ? ExistingAreas() : user.areas}
-                options={areas}
-                onChange={onAreaChange}
-                placeholder="Seleccionar áreas"
-                optionLabel="name"
-                optionValue="id"
-              />
-            </div>
+            
             <div className="field flex">
               <label className='pr-3'>Activo</label>
               <InputSwitch checked={user.active} onChange={(e) => onSwitchChange(e)}/> 

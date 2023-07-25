@@ -28,6 +28,7 @@ import './styles/layout/layout.scss';
 import { useAppDispatch } from "./hooks/typedSelectors";
 import { setLogUser } from "./redux/features/userSlice";
 import { setEmpresa } from "./redux/features/activitiesSlice";
+import AddRole from "./components/admin/AddRole";
 
 
 function App() {
@@ -69,18 +70,20 @@ function App() {
 
   return (
     <>
-    <NavBar/>
+    {pathname !== '/' && <NavBar/>}
     <Routes>
 				{/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
 				<Route path="/" element={<Landing />} />
 				<Route path="/home" element={<Home />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/activity/:id" element={<Activity />} />
+
         		<Route path="/admin" element={<Admin />} />
         		<Route path="/activities" element={<AdminActivities />} />
 				<Route path="/actvitySteps/:id" element={<ActivitySteps />} />
 				<Route path="/addActivity/:id" element={<AddActivity />} />
 				<Route path="/addArea" element={<AddArea />} />
+				<Route path="/addRole" element={<AddRole />} />
 				<Route path="/addStep/:id" element={<AddStep />} />
 				<Route path="/crud" element={<Crud />} />
 		</Routes>

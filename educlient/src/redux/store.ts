@@ -3,12 +3,14 @@ import activitiesSlice from "./features/activitiesSlice";
 import stepsSlice from "./features/stepsSlider"
 import AreasSlice from "./features/areaSlice"
 import UserSlice from "./features/userSlice"
+import RoleSlice from "./features/roleSlice"
 
 export const store = configureStore({
     reducer:{
         activities: activitiesSlice,
         steps: stepsSlice,
         areas: AreasSlice,
+        roles: RoleSlice,
         user: UserSlice
     }
 })
