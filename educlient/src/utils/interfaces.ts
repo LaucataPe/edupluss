@@ -54,8 +54,7 @@ export interface Role {
 export interface Activity {
     id?: number
     title: string
-    areaId: number
+    roleId: number
     active?: boolean
-    companyId: number
 }
 

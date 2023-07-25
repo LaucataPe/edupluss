@@ -1,26 +1,24 @@
 import {useState} from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-import { useParams, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Activity } from '../../utils/interfaces'
 import { RootState } from '../../redux/store'
 
 function AddActivity() {
-    const {id} = useParams()
-    const areas = useSelector((state: RootState) => state.areas.areas)
-    const currentArea = areas.find((area) => area.id === Number(id))
+    
+  const currentRole = useSelector((state: RootState) => state.roles.currentRole)
 
     const [activity, setActivity] = useState<Activity>({
       title: '',
-      companyId: currentArea?.companyId ?? 0,
-      areaId: currentArea?.id ?? 0    
+      roleId: currentRole.id ?? 0
     })
     const [error, setError] = useState()
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
 
-      if(activity.companyId !== 0 && activity.areaId !== 0){
+      if(activity.roleId !== 0){
         try {
           const response = await axios.post('http://localhost:3001/activity', activity)
           if(response){
@@ -28,14 +26,13 @@ function AddActivity() {
           }
           setActivity({
             title: '',
-            companyId: 0,
-            areaId: 0  
+            roleId: 0
           })
         } catch (error: any) {
           setError(error)
         }
       }else{
-        return alert('No se encontró el área relacionada a esta actividad')
+        return alert('No se encontró el cargo relacionado a esta actividad')
       }
     }
 
@@ -64,13 +61,13 @@ function AddActivity() {
             border-0 border-b-2 border-gray-300 appearance-none dark:text-white
             dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none 
             focus:ring-0 focus:border-blue-600 peer" placeholder='  ' disabled
-            value={currentArea?.name}
+            value={currentRole?.name}
             />
           <label className="peer-focus:font-medium absolute text-sm text-gray-500
            dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 
            origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 
            peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75
-            peer-focus:-translate-y-6">Área</label>
+            peer-focus:-translate-y-6">Cargo</label>
         </div>
         <button type='submit'
         className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none

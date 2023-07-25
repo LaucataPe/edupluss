@@ -4,11 +4,20 @@ import { RootState } from "../../redux/store";
 import { useAppDispatch } from "../../hooks/typedSelectors";
 import { getActivitiesByRole } from "../../redux/features/activitiesSlice";
 import { FaUser } from "react-icons/fa";
+import {Role } from "../../utils/interfaces";
+import { setCurrentRole } from "../../redux/features/roleSlice";
 
 function Roles() {
     const dispatch = useAppDispatch()
     const roles = useSelector((state: RootState) => state.roles.roles)
     const currentArea = useSelector((state: RootState) => state.areas.currentArea)
+
+    const handleRoleClick = (role: Role) =>{
+      if(role && role.id){
+        dispatch(getActivitiesByRole(role.id))
+        dispatch(setCurrentRole(role))
+      }
+    }
 
     return (
       <>
@@ -17,7 +26,7 @@ function Roles() {
         <h3 className="text-center my-2 text-indigo-500">{currentArea.name}</h3>
           {roles.map((role) => (
             <Link to={'/activities'}>
-                <div key={role.id} onClick={() => dispatch(getActivitiesByRole(role.id ?? 0))}
+                <div key={role.id} onClick={() => handleRoleClick(role)}
                 className="bg-white m-5 p-5 w-3 flex items-center">
                     <FaUser className="text-6xl"/>
                     <p className="text-xl ml-3">{role.name}</p>

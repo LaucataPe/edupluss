@@ -5,11 +5,17 @@ import { Role } from "../../utils/interfaces";
 
 interface initState {
 	roles: Array<Role>
+	currentRole: Role
 	status: string
 }
 
 const initialState:initState = {
 	roles: [],
+	currentRole: {
+		id: 0,
+		name: '', 
+		hardSkills: []
+	},
 	status: 'idle'
 };
 
@@ -30,6 +36,9 @@ const roleSlice = createSlice({
 		resetRoles: (state) =>{
 			state.roles = [];
 			state.status = 'idle'
+		},
+		setCurrentRole: (state, action) => {
+			state.currentRole = action.payload
 		}
 	},
 	extraReducers: (builder) => {
@@ -48,6 +57,7 @@ const roleSlice = createSlice({
 
 export const {
 	resetRoles,
+	setCurrentRole
 } = roleSlice.actions;
 export default roleSlice.reducer;
 export const allRoles = (state: RootState) => state.roles;
