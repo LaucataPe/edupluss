@@ -16,10 +16,14 @@ import Admin from "./components/admin/Admin";
 import AdminActivities from "./components/admin/AdminActivities";
 import AddArea from "./components/admin/AddArea";
 import Crud from "./components/admin/Crud";
+import AddRole from "./components/admin/AddRole";
+import AppMenu from "./components/SideMenu";
+
+import { useSelector } from "react-redux";
+
 
 import './index.css'
 import '../public/tailwind-light/theme.css'
-
 
 import 'primereact/resources/primereact.css';
 import 'primeflex/primeflex.css';
@@ -28,13 +32,16 @@ import './styles/layout/layout.scss';
 import { useAppDispatch } from "./hooks/typedSelectors";
 import { setLogUser } from "./redux/features/userSlice";
 import { setEmpresa } from "./redux/features/activitiesSlice";
-import AddRole from "./components/admin/AddRole";
+import { RootState } from "./redux/store";
+
 
 
 function App() {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate();
 	const {pathname} = useLocation();
+
+	const logUser = useSelector((state: RootState) => state.user.logUser)
 
 	const session = window.localStorage.getItem("token");
 
@@ -70,23 +77,29 @@ function App() {
 
   return (
     <>
-    {pathname !== '/' && <NavBar/>}
-    <Routes>
+    {pathname !== '/' && pathname !== '/login' && <NavBar/>}
+	<div className="grid">
+		{/* {pathname !== '/' && pathname!== '/login' && logUser.tipo === 'admin' && <AppMenu />} */}
+			<div className="col">
+		<Routes>
 				{/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
 				<Route path="/" element={<Landing />} />
-				<Route path="/home" element={<Home />} />
-				<Route path="/login" element={<Login />} />
-				<Route path="/activity/:id" element={<Activity />} />
+					<Route path="/home" element={<Home />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/activity/:id" element={<Activity />} />
 
-        		<Route path="/admin" element={<Admin />} />
-        		<Route path="/activities" element={<AdminActivities />} />
-				<Route path="/actvitySteps/:id" element={<ActivitySteps />} />
-				<Route path="/addActivity" element={<AddActivity />} />
-				<Route path="/addArea" element={<AddArea />} />
-				<Route path="/addRole" element={<AddRole />} />
-				<Route path="/addStep/:id" element={<AddStep />} />
-				<Route path="/crud" element={<Crud />} />
+					<Route path="/admin" element={<Admin />} />
+					<Route path="/activities" element={<AdminActivities />} />
+					<Route path="/actvitySteps/:id" element={<ActivitySteps />} />
+					<Route path="/addActivity" element={<AddActivity />} />
+					<Route path="/addArea" element={<AddArea />} />
+					<Route path="/addRole" element={<AddRole />} />
+					<Route path="/addStep/:id" element={<AddStep />} />
+					<Route path="/crud" element={<Crud />} />
 		</Routes>
+			</div>			
+	</div>
+	
     </>
   );
 }
