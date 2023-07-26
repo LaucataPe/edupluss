@@ -20,9 +20,20 @@ const initialState:initState = {
 };
 
 ///
-export const getRolesByArea = createAsyncThunk('areas/getRolesByArea', async (areaId: number) => {
+export const getRolesByArea = createAsyncThunk('roles/getRolesByArea', async (areaId: number) => {
 	try {
 		const {data} = await axios(`http://localhost:3001/roles/${areaId}`);
+        return data
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+}) 
+
+export const getCompanyRoles = createAsyncThunk('roles/getCompanyRoles', async (companyId: number) => {
+	try {
+		const {data} = await axios(`http://localhost:3001/company/roles/${companyId}`);
+		console.log(data);
+		
         return data
 	} catch (error: any) {
 		throw new Error(error.message);
@@ -50,6 +61,16 @@ const roleSlice = createSlice({
 			state.roles = action.payload;
 		});
 		builder.addCase(getRolesByArea.rejected, (state) => {
+			state.status = 'rejected';
+		});
+		builder.addCase(getCompanyRoles.pending, (state) => {
+			state.status = 'loading';
+		});
+		builder.addCase(getCompanyRoles.fulfilled, (state, action: PayloadAction<Role[]>) => {
+			state.status = 'success';
+			state.roles = action.payload;
+		});
+		builder.addCase(getCompanyRoles.rejected, (state) => {
 			state.status = 'rejected';
 		})
 	},

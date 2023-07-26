@@ -20,7 +20,7 @@ function Admin() {
     const [ready, setReady] = useState<boolean>(false)
 
     useEffect(() => {
-      if(areas.length === 0 && currentEmpresa.id){
+      if(currentEmpresa.id){
         dispatch(fetchCompanyAreas(currentEmpresa.id));
         setReady(true)
       }

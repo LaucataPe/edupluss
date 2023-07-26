@@ -10,6 +10,7 @@ const {SearchActivity} = require('../controllers/Activities/SearchActivity')
 const {getAllCompanies} = require('../controllers/Company/getAllEmpresas')
 const {getActivitiesByArea} = require('../controllers/Areas/getActivitiesByArea')
 const {getCompanyActivities} = require('../controllers/Company/getCompanyActivities')
+const {getCompanyRoles} = require('../controllers/Roles/getCompanyRoles')
 
 //USER GET
 const {getAllUsers} = require('../controllers/Users/getAllUsers')
@@ -27,6 +28,7 @@ router.get('/activities', getAllActivities)
 router.get('/activities/:companyId', getCompanyActivities)
 router.get('/activities/area/:areaId', getActivitiesByArea)
 
+router.get('/company/roles/:companyId', getCompanyRoles)
 router.get('/activities/role/:roleId', getActivitiesByRole)
 router.get('/roles/:areaId', getRolesByArea)
 

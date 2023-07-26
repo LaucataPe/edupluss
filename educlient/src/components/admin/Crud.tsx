@@ -5,7 +5,6 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { InputSwitch } from 'primereact/inputswitch';
-import { MultiSelect } from 'primereact/multiselect';
 import { Password } from 'primereact/password';
 //import { RadioButton } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
@@ -14,19 +13,19 @@ import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 //import { UserService } from '../../../demo/service/UserService';
 import { Demo } from '../../utils/types/types';
-//import { es } from 'date-fns/locale';
-import { Area } from '../../utils/interfaces';
 import { useAppDispatch } from '../../hooks/typedSelectors';
 import { fetchUsers } from '../../redux/features/userSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { fetchCompanyAreas } from '../../redux/features/areaSlice';
 import axios from 'axios';
+import { getCompanyRoles } from '../../redux/features/roleSlice';
 
 const Crud = () => {
   const dispatch = useAppDispatch()
   const currentUsers = useSelector((state: RootState) => state.user.users)
   const areas = useSelector((state: RootState) => state.areas.areas)
+  const roles = useSelector((state: RootState) => state.roles.roles)
   const currentEmpresa = useSelector((state: RootState) => state.user.logUser.companyId)
 
   const emptyUser: Demo.User = {
@@ -37,7 +36,7 @@ const Crud = () => {
     active: false,
     tipo: '',
     companyId: currentEmpresa,
-    areas: []
+    roleId: 0
   };
   interface InputValue {
     name: string;
@@ -54,15 +53,15 @@ const Crud = () => {
   const [selectedUsers, setSelectedUsers] = useState<Demo.User[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
+  const [activePassword, setActivePassword] = useState<boolean>(false)
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<Demo.User[]>>(null);
 
   useEffect(() => {
-    if(currentUsers.length === 0){
       dispatch(fetchUsers())
       dispatch(fetchCompanyAreas(currentEmpresa))
+      dispatch(getCompanyRoles(currentEmpresa))
       setReady(true)
-    }
   }, [dispatch]);
   
   useEffect(() => {
@@ -70,11 +69,6 @@ const Crud = () => {
       setUsers(currentUsers)
     }
   }, [ready, currentUsers]);
-
-  const ExistingAreas = () => {
-    const areasId = user.areas.map((area) => area.id)
-    return areasId
-  }
 
   const openNew = () => {
     setUser(emptyUser);
@@ -185,10 +179,11 @@ const Crud = () => {
     }));
   };
 
-  const onAreaChange = (e: { value: Area[] }) => {
+  const onRoleChange = (e: any) => {
+    const { value } = e.target;
     setUser((prevState: Demo.User) => ({
       ...prevState,
-      areas: e.value
+      roleId: value
     }));
   };
 
@@ -229,13 +224,30 @@ const Crud = () => {
   };
 
   const areasBodyTemplate = (rowData: Demo.User) => {
+    const findRole = roles.find((role) => role.id === rowData.roleId)
+    const findArea = areas.find((area) => area.id === findRole?.areaId)
+    console.log(findRole);
+    
     return (
       <>
-        {rowData.areas.map((area: Area) => (
-          <span key={area.id} className="p-badge p-mr-1">
-            {area.name}
-          </span>
-        ))}
+        {findArea &&
+          <span key={findArea.id} className="p-badge p-mr-1">
+          {findArea.name}
+        </span>}
+        {!findArea && <span className="p-badge p-mr-1">No encontrada</span>}
+      </>
+    );
+  };
+
+  const roleBodyTemplate = (rowData: Demo.User) => {
+    const findRole = roles.find((role) => role.id === rowData.roleId)
+    return (
+      <>
+        {findRole &&
+          <span key={findRole.id} className="p-badge p-badge-info p-mr-1">
+          {findRole.name}
+        </span>}
+        {!findRole && <span className="p-badge p-badge-info p-mr-1">No encontrado</span>}
       </>
     );
   };
@@ -316,7 +328,8 @@ const Crud = () => {
             <Column field="username" header="Nombre de usuario" sortable body={usernameBodyTemplate}></Column>
             <Column field="email" header="Correo electrónico" sortable body={emailBodyTemplate}></Column>
             <Column field="tipo" header="Tipo" sortable body={tipoBodyTemplate} className='capitalize'></Column>
-            <Column field="areas" header="Áreas" body={areasBodyTemplate}></Column>
+            <Column field="area" header="Área" body={areasBodyTemplate}></Column>
+            <Column field="role" header="Cargo" body={roleBodyTemplate}></Column>
             <Column field="active" header="Activo" body={activeBodyTemplate}></Column>
             <Column body={actionBodyTemplate}></Column>
           </DataTable>
@@ -349,9 +362,26 @@ const Crud = () => {
             </div>
             <div className="field">
               <label htmlFor="email">Contraseña</label>
+              <input type="checkbox" checked={activePassword} onChange={() => setActivePassword(!activePassword)} 
+               className='mx-2'/>
               <Password inputId="password1" value={user.password} onChange={(e) => onInputChange(e, 'password')}
-               toggleMask className="w-full mb-5" promptLabel='Ingresa una contraseña' weakLabel='Poco Segura' mediumLabel='Segura' strongLabel='Muy Segura'></Password>
+               toggleMask className="w-full mb-5" promptLabel='Ingresa una contraseña' weakLabel='Poco Segura' mediumLabel='Segura' strongLabel='Muy Segura'
+               disabled={activePassword ? false : true}></Password>
               {submitted && !user.password && <small className="p-error">Ingrese una contraseña</small>}
+            </div>
+            <div className="field">
+              <label>Cargo</label>
+              <Dropdown
+                id="roles"
+                value={user.roleId}
+                options={roles}
+                onChange={onRoleChange}
+                placeholder="Seleccionar cargo"
+                optionLabel="name"
+                optionValue="id"
+                filter
+              />
+              {submitted && user.roleId === 0 && <small className="p-error">Debe seleccionar un cargo</small>}
             </div>
             <div className="field">
               <label>Tipo de Usuario</label>  
