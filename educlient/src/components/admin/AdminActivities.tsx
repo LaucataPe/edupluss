@@ -1,15 +1,21 @@
 import { useSelector} from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { RootState } from "../../redux/store";
-//import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import { useAppDispatch } from "../../hooks/typedSelectors";
 import { getActivitiesByRole } from "../../redux/features/activitiesSlice";
 
 function AdminActivities() {
+    const {roleId} = useParams()
     const dispatch = useAppDispatch()
     const activities = useSelector((state: RootState) => state.activities.activities)
-    //const currentArea = useSelector((state: RootState) => state.areas.currentArea)
+
+    useEffect(() => {
+      if(activities.length === 0 && roleId){
+        dispatch(getActivitiesByRole(Number(roleId)))
+      }
+    }, [roleId])
 
     const handleState = async (id: number = 1, roleId: number) => {
       try {
@@ -40,7 +46,7 @@ function AdminActivities() {
           ))}  
       </div>
       
-      <Link to={`/addActivity`}><button className="py-2 px-4 flex absolute bottom-10 right-10
+      <Link to={`/addActivity/${roleId}`}><button className="py-2 px-4 flex absolute bottom-10 right-10
       justify-center items-center rounded-full 
       font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-all text-xl
        dark:focus:ring-offset-gray-800">+ Añadir Actividad</button></Link>

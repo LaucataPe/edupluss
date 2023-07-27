@@ -1,5 +1,5 @@
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Ripple } from 'primereact/ripple';
 import { classNames } from 'primereact/utils';
 import { CSSTransition } from 'react-transition-group';
@@ -9,6 +9,7 @@ import { AppMenuItem, AppMenuItemProps } from '../utils/types/types';
 import { setCurrentArea } from '../redux/features/areaSlice';
 import { getRolesByArea } from '../redux/features/roleSlice';
 const AppMenuitem = (props: AppMenuItemProps) => {
+    const {pathname} = useLocation()
     const navigate = useNavigate()
     //const { activeMenu, setActiveMenu } = useContext(MenuContext);
     const item = props.item;
@@ -21,6 +22,9 @@ const AppMenuitem = (props: AppMenuItemProps) => {
         if(item && item.area && item.area.id){
             dispatch(getRolesByArea(item.area.id))
             dispatch(setCurrentArea(item.area))
+            if(pathname !== '/admin'){
+                navigate('/admin')
+            }
         }else{
             if(item?.to)
             navigate(item.to)

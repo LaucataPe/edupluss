@@ -33,6 +33,7 @@ import { useAppDispatch } from "./hooks/typedSelectors";
 import { setLogUser } from "./redux/features/userSlice";
 import { setEmpresa } from "./redux/features/activitiesSlice";
 import { RootState } from "./redux/store";
+import { fetchCompanyAreas } from "./redux/features/areaSlice";
 
 
 
@@ -42,6 +43,7 @@ function App() {
 	const {pathname} = useLocation();
 
 	const logUser = useSelector((state: RootState) => state.user.logUser)
+	const currentEmpresa = useSelector((state: RootState) => state.user.logUser.companyId)
 
 	const session = window.localStorage.getItem("token");
 
@@ -55,6 +57,9 @@ function App() {
 		}
 		if(pathname === '/login' && session){
 			navigate('/home')
+		}
+		if(pathname === '/home' && logUser.tipo === 'admin'){
+			navigate('/admin')
 		}
 	},[pathname])
 
@@ -75,11 +80,17 @@ function App() {
 		}
 	}, [dispatch, session]);
 
+	useEffect(() => {
+		if(currentEmpresa){
+		  dispatch(fetchCompanyAreas(currentEmpresa));
+		}
+	  }, [currentEmpresa]);
+
   return (
     <>
     {pathname !== '/' && pathname !== '/login' && <NavBar/>}
 	<div className="grid">
-		{/* {pathname !== '/' && pathname!== '/login' && logUser.tipo === 'admin' && <AppMenu />} */}
+		{pathname !== '/' && pathname!== '/login' && logUser.tipo === 'admin' && <AppMenu />}
 			<div className="col">
 		<Routes>
 				{/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
@@ -89,9 +100,9 @@ function App() {
 					<Route path="/activity/:id" element={<Activity />} />
 
 					<Route path="/admin" element={<Admin />} />
-					<Route path="/activities" element={<AdminActivities />} />
+					<Route path="/activities/:roleId" element={<AdminActivities />} />
 					<Route path="/actvitySteps/:id" element={<ActivitySteps />} />
-					<Route path="/addActivity" element={<AddActivity />} />
+					<Route path="/addActivity/:roleId" element={<AddActivity />} />
 					<Route path="/addArea" element={<AddArea />} />
 					<Route path="/addRole" element={<AddRole />} />
 					<Route path="/addStep/:id" element={<AddStep />} />

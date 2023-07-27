@@ -13,11 +13,11 @@ interface initState {
 const initialState:initState = {
 	users: [],
     logUser: {
-        id: 1,
+        id: 0,
         username: '',
         email: '',
         password: '',
-        companyId: 1,
+        companyId: 0,
 		tipo: '',
 		roleId: 0,
 		active: false
@@ -29,6 +29,15 @@ const initialState:initState = {
 export const fetchUsers = createAsyncThunk('user/fetchUsers', async () => {
 	try {
 		const { data } = await axios(`http://localhost:3001/users`);
+		return data
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+} ) 
+
+export const getUsersByCompany = createAsyncThunk('user/getUsersByCompany', async (id: number) => {
+	try {
+		const { data } = await axios(`http://localhost:3001/users/${id}`);
 		return data
 	} catch (error: any) {
 		throw new Error(error.message);
@@ -55,6 +64,17 @@ const userSlice = createSlice({
 			state.users = filtUsers;
 		});
 		builder.addCase(fetchUsers.rejected, (state) => {
+			state.status = 'rejected';
+		});
+		builder.addCase(getUsersByCompany.pending, (state) => {
+			state.status = 'loading';
+		});
+		builder.addCase(getUsersByCompany.fulfilled, (state, action: PayloadAction<Demo.User[]>) => {
+			state.status = 'success';
+			const filtUsers = action.payload.filter((user) => user.id !== state.logUser.id)
+			state.users = filtUsers;
+		});
+		builder.addCase(getUsersByCompany.rejected, (state) => {
 			state.status = 'rejected';
 		});
 	},
