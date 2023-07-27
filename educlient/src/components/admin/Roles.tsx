@@ -56,7 +56,7 @@ function Roles() {
                 <div className="car-buttons mt-5">
                   <Button rounded className="mr-2" icon="pi pi-eye" onClick={() => handleLook(role)}></Button>
                   <Button rounded severity="success" className="mr-2" icon="pi pi-pencil"></Button>
-                  <Link to={'/activities'}><Button rounded severity="info" icon="pi pi-arrow-right"></Button></Link>
+                  <Link to={`/activities/${role.id}`}><Button rounded severity="info" icon="pi pi-arrow-right"></Button></Link>
                 </div>
               </div>  
             </div>

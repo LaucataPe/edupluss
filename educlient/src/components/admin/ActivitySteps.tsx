@@ -16,6 +16,7 @@ function ActivitySteps() {
     const {id} = useParams()
     const steps = useSelector((state: RootState) => state.steps.steps)
     const activities = useSelector((state: RootState) => state.activities.activities)
+    const role = useSelector((state: RootState) => state.roles.currentRole)
 
     const [layout, setLayout] = useState<LayoutType>('grid');
 
@@ -76,7 +77,7 @@ function ActivitySteps() {
     
     return (
       <>
-      <Link to={`/admin`}><Button icon="pi pi-angle-double-left" label="Atrás" className="m-2" rounded severity="secondary" /></Link>
+      <Link to={`/activities/${role.id}`}><Button icon="pi pi-angle-double-left" label="Atrás" className="m-2" rounded severity="secondary" /></Link>
       <div className="list-demo relative">
             <div className="col-12">
                 <div className="card">

@@ -6,8 +6,7 @@ const getUserByCompany = async (req, res) =>{
         const findUsers = await User.findAll({
             where: {
               companyId
-            },
-            include: Area,
+            }
           });
         return res.status(200).json(findUsers)
     } catch (error) {

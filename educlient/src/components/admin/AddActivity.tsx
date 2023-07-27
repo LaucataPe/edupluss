@@ -1,13 +1,20 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Activity } from '../../utils/interfaces'
 import { RootState } from '../../redux/store'
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
+import { getCompanyRoles, setCurrentRole } from '../../redux/features/roleSlice'
+import { useAppDispatch } from '../../hooks/typedSelectors'
 
 function AddActivity() {
-    
+  const {roleId} = useParams()
+  const dispatch = useAppDispatch()
+  const roles = useSelector((state: RootState) => state.roles.roles)
   const currentRole = useSelector((state: RootState) => state.roles.currentRole)
+  const logUser = useSelector((state: RootState) => state.user.logUser)
 
     const [activity, setActivity] = useState<Activity>({
       title: '',
@@ -15,9 +22,19 @@ function AddActivity() {
     })
     const [error, setError] = useState()
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
+    useEffect(() => {
+      if(roles.length === 0){
+        dispatch(getCompanyRoles(logUser.companyId))
+      }
+      const findRole = roles.find((role) => role.id === Number(roleId))
+      if(currentRole.id === 0 && findRole?.id){  
+        dispatch(setCurrentRole(findRole))
+        setActivity({...activity, roleId: findRole.id})
+      }
+    }, [roles, logUser])
 
+
+    const handleSubmit = async () => {
       if(activity.roleId !== 0){
         try {
           const response = await axios.post('http://localhost:3001/activity', activity)
@@ -38,45 +55,22 @@ function AddActivity() {
 
     return (
       <>
-      <h1 className='text-center p-5 text-3xl text-blue-500 font-semibold'>Creando Actividad</h1>
-      <form onSubmit={(e) => handleSubmit(e)} className='mx-[20%]'>
-        <div className="relative z-0 w-full mb-6 group">
-            <input type="text" name="title" 
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent 
-              border-0 border-b-2 border-gray-300 appearance-none dark:text-white
-              dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none 
-              focus:ring-0 focus:border-blue-600 peer" placeholder='  ' required
-              value={activity.title}
-              onChange={(e) => setActivity({...activity, title: e.target.value})}
-              />
-            <label className="peer-focus:font-medium absolute text-sm text-gray-500
-            dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 
-            origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 
-            peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75
-              peer-focus:-translate-y-6">Nombre</label>
+        <Link to={`/activities/${roleId}`}><Button icon="pi pi-angle-double-left" label="Atrás" className="m-2" rounded severity="secondary" /></Link>
+        <div className="card p-fluid my-3 mx-[10%]">
+          <h5>Creando Actividad</h5>
+          <div className="field">
+            <label>Nombre</label>
+            <InputText type="text" value={activity.title}
+              onChange={(e) => setActivity({...activity, title: e.target.value})}/>
           </div>
-          <div className="relative z-0 w-full mb-6 group">
-          <input type="text" 
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent 
-            border-0 border-b-2 border-gray-300 appearance-none dark:text-white
-            dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none 
-            focus:ring-0 focus:border-blue-600 peer" placeholder='  ' disabled
-            value={currentRole?.name}
-            />
-          <label className="peer-focus:font-medium absolute text-sm text-gray-500
-           dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 
-           origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 
-           peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75
-            peer-focus:-translate-y-6">Cargo</label>
+          <div className="field">
+            <label>Cargo</label>
+            <InputText type="text" value={currentRole?.name} disabled/>
+          </div>
+          <Button label='Crear Actividad' onClick={handleSubmit} 
+          disabled={(activity.title.length > 0 && activity.roleId !== 0) ? false : true}/>
         </div>
-        <button type='submit'
-        className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
-         focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
-          dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-        >Crear Actividad</button>
-      </form>
-      <Link to={`/admin`}><button className='py-1 px-2 bg-green-400 text-white font-semibold'>Atrás</button></Link>
-      <p className='text-red-500 font-semibold'>{error}</p>
+        <p className='text-red-500 font-semibold'>{error}</p>
       </>
     );
   }

@@ -14,7 +14,7 @@ import React, { useEffect, useRef, useState } from 'react';
 //import { UserService } from '../../../demo/service/UserService';
 import { Demo } from '../../utils/types/types';
 import { useAppDispatch } from '../../hooks/typedSelectors';
-import { fetchUsers } from '../../redux/features/userSlice';
+import { fetchUsers, getUsersByCompany } from '../../redux/features/userSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { fetchCompanyAreas } from '../../redux/features/areaSlice';
@@ -58,11 +58,11 @@ const Crud = () => {
   const dt = useRef<DataTable<Demo.User[]>>(null);
 
   useEffect(() => {
-      dispatch(fetchUsers())
+      dispatch(getUsersByCompany(currentEmpresa))
       dispatch(fetchCompanyAreas(currentEmpresa))
       dispatch(getCompanyRoles(currentEmpresa))
       setReady(true)
-  }, [dispatch]);
+  }, [dispatch, currentEmpresa]);
   
   useEffect(() => {
     if(ready){
