@@ -9,7 +9,7 @@ import { RootState } from '../../redux/store';
 
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-//import { FileUpload, FileUploadState } from 'primereact/fileupload';
+import { InputSwitch } from 'primereact/inputswitch'; 
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 
@@ -32,6 +32,11 @@ function AddStep() {
       activityId: Number(id)
     })
     const [errors, setErrors] = useState<StepErrors>({title: ''});
+
+    //Videos
+    const [videoOrigin, setVideoOrigin] = useState<boolean>(false);
+    const [videoURL, setVideoURL] = useState<string>('');
+    const [videoFile, setVideoFile] = useState<string | ArrayBuffer | null>(null);
 
     useEffect(() => {
       if(steps.length === 0){
@@ -69,12 +74,33 @@ function AddStep() {
       }))
     }
 
+    const handleVideoOrigin = (checked: boolean) => {
+      setVideoOrigin(checked);
+      setStep({...step, video: ''})
+      setErrors(validate({...step, video: ''}))
+      // Resetear los valores al cambiar el origen del video
+      setVideoURL('');
+      setVideoFile(null);
+    };
+
+    const handleVideoURL = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setVideoURL(event.target.value);
+      setVideoFile(null);
+      setStep({...step, 
+        [event.target.name]: event.target.value})
+      setErrors(validate({
+        ...step,
+        video: event.target.value
+      }))
+    };
+    
+
     const handleVideo = (e: React.ChangeEvent<HTMLInputElement>) =>{
       if(e.target.files !== null){
         const file = e.target.files[0];
         if(file){
           setFileToBase(file);
-          console.log(file);
+          setVideoURL('');
         }
       }
     }
@@ -83,9 +109,9 @@ function AddStep() {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () =>{
-          setStep({...step, 
-              video: reader.result});
 
+          setVideoFile(reader.result);
+          setStep({...step, video: reader.result})
           setErrors(validate({
                 ...step,
                 video: reader.result,
@@ -143,10 +169,24 @@ function AddStep() {
                     </div>
                     <div className="field">
                       <h5>Agregar Video</h5>
-                      {/* <FileUpload name="video" onUpload={handleFileUpload} accept="video/*"
-                      maxFileSize={16000000} chooseLabel='Adjuntar' uploadLabel='Subir' cancelLabel='Cancelar'
-                      disabled={step.video ? true : false}/> */}
-                      <input type="file" name="video" onChange={(e) => handleVideo(e)} accept='video/*' size={16000000}/>
+                      <div className='flex items-center my-2'>
+                        Archivo
+                        <InputSwitch checked={videoOrigin} onChange={(e) => handleVideoOrigin(e.value ?? false)} className='mx-2'/>
+                        Url
+                      </div>
+                      
+                      {videoOrigin ? (
+                        <InputText
+                          name="video"
+                          type="text"
+                          placeholder="Ingrese una url"
+                          value={videoURL}
+                          onChange={(e) => handleVideoURL(e)}
+                          className={errors.video ? 'p-invalid' : ''}
+                        />
+                      ) : (
+                        <input type="file" name="video" onChange={(e) => handleVideo(e)} accept="video/*" size={16000000} />
+                      )}
                       <p className='font-semibold text-red-600'>{errors.video ? errors.video : ''}</p>
                     </div> 
         <Button label="Crear Paso" severity="info" outlined type='submit' onClick={(e) => handleSubmit(e)}

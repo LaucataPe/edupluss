@@ -6,11 +6,15 @@ const createStep = async (req, res) =>{
     const {title, description, video, activityId } = req.body
     //console.log(req.body);
     try {
-        const uploadVideo = await cloudinary.uploader.upload(video, {
-           resource_type: 'video',
-           folder: 'edupluss'
-        })
-        const urlVideo = uploadVideo.secure_url
+        let urlVideo = video
+
+        if(!video.includes('https://') && video.includes('video')){
+            const uploadVideo = await cloudinary.uploader.upload(video, {
+                resource_type: 'video',
+                folder: 'edupluss'
+             })
+             urlVideo = uploadVideo.secure_url
+        }
 
         const activitySteps = await Step.findAll({ where: { activityId } });
         const stepsOrder = [...activitySteps].sort((a, b) => b.number - a.number)

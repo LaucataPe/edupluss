@@ -11,7 +11,7 @@ function CurrentStep( {step}: props) {
         <div key={step?.number}>
           <h1>{step?.title}</h1>
           <p>{step?.description}</p>
-          {step?.video.includes('youtube') ? 
+          {step?.video.includes('youtu') ? 
             <iframe width="560" height="315" src='https://www.youtube.com/watch?v=ptc4Awb0UpU' 
             title="YouTube video player" allow="accelerometer; autoplay; 
             clipboard-write; encrypted-media; gyroscope; picture-in-picture;
