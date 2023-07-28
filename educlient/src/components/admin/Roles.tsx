@@ -44,7 +44,11 @@ function Roles() {
       <>
       {/*Mapea todos los roles*/}
       <div className="w-[90%] relative mx-10">
-        <h3 className="text-center my-2 text-indigo-500">{currentArea.name}</h3>
+        <div className="flex items-center justify-center">
+          <h3 className="m-2 text-indigo-500">{currentArea.name}</h3>
+          <Link to={`/editArea/${currentArea.id}`}><Button icon="pi pi-pencil" rounded severity="success" text /></Link>
+        </div>
+        
           {roles.map((role) => (
             <div key={role.id} onClick={() => handleRoleClick(role)}
              className="border-1 surface-border border-round m-1 text-center py-5 w-3">

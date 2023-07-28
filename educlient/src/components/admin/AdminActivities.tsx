@@ -1,21 +1,33 @@
 import { useSelector} from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { RootState } from "../../redux/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppDispatch } from "../../hooks/typedSelectors";
 import { getActivitiesByRole } from "../../redux/features/activitiesSlice";
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
 
 function AdminActivities() {
     const {roleId} = useParams()
+    const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const activities = useSelector((state: RootState) => state.activities.activities)
+
+    const [displayConfirmation, setDisplayConfirmation] = useState(false);
 
     useEffect(() => {
       if(activities.length === 0 && roleId){
         dispatch(getActivitiesByRole(Number(roleId)))
       }
     }, [roleId])
+
+    const confirmationDialogFooter = (
+      <>
+          <Button type="button" label="No" icon="pi pi-times" onClick={() => setDisplayConfirmation(false)} text />
+          <Button type="button" label="Sí" icon="pi pi-check" onClick={() => setDisplayConfirmation(false)} text autoFocus />
+      </>
+    );
 
     const handleState = async (id: number = 1, roleId: number) => {
       try {
@@ -30,19 +42,34 @@ function AdminActivities() {
     return (
       <>
       {/*Mapea todas las actividades*/}
-      <div className="w-[90%] relative mx-10">
+      <div className="card p-fluid my-2">
           {activities?.map((act) => (
-            <Link to={`/actvitySteps/${act.id}`}>  
-              <div key={act.id} className="flex items-center my-5 relative bg-white border shadow-sm rounded-xl 
-                p-4 text-lg md:p-5 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]
-                 dark:text-gray-400 hover:bg-slate-100">
-                <p className="pr-10">{act.title}</p>
-                {act.active ? <button onClick={()=>handleState(act.id, act.roleId)} 
-                className="absolute right-5 p-1 bg-red-500 rounded text-white hover:bg-red-600">Desactivar</button> 
-                : <button onClick={()=>handleState(act.id, act.roleId)}
-                className="absolute right-5 p-1 bg-green-500 rounded text-white hover:bg-green-600">Activar</button>}
+               
+            <div key={act.id} className="py-4 px-3 border rounded m-3 flex items-center">
+                <div className="flex w-[80%] gap-2 cursor-pointer hover:bg-slate-300" onClick={() => navigate(`/actvitySteps/${act.id}`)}>
+                <p className=" text-black m-0 text-xl">{act.title}</p>
+                </div>
+
+                <div className="flex w-[20%] gap-2">
+                  {act.active ? <Button label="Desactivar" severity="danger" outlined 
+                  onClick={()=>handleState(act.id, act.roleId)} />
+                  : <Button label="Activar" severity="success" outlined 
+                  onClick={()=>handleState(act.id, act.roleId)} />}
+                  <Button icon="pi pi-pencil" rounded outlined severity="success" className="w-3"
+                    onClick={() => navigate(`/editActivity/${roleId}/${act.id}`)}/>
+                  <Button icon="pi pi-times" rounded outlined severity="danger" className="w-3"
+                  onClick={() => setDisplayConfirmation(true)}/>
+                </div>
+
+                <Dialog header="Confirmación" visible={displayConfirmation} onHide={() => setDisplayConfirmation(false)} style={{ width: '350px' }} modal footer={confirmationDialogFooter}>
+                  <div className="flex align-items-center justify-content-center">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    <span>¿Estás seguro de eliminar esta actividad?</span>
+                  </div>
+                </Dialog>
+                
               </div>
-            </Link>
+               
           ))}  
       </div>
       
