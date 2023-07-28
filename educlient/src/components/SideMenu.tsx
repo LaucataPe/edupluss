@@ -26,16 +26,17 @@ const AppMenu = () => {
     const xd: AppMenuItem[] = [
         {
             label: 'Inicio',
-            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/crud' }]
+            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/crud' },
+            {  label: 'Usuarios', icon: 'pi pi-users', to: `/crud` }]
         },
         {
             label: 'Áreas',
             items: navItems
         },
         {
-            label: 'Crear Áreas',
+            label: 'Gestionar Áreas',
             items: [
-                {  label: 'Crear', icon: 'pi pi-plus-circle', to: `/addArea` }
+                {  label: 'Crear', icon: 'pi pi-plus-circle', to: `/addArea` },
             ]
         }
     ];

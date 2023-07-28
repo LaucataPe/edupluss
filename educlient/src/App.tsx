@@ -59,7 +59,7 @@ function App() {
 			navigate('/home')
 		}
 		if(pathname === '/home' && logUser.tipo === 'admin'){
-			navigate('/admin')
+			navigate('/crud')
 		}
 	},[pathname])
 
@@ -89,9 +89,9 @@ function App() {
   return (
     <>
     {pathname !== '/' && pathname !== '/login' && <NavBar/>}
-	<div className="grid">
+	<div className="grid max-w-[100%]">
 		{pathname !== '/' && pathname!== '/login' && logUser.tipo === 'admin' && <AppMenu />}
-			<div className="col">
+		<div className="col">
 		<Routes>
 				{/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
 				<Route path="/" element={<Landing />} />
@@ -103,12 +103,14 @@ function App() {
 					<Route path="/activities/:roleId" element={<AdminActivities />} />
 					<Route path="/actvitySteps/:id" element={<ActivitySteps />} />
 					<Route path="/addActivity/:roleId" element={<AddActivity />} />
+					<Route path="/editActivity/:roleId/:actId" element={<AddActivity />} />
 					<Route path="/addArea" element={<AddArea />} />
+					<Route path="/editArea/:areaId" element={<AddArea />} />
 					<Route path="/addRole" element={<AddRole />} />
 					<Route path="/addStep/:id" element={<AddStep />} />
 					<Route path="/crud" element={<Crud />} />
 		</Routes>
-			</div>			
+		</div>			
 	</div>
 	
     </>
