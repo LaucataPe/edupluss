@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -7,8 +7,8 @@ import { setEmpresa } from '../redux/features/activitiesSlice'
 
 import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
-//import { LayoutContext } from '../../../layout/context/layoutcontext';
 import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
 
 function Login() {
     const dispatch = useDispatch()
@@ -18,6 +18,7 @@ function Login() {
       password: ''
     })
     const [error, setError] = useState()
+    const toast = useRef<Toast>(null);
 
     const handleInputs = (event: React.ChangeEvent<HTMLInputElement>) =>{
       setInputs({...inputs, 
@@ -29,13 +30,13 @@ function Login() {
           const {data} = await axios.post('http://localhost:3001/logUser', inputs)
           console.log(data);          
           if(data){
+            toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado', life: 3000 });
             const token = data.token;
 			      window.localStorage.setItem("token", token);
             
             dispatch(setLogUser(data.user))
             dispatch(setEmpresa(data.company))
           }
-          alert('Inicio de sesión exitoso')
           if(data.user.tipo === 'admin'){
             navigate('/crud')
           } else{
@@ -65,16 +66,6 @@ function Login() {
                             </label>
                             <Password name='password' value={inputs.password} onChange={(e) => handleInputs(e)} 
                             toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"  placeholder="Ingresar contraseña"></Password>
-
-                            <div className="flex align-items-center justify-content-between mb-5 gap-5">
-                                 <div className="flex align-items-center">
-                                    {/* <Checkbox inputId="rememberme1" checked={checked} onChange={(e) => setChecked(e.checked ?? false)} className="mr-2"></Checkbox> */}
-                                    <label htmlFor="rememberme1">Recordarme</label>
-                                </div> 
-                                <a className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
-                                    Olvidaste tu contraseña?
-                                </a>
-                            </div>
                             <Button label="Ingresar" className="w-full p-3 text-xl" onClick={handleSubmit}></Button>
                         </div>
                     </div>

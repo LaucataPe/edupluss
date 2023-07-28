@@ -1,74 +1,72 @@
-import CurrentStep from "../components/Step";
-import { Step} from "../utils/interfaces";
-import {useState, useEffect} from 'react'
-import { Link, useParams } from "react-router-dom";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
-
+import React, { useState, useEffect } from 'react';
+import { Steps } from 'primereact/steps';
+import { Link, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import CurrentStep from '../components/Step';
+import { useAppDispatch } from '../hooks/typedSelectors';
+import { getStepsActivity } from '../redux/features/stepsSlider';
+import { Button } from 'primereact/button';
 
 function Activity() {
-  const {id} = useParams()
+  const { id } = useParams();
+  const dispatch = useAppDispatch()
 
-  const [steps, setSteps] = useState<Step[]>()
-  const [error, setError] = useState<string>('')
-  const [stepNumber, setStepNumber] = useState<number>(0)
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
-  const activities = useSelector((state: RootState) => state.activities.activities)
+  const activities = useSelector((state: RootState) => state.activities.activities);
+  const steps = useSelector((state: RootState) => state.steps.steps);
 
-    useEffect(() => {
-      const fetchEmpresas = async () =>{
-        try {
-          const response = await axios(`http://localhost:3001/steps/${id}`)
-          console.log(response);
-          
-          setSteps(response.data);
-          
-        } catch (error: any) {
-          setError(error.message)
-        }
-      }
-      fetchEmpresas() 
-    }, [])
+  useEffect(() => {
+      dispatch(getStepsActivity(Number(id)))
+  }, [id]);
 
-    const findActivityName = () =>{
-      const ActivityName = activities.find((act) => act.id === Number(id))
-      return ActivityName?.title
-    }
+  const findActivityName = () => {
+    const activityName = activities.find((act) => act.id === Number(id));
+    return activityName?.title;
+  };
 
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    const currentIndex = steps.findIndex((step) => currentPath.endsWith(`/${step.number}`));
+    setActiveIndex(currentIndex !== -1 ? currentIndex : 0);
+  }, [steps]);
 
-    const handleNumberClick = (number: number) => {
-        setStepNumber(number)
-        //setStep(steps[number - 1])
-    }
+  const handleStepChange = (e: { index: number }) => {
+    setActiveIndex(e.index);
+  };
 
-    const handleNextClick = () => {
-        setStepNumber(stepNumber + 1)
-        //setStep(steps[stepNumber - 1])
-    }
+  return (
+    <>
+      <Link to={`/home`}>
+        <Button icon="pi pi-angle-double-left" label="Atrás" className="m-2 absolute" rounded severity="secondary" />
+      </Link>
+      <h1 className="my-4 text-center text-4xl font-semibold">{findActivityName()}</h1>
+      <div className="grid p-fluid mx-5">
+        <div className="col-12">
+          <div className="card w-[100%] relative">
+            <Steps model={steps.map((step) => ({ label: step.title, command: () => {} }))} activeIndex={activeIndex} onSelect={handleStepChange} readOnly={false} />
+            {steps && <CurrentStep step={steps[activeIndex]} />}
 
-    return (
-      <>
-      <Link to='/'><button className="absolute top-15 py-1 px-4 inline-flex m-2 justify-center items-center gap-2 rounded-md border-2 border-gray-200 font-semibold text-blue-500 hover:text-white hover:bg-blue-500 hover:border-blue-500 transition-all text-sm dark:border-gray-700 dark:hover:border-blue-500">Atrás</button></Link>
-      <h1 className="py-4 text-center text-4xl font-semibold">{findActivityName()}</h1>
-      <ol className="flex items-center justify-center w-full p-3 space-x-2 text-sm font-medium text-center text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 sm:text-base dark:bg-gray-800 dark:border-gray-700 sm:p-4 sm:space-x-4">
-      {steps?.map((step) => (
-        <li className="flex items-center text-blue-600 dark:text-blue-500">
-          <span onClick={() => handleNumberClick(step.number)} className="flex items-center justify-center w-10 h-10 mr-1 
-          cursor-pointer text-xl border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
-           {step.number}
-          </span>
-        </li>
-      ))}
-      </ol>
-      {steps && <CurrentStep step={steps[stepNumber]}/>} 
-      {steps && stepNumber <= steps.length ? 
-      <button onClick={handleNextClick} className="border py-1 px-2 bg-green-500 text-white font-semibold
-      rounded">Next {'->'}</button>:
-      <Link to='/'><button>Finish</button></Link> }
-      <p>{error}</p>
-      </>
-    );
-  }
-  
-  export default Activity;
+            {activeIndex > 0 && (
+              <Button label="Anterior" icon='pi pi-arrow-left' severity="warning" outlined 
+                onClick={() => setActiveIndex(activeIndex - 1)} className='absolute w-1 bottom-4 left-4'/>
+            )}
+            {activeIndex < steps.length - 1 ? (
+              <Button label="Siguiente" icon='pi pi-arrow-right' severity="success" outlined 
+              onClick={() => setActiveIndex(activeIndex + 1)} className='absolute w-1 bottom-4 right-4'/>
+            ) : (
+              <Link to="/home">
+                <Button label="Finalizar" icon='pi pi-home' severity="info" outlined 
+                className='absolute w-1 bottom-4 right-4'/>
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+      
+    </>
+  );
+}
+
+export default Activity;

@@ -6,15 +6,13 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { InputSwitch } from 'primereact/inputswitch';
 import { Password } from 'primereact/password';
-//import { RadioButton } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-//import { UserService } from '../../../demo/service/UserService';
 import { Demo } from '../../utils/types/types';
 import { useAppDispatch } from '../../hooks/typedSelectors';
-import { fetchUsers, getUsersByCompany } from '../../redux/features/userSlice';
+import { getUsersByCompany } from '../../redux/features/userSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { fetchCompanyAreas } from '../../redux/features/areaSlice';
@@ -102,7 +100,7 @@ const Crud = () => {
         try {
           const {data} = await axios.put('http://localhost:3001/user/update', user)
           if(data){
-          dispatch(fetchUsers())
+          dispatch(getUsersByCompany(currentEmpresa))
           toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado', life: 3000 });
           }           
         } catch (error: any) {
@@ -113,7 +111,7 @@ const Crud = () => {
         try {
           const {data} = await axios.post('http://localhost:3001/user', user)
           if(data){
-            dispatch(fetchUsers())
+            dispatch(getUsersByCompany(currentEmpresa))
             toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado', life: 3000 });
           }           
         } catch (error: any) {

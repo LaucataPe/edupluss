@@ -14,7 +14,7 @@ function Activities() {
           {activeActivities?.map((act) => (
             <Link to={`/activity/${act.id}`}>  
                 <div key={act.id} className="flex flex-col my-5 bg-white border shadow-sm rounded-xl 
-                p-4 text-lg md:p-5 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]
+                p-4 text-2xl text-black md:p-5 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]
                  dark:text-gray-400 hover:bg-slate-100">
                   {act.title}
                 </div>
