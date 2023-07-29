@@ -100,7 +100,7 @@ const Crud = () => {
         try {
           const {data} = await axios.put('http://localhost:3001/user/update', user)
           if(data){
-          dispatch(getUsersByCompany(currentEmpresa))
+          dispatch(getUsersByCompany(user.companyId))
           toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado', life: 3000 });
           }           
         } catch (error: any) {
@@ -111,7 +111,7 @@ const Crud = () => {
         try {
           const {data} = await axios.post('http://localhost:3001/user', user)
           if(data){
-            dispatch(getUsersByCompany(currentEmpresa))
+            dispatch(getUsersByCompany(user.companyId))
             toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado', life: 3000 });
           }           
         } catch (error: any) {

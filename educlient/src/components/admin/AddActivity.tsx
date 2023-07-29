@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { Activity } from '../../utils/interfaces'
 import { RootState } from '../../redux/store'
 import { InputText } from 'primereact/inputtext';
@@ -13,6 +13,7 @@ import { getActivitiesByRole } from '../../redux/features/activitiesSlice'
 function AddActivity() {
   const {roleId, actId} = useParams()
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const roles = useSelector((state: RootState) => state.roles.roles)
   const activities = useSelector((state: RootState) => state.activities.activities)
@@ -57,6 +58,8 @@ function AddActivity() {
           const response = await axios.post('http://localhost:3001/activity', activity)
           if(response){
             alert('La actividad fue creada con éxito')
+            dispatch(getActivitiesByRole(Number(roleId)))
+            navigate(`/activities/${roleId}`)
           }
           setActivity({
             title: '',
@@ -77,6 +80,8 @@ function AddActivity() {
           const response = await axios.put('http://localhost:3001/activity/update', data)
           if(response){
             alert('La actividad fue editada con éxito')
+            dispatch(getActivitiesByRole(Number(roleId)))
+            navigate(`/activities/${roleId}`)
           }
           setActivity({
             title: '',
@@ -92,7 +97,7 @@ function AddActivity() {
 
     return (
       <>
-        <Link to={`/activities/${activity.roleId}`}><Button icon="pi pi-angle-double-left" label="Atrás" className="m-2" rounded severity="secondary" /></Link>
+        <Link to={`/activities/${roleId}`}><Button icon="pi pi-angle-double-left" label="Atrás" className="m-2" rounded severity="secondary" /></Link>
         <div className="card p-fluid my-3 mx-[10%]">
           {actId ? <h5>Editando Actividad</h5> : <h5>Creando Actividad</h5>}
           <div className="field">

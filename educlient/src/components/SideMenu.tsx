@@ -26,7 +26,7 @@ const AppMenu = () => {
     const xd: AppMenuItem[] = [
         {
             label: 'Inicio',
-            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/crud' },
+            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard' },
             {  label: 'Usuarios', icon: 'pi pi-users', to: `/crud` }]
         },
         {

@@ -65,7 +65,8 @@ function Login() {
                                 Contraseña
                             </label>
                             <Password name='password' value={inputs.password} onChange={(e) => handleInputs(e)} 
-                            toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"  placeholder="Ingresar contraseña"></Password>
+                            toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem" placeholder="Ingresar contraseña"
+                            weakLabel='Poco Segura' mediumLabel='Segura' strongLabel='Muy Segura'></Password>
                             <Button label="Ingresar" className="w-full p-3 text-xl" onClick={handleSubmit}></Button>
                         </div>
                     </div>
