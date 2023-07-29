@@ -6,6 +6,7 @@ import { Area } from '../../utils/interfaces'
 import { RootState } from '../../redux/store'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
 import { useAppDispatch } from '../../hooks/typedSelectors'
 import { fetchCompanyAreas, setCurrentArea } from '../../redux/features/areaSlice'
 
@@ -23,6 +24,7 @@ function AddArea() {
       companyId: currentEmpresa.id     
     })
     const [error, setError] = useState()
+    const [modalDelete, setModalDelete] = useState(false);
 
     useEffect(() => {
       if(areaId){
@@ -42,6 +44,7 @@ function AddArea() {
         const response = await axios.post('http://localhost:3001/area', area)
         if(response){
           alert('El área fue creada con éxito')
+          dispatch(fetchCompanyAreas(currentEmpresa.id))
           navigate('/admin')
         }
         setArea({
@@ -59,6 +62,7 @@ function AddArea() {
         const response = await axios.put('http://localhost:3001/area/update', data)
         if(response){
           alert('El área fue editada con éxito')
+          dispatch(fetchCompanyAreas(currentEmpresa.id))
           navigate('/admin')
         }
         setArea({
@@ -69,6 +73,34 @@ function AddArea() {
         setError(error)
       }
     }
+
+    const handleDelete = async () => {
+      console.log('Llegué');
+      
+      setModalDelete(false)
+      try {
+        const response = await axios.delete(`http://localhost:3001/area/${areaId}`)
+        if(response){
+          alert('El área fue eliminada')
+          dispatch(fetchCompanyAreas(currentEmpresa.id))
+          navigate('/admin')
+        }
+        setArea({
+          name: '',
+          companyId: currentEmpresa.id 
+        })
+      } catch (error: any) {
+        console.log(error);        
+        setError(error)
+      }
+    }
+
+    const confirmationDialogFooter = (
+      <>
+          <Button type="button" label="No" icon="pi pi-times" onClick={() => setModalDelete(false)} text />
+          <Button type="button" label="Sí" icon="pi pi-check" onClick={handleDelete} text autoFocus />
+      </>
+    );
 
     return (
       <>
@@ -85,8 +117,17 @@ function AddArea() {
         </div>
         <Button label={areaId ? 'Editar' : 'Crear Área'} onClick={areaId ? handleEdit : handleSubmit} 
         disabled={area.name.length > 0 ? false : true}/>
+        {areaId ? <Button label='Eliminar Área' outlined severity="danger" className='my-3' 
+        onClick={() => setModalDelete(true)}/> : ''}
       </div>
       <p className='text-red-500 font-semibold'>{error}</p>
+
+      <Dialog header="Eliminar" visible={modalDelete} onHide={() => setModalDelete(false)} style={{ width: '350px' }} modal footer={confirmationDialogFooter}>
+        <div className="flex align-items-center justify-content-center">
+          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+          <span>¿Estás seguro de eliminar esta <strong>área, sus roles y actividades</strong>?</span>
+        </div>
+      </Dialog>
       </>
     );
   }
