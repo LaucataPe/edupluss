@@ -133,7 +133,7 @@ function AddRole() {
    
     const handleSubmit = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/role', role)
+        const response = await axios.post('https://edupluss.onrender.com/role', role)
         if(response){
           alert('Cargo Creado correctamente')
           navigate('/admin')
@@ -156,7 +156,7 @@ function AddRole() {
 
     const handleEdit = async () => {
       try {
-        const response = await axios.put('http://localhost:3001/role/update', role)
+        const response = await axios.put('https://edupluss.onrender.com/role/update', role)
         if(response){
           alert('Cargo Editado')
           navigate('/admin')

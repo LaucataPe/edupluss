@@ -31,7 +31,7 @@ function AdminActivities() {
 
     const handleState = async (id: number = 1, roleId: number) => {
       try {
-        const {data} = await axios.put(`http://localhost:3001/activity/state?id=${id}`)
+        const {data} = await axios.put(`https://edupluss.onrender.com/activity/state?id=${id}`)
         dispatch(getActivitiesByRole(roleId))
         return data 
       } catch (error) {

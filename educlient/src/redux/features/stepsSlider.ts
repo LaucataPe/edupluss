@@ -16,7 +16,7 @@ const initialState:initState = {
 ///
 export const getStepsActivity = createAsyncThunk('steps/getStepsActivity', async (id: number) => {
 	try {
-		const { data } = await axios(`http://localhost:3001/steps/${id}`);
+		const { data } = await axios(`https://edupluss.onrender.com/steps/${id}`);
 		return data;
 	} catch (error: any) {
 		throw new Error(error.message);

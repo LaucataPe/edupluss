@@ -41,7 +41,7 @@ function AddArea() {
 
     const handleSubmit = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/area', area)
+        const response = await axios.post('https://edupluss.onrender.com/area', area)
         if(response){
           alert('El área fue creada con éxito')
           dispatch(fetchCompanyAreas(currentEmpresa.id))
@@ -59,7 +59,7 @@ function AddArea() {
     const handleEdit = async () => {
       try {
         const data = { id: Number(areaId), name: area.name}
-        const response = await axios.put('http://localhost:3001/area/update', data)
+        const response = await axios.put('https://edupluss.onrender.com/area/update', data)
         if(response){
           alert('El área fue editada con éxito')
           dispatch(fetchCompanyAreas(currentEmpresa.id))
@@ -79,7 +79,7 @@ function AddArea() {
       
       setModalDelete(false)
       try {
-        const response = await axios.delete(`http://localhost:3001/area/${areaId}`)
+        const response = await axios.delete(`https://edupluss.onrender.com/area/${areaId}`)
         if(response){
           alert('El área fue eliminada')
           dispatch(fetchCompanyAreas(currentEmpresa.id))

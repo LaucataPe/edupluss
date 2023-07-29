@@ -24,7 +24,7 @@ const initialState:initState = {
 ///
 export const fetchActivities = createAsyncThunk('activities/fetchActivities', async () => {
 	try {
-		const { data } = await axios(`http://localhost:3001/activities`);
+		const { data } = await axios(`https://edupluss.onrender.com/activities`);
 		return data
 	} catch (error: any) {
 		throw new Error(error.message);
@@ -33,7 +33,7 @@ export const fetchActivities = createAsyncThunk('activities/fetchActivities', as
 
 export const getEmpresaActivities = createAsyncThunk('activities/getEmpresaActivities', async (id: number) => {
 	try {
-		const { data } = await axios(`http://localhost:3001/activities/${id}`);
+		const { data } = await axios(`https://edupluss.onrender.com/activities/${id}`);
 		return data;
 	} catch (error: any) {
 		throw new Error(error.message);
@@ -42,7 +42,7 @@ export const getEmpresaActivities = createAsyncThunk('activities/getEmpresaActiv
 
 export const getActivitiesByRole = createAsyncThunk('activities/getActivitiesByRole', async (id: number) => {
 	try {
-		const { data } = await axios(`http://localhost:3001/activities/role/${id}`);
+		const { data } = await axios(`https://edupluss.onrender.com/activities/role/${id}`);
 		return data
 	} catch (error: any) {
 		throw new Error(error.message);

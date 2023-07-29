@@ -98,7 +98,7 @@ const Crud = () => {
     if (user.username.trim() && user.email.trim() && user.tipo.trim()) {
       if(user.id !== 0){
         try {
-          const {data} = await axios.put('http://localhost:3001/user/update', user)
+          const {data} = await axios.put('https://edupluss.onrender.com/user/update', user)
           if(data){
           dispatch(getUsersByCompany(user.companyId))
           toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado', life: 3000 });
@@ -109,7 +109,7 @@ const Crud = () => {
         }
       } else {
         try {
-          const {data} = await axios.post('http://localhost:3001/user', user)
+          const {data} = await axios.post('https://edupluss.onrender.com/user', user)
           if(data){
             dispatch(getUsersByCompany(user.companyId))
             toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado', life: 3000 });

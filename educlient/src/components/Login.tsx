@@ -27,7 +27,7 @@ function Login() {
     const handleSubmit = async () => {
       if(inputs.email && inputs.password){
         try {
-          const {data} = await axios.post('http://localhost:3001/logUser', inputs)
+          const {data} = await axios.post('https://edupluss.onrender.com/logUser', inputs)
           console.log(data);          
           if(data){
             toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado', life: 3000 });
