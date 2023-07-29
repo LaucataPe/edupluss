@@ -59,7 +59,7 @@ function Roles() {
                 <h4 className="p-mb-1">{role.name}</h4>
                 <div className="car-buttons mt-5">
                   <Button rounded className="mr-2" icon="pi pi-eye" onClick={() => handleLook(role)}></Button>
-                  <Button rounded severity="success" className="mr-2" icon="pi pi-pencil"></Button>
+                  <Link to={`/editRole/${currentArea.id}/${role.id}`}><Button rounded severity="success" className="mr-2" icon="pi pi-pencil"></Button></Link> 
                   <Link to={`/activities/${role.id}`}><Button rounded severity="info" icon="pi pi-arrow-right"></Button></Link>
                 </div>
               </div>  
@@ -95,7 +95,7 @@ function Roles() {
         </TabView>
       </Dialog>
 
-      <Link to={`/addRole`}><button className="py-2 px-4 flex absolute bottom-10 right-10
+      <Link to={`/addRole/${currentArea.id}`}><button className="py-2 px-4 flex absolute bottom-10 right-10
       justify-center items-center rounded-full 
       font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-all text-xl
        dark:focus:ring-offset-gray-800">+ Añadir Cargo</button></Link>

@@ -79,12 +79,14 @@ router.put('/activity/update', updateActivity)
 
 
 //DELETE Controllers
+const {deleteAreaCascade} = require('../controllers/Areas/deleteArea')
 const {deleteActivity} = require('../controllers/Activities/deleteActivity')
 const {deleteStep} = require('../controllers/Steps/deleteStep')
 const {deleteUser} = require('../controllers/Users/deleteUser')
 
 
 //DELETE
+router.delete('/area/:id', deleteAreaCascade)
 router.delete('/activity/:id', deleteActivity)
 router.delete('/step/:id', deleteStep)
 router.delete('/user/:id', deleteUser)

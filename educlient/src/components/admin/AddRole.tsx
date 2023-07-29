@@ -6,10 +6,20 @@ import { RootState } from '../../redux/store'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputSwitch } from 'primereact/inputswitch'; 
+import { useParams, useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '../../hooks/typedSelectors'
+import { getRolesByArea, setCurrentRole } from '../../redux/features/roleSlice'
+import { fetchCompanyAreas, setCurrentArea } from '../../redux/features/areaSlice'
 //import { getTimeFromString } from '../../utils/services'
 
 function AddRole() {
+    const {areaId, roleId} = useParams()
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
+    const roles = useSelector((state: RootState) => state.roles.roles)
+    const areas = useSelector((state: RootState) => state.areas.areas)
+    const currentEmpresa = useSelector((state: RootState) => state.activities.selectEmpresa)
     const currentArea = useSelector((state: RootState) => state.areas.currentArea)
     //Experiencia
     const [first, setFirst] = useState<number>(0)
@@ -31,6 +41,33 @@ function AddRole() {
         remote: false,
         areaId: currentArea.id
     })
+
+    useEffect(() => {
+        if(areas.length === 0){
+          dispatch(fetchCompanyAreas(currentEmpresa.id))
+        }
+        const findArea = areas.find((area) => area.id === Number(areaId))
+        if(findArea?.id){  
+          dispatch(setCurrentArea(findArea))
+        }
+    }, [currentArea, areas]);
+
+    useEffect(() => {
+      if(roleId){
+        if(roles.length === 0){
+          dispatch(getRolesByArea(currentArea.id ?? 0))
+        }
+        const findRole = roles.find((role) => role.id === Number(roleId))
+        if(findRole){  
+          dispatch(setCurrentRole(findRole))
+          setRole(findRole)
+          if(findRole.experience){
+            setFirst(Number(findRole.experience[0]))
+            setLast(Number(findRole.experience[1]))
+          }
+        }
+      }
+    }, [roleId, roles]);
 
     useEffect(() => {
       setRole(prevRole => ({
@@ -98,9 +135,8 @@ function AddRole() {
       try {
         const response = await axios.post('http://localhost:3001/role', role)
         if(response){
-          //toast.current?.show({ severity: 'info', summary: 'Success', detail: 'Paso creado', life: 3000 });
-          //navigate(`/admin`)
-          alert('You did it!')
+          alert('Cargo Creado correctamente')
+          navigate('/admin')
           setRole({
             name: '',
             hardSkills: [],
@@ -118,20 +154,44 @@ function AddRole() {
       }
     }
 
+    const handleEdit = async () => {
+      try {
+        const response = await axios.put('http://localhost:3001/role/update', role)
+        if(response){
+          alert('Cargo Editado')
+          navigate('/admin')
+          setRole({
+            name: '',
+            hardSkills: [],
+            softSkills: [],
+            schedule: '',
+            salary: '',
+            experience: [],
+            remote: false,
+            areaId: currentArea.id
+        })
+        } 
+        
+      } catch (error: any) {
+        console.log(error);
+      }
+    }
+
+
     return (
       <>
           <div className="card p-fluid mx-[25%]">
-              <h5>Creación de cargo</h5>
+              {roleId ? <h5>Editando Cargo</h5> : <h5>Creando Cargo</h5>}
               <div className="formgrid grid mb-3">
                   <div className="field col">
                       <label>Nombre del Cargo</label>
-                      <InputText id="name2" type="text" onChange={(e) => onInputChange(e, 'name')}/>
+                      <InputText id="name2" type="text" value={role.name} onChange={(e) => onInputChange(e, 'name')}/>
                   </div>
                   <div className="field col">
                       <label>Salario</label>
                       <div className='p-inputgroup'>
                         <span className="p-inputgroup-addon">$</span>
-                        <InputText id="email2" type="text" onChange={(e) => onInputChange(e, 'salary')}/>
+                        <InputText id="email2" type="text" value={role.salary} onChange={(e) => onInputChange(e, 'salary')}/>
                       </div>                  
                   </div>
                   <div className="field col-2">
@@ -216,7 +276,7 @@ function AddRole() {
                       </ul>           
                   </div>
               </div>
-              <Button label='Crear Cargo' onClick={handleSubmit}/>
+              <Button label={roleId ? 'Editar' : 'Crear cargo'} onClick={roleId ? handleEdit : handleSubmit}/>
           </div>
       </>
     );
