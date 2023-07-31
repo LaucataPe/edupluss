@@ -76,7 +76,7 @@ function AdminActivities() {
       <Link to={`/addActivity/${roleId}`}><button className="py-2 px-4 flex absolute bottom-10 right-10
       justify-center items-center rounded-full 
       font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-all text-xl
-       dark:focus:ring-offset-gray-800">+ Añadir Actividad</button></Link>
+       dark:focus:ring-offset-gray-800">+ Crear Actividad</button></Link>
       </>
     );
   }

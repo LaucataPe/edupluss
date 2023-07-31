@@ -98,7 +98,7 @@ function Roles() {
       <Link to={`/addRole/${currentArea.id}`}><button className="py-2 px-4 flex absolute bottom-10 right-10
       justify-center items-center rounded-full 
       font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-all text-xl
-       dark:focus:ring-offset-gray-800">+ Añadir Cargo</button></Link>
+       dark:focus:ring-offset-gray-800">+ Crear Cargo</button></Link>
       
       </>
     );

@@ -84,7 +84,7 @@ function ActivitySteps() {
                     <DataView value={steps} emptyMessage="No hay pasos en este actividad" layout={layout} rows={9}  itemTemplate={itemTemplate} header={dataViewHeader}></DataView>
                 </div>
             </div>
-      <Link to={`/addStep/${id}`}><Button label="+ Añadir Paso" severity="info" rounded 
+      <Link to={`/addStep/${id}`}><Button label="+ Crear Paso" severity="info" rounded 
         className="absolute right-4 bottom-4 "/></Link>
       </div>
       </>
