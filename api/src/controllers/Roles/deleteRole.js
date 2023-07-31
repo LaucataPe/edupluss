@@ -1,19 +1,37 @@
-const { Role } = require('../../db');
+const { Role, Activity, Step } = require('../../db');
 
 const deleteRole = async (req, res) => {
-  const { id } = req.query;
+    const { id } = req.params;
+    try {
+    // Buscar el área por su ID y también incluir los roles asociados
+    const role = await Role.findOne({
+      where: { id },
+      include: [
+            {
+              model: Activity,
+              include: [Step] // Incluir también los pasos asociados a las actividades
+            }
+      ]
+    });
 
-  try {
-    const getRole = await Role.findByPk(id)
-    
-    if(!getRole) throw new Error('Rol/perfil no encontrado')
-    
-    await getRole.destroy()
+    if (!role) {
+      throw new Error('Cargo no encontrada');
+    }
 
-    res.status(200).send('Rol eliminado correctamente');
+    // Eliminar en cascada: primero eliminar los pasos, luego las actividades, luego los roles y finalmente el área
+        await Promise.all(
+          role.Activities.map(async (activity) => {
+            await Step.destroy({ where: { activityId: activity.id } });
+            await activity.destroy();
+          })
+        );
+
+    await role.destroy();
+
+    res.status(200).json({ message: 'Cargo y registros relacionados eliminados correctamente' });
+
   } catch (error) {
     res.status(404).send(error.message);
-  }
-};
-
+  };
+}
 module.exports = { deleteRole };

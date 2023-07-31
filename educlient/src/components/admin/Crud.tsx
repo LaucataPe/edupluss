@@ -223,9 +223,7 @@ const Crud = () => {
 
   const areasBodyTemplate = (rowData: Demo.User) => {
     const findRole = roles.find((role) => role.id === rowData.roleId)
-    const findArea = areas.find((area) => area.id === findRole?.areaId)
-    console.log(findRole);
-    
+    const findArea = areas.find((area) => area.id === findRole?.areaId)    
     return (
       <>
         {findArea &&

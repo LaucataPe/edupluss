@@ -1,6 +1,6 @@
 import { useState} from "react";
 import { useSelector} from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RootState } from "../../redux/store";
 import { useAppDispatch } from "../../hooks/typedSelectors";
 import { getActivitiesByRole } from "../../redux/features/activitiesSlice";
@@ -14,13 +14,19 @@ import { TabView, TabPanel } from 'primereact/tabview';
 //PDF
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PDFWorkerProfile from "../rolePdf";
+import axios from "axios";
 
 function Roles() {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+
     const roles = useSelector((state: RootState) => state.roles.roles)
     const currentArea = useSelector((state: RootState) => state.areas.currentArea)
 
     const [displayBasic, setDisplayBasic] = useState(false);
+    const [displayConfirmation, setDisplayConfirmation] = useState(false);
+
+    const [roleId, setRoleId] = useState(0);
     const [role, setRole] = useState<Role>();
 
     const handleRoleClick = (role: Role) =>{
@@ -34,11 +40,35 @@ function Roles() {
         <Button type="button" label="Descargar" onClick={() => setDisplayBasic(false)} icon="pi pi-file-pdf" severity="danger" />
       </PDFDownloadLink>
     ) 
-
     const handleLook = (role: Role) => {
       setRole(role)
       setDisplayBasic(true)
     }
+
+    const dialogHandler = (id: number) => {
+      setDisplayConfirmation(true)
+      setRoleId(id)
+  }
+
+    const handleDelete = async () =>{
+      try {
+          let response = await axios.delete(`http://localhost:3001/role/${roleId}`);
+          let data = response.data;
+          if(data){
+           navigate('/admin')
+          } 
+          setDisplayConfirmation(false)
+       } catch (error: any) {
+        console.log(error);          
+       }
+    }
+
+    const confirmationDialogFooter = (
+      <>
+          <Button type="button" label="No" icon="pi pi-times" onClick={() => setDisplayConfirmation(false)} text />
+          <Button type="button" label="Sí" icon="pi pi-check" onClick={handleDelete} text autoFocus />
+      </>
+    );
 
     return (
       <>
@@ -51,7 +81,9 @@ function Roles() {
         
           {roles.map((role) => (
             <div key={role.id} onClick={() => handleRoleClick(role)}
-             className="border-1 surface-border border-round m-1 text-center py-5 w-3">
+             className="relative border-1 surface-border border-round m-1 text-center py-5 w-3">
+              <Button rounded text severity="danger" className="absolute top-0 right-0" icon="pi pi-times" 
+              onClick={() => dialogHandler(role.id ?? 0)}></Button>
               <div className="mb-3 flex justify-center">
                 <FaUser className="text-8xl text-center"/>
               </div>
@@ -89,10 +121,19 @@ function Roles() {
               {role?.softSkills && role?.softSkills.map((skill) => (
                 <li>- {skill}</li>
               ))}
-              {!role?.softSkills && 'No se especificó ninguna habilidad blanda'}
+              {role?.softSkills?.length === 0 && 'No se especificó ninguna habilidad blanda'}
             </ul>
           </TabPanel>                       
         </TabView>
+      </Dialog>
+
+      <Dialog header="Eliminar Cargo" visible={displayConfirmation} onHide={() => setDisplayConfirmation(false)} style={{ width: '350px' }} modal footer={confirmationDialogFooter}>
+            <div className="flex align-items-center justify-content-center">
+                <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                <span>¿Estás seguro que desea eliminar este 
+                  <strong> cargo, sus actividades y pasos</strong>?
+                </span>
+            </div>
       </Dialog>
 
       <Link to={`/addRole/${currentArea.id}`}><button className="py-2 px-4 flex absolute bottom-10 right-10
