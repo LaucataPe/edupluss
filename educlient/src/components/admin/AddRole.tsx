@@ -1,9 +1,10 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { Role } from '../../utils/interfaces'
 import { RootState } from '../../redux/store'
 import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { InputSwitch } from 'primereact/inputswitch'; 
 import { useParams, useNavigate } from 'react-router-dom'
@@ -21,6 +22,7 @@ function AddRole() {
     const areas = useSelector((state: RootState) => state.areas.areas)
     const currentEmpresa = useSelector((state: RootState) => state.activities.selectEmpresa)
     const currentArea = useSelector((state: RootState) => state.areas.currentArea)
+
     //Experiencia
     const [first, setFirst] = useState<number>(0)
     const [last, setLast] = useState<number>(0)
@@ -41,6 +43,7 @@ function AddRole() {
         remote: false,
         areaId: currentArea.id
     })
+    const toast = useRef<Toast>(null);
 
     useEffect(() => {
         if(areas.length === 0){
@@ -135,7 +138,8 @@ function AddRole() {
       try {
         const response = await axios.post('http://localhost:3001/role', role)
         if(response){
-          alert('Cargo Creado correctamente')
+          toast.current?.show({ severity: 'success', summary: 'Eliminado!', detail: 'Cargo creado', life: 2000 });
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           navigate('/admin')
           setRole({
             name: '',
@@ -158,7 +162,8 @@ function AddRole() {
       try {
         const response = await axios.put('http://localhost:3001/role/update', role)
         if(response){
-          alert('Cargo Editado')
+          toast.current?.show({ severity: 'success', summary: 'Editado!', detail: 'Cargo editado', life: 2000 });
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           navigate('/admin')
           setRole({
             name: '',
@@ -181,6 +186,7 @@ function AddRole() {
     return (
       <>
           <div className="card p-fluid mx-[25%]">
+          <Toast ref={toast} />
               {roleId ? <h5>Editando Cargo</h5> : <h5>Creando Cargo</h5>}
               <div className="formgrid grid mb-3">
                   <div className="field col">

@@ -79,26 +79,30 @@ function Roles() {
           <Link to={`/editArea/${currentArea.id}`}><Button icon="pi pi-pencil" rounded severity="success" text /></Link>
         </div>
         
+        <div className="flex flex-wrap">
           {roles.map((role) => (
-            <div key={role.id} onClick={() => handleRoleClick(role)}
-             className="relative border-1 surface-border border-round m-1 text-center py-5 w-3">
-              <Button rounded text severity="danger" className="absolute top-0 right-0" icon="pi pi-times" 
-              onClick={() => dialogHandler(role.id ?? 0)}></Button>
-              <div className="mb-3 flex justify-center">
-                <FaUser className="text-8xl text-center"/>
-              </div>
-              <div>
-                <h4 className="p-mb-1">{role.name}</h4>
-                <div className="car-buttons mt-5">
-                  <Button rounded className="mr-2" icon="pi pi-eye" onClick={() => handleLook(role)}></Button>
-                  <Link to={`/editRole/${currentArea.id}/${role.id}`}><Button rounded severity="success" className="mr-2" icon="pi pi-pencil"></Button></Link> 
-                  <Link to={`/activities/${role.id}`}><Button rounded severity="info" icon="pi pi-arrow-right"></Button></Link>
+              <div key={role.id} onClick={() => handleRoleClick(role)}
+              className="relative border-1 surface-border border-round m-1 text-center py-5 w-3">
+                <Button rounded text severity="danger" className="absolute top-0 right-0" icon="pi pi-times" 
+                onClick={() => dialogHandler(role.id ?? 0)}></Button>
+                <div className="mb-3 flex justify-center">
+                  <FaUser className="text-8xl text-center"/>
                 </div>
-              </div>  
-            </div>
-          ))}
-          {roles.length === 0 ? <p className="text-2xl text-blue-500 m-10"
-          >Aún no hay cargos en esta área </p>: ''}
+                <div>
+                  <h4 className="p-mb-1">{role.name}</h4>
+                  <div className="car-buttons mt-5">
+                    <Button rounded className="mr-2" icon="pi pi-eye" onClick={() => handleLook(role)}></Button>
+                    <Link to={`/editRole/${currentArea.id}/${role.id}`}><Button rounded severity="success" className="mr-2" icon="pi pi-pencil"></Button></Link> 
+                    <Link to={`/activities/${role.id}`}><Button rounded severity="info" icon="pi pi-arrow-right"></Button></Link>
+                  </div>
+                </div>  
+              </div>
+            ))}
+          {roles.length === 0 ? 
+          <p className="text-2xl text-blue-500 m-10">Aún no hay cargos en esta área </p>
+          : ''}
+        </div>
+          
       </div>
       
       <Dialog header={role?.name} visible={displayBasic} style={{ width: '30vw' }} modal footer={basicDialogFooter} onHide={() => setDisplayBasic(false)}>

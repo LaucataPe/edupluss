@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { Link, useParams, useNavigate } from 'react-router-dom'
@@ -6,6 +6,7 @@ import { Activity } from '../../utils/interfaces'
 import { RootState } from '../../redux/store'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { getCompanyRoles, setCurrentRole } from '../../redux/features/roleSlice'
 import { useAppDispatch } from '../../hooks/typedSelectors'
 import { getActivitiesByRole } from '../../redux/features/activitiesSlice'
@@ -25,6 +26,7 @@ function AddActivity() {
       roleId: currentRole.id ?? 0
     })
     const [error, setError] = useState()
+    const toast = useRef<Toast>(null);
 
     useEffect(() => {
         if(roles.length === 0){
@@ -57,7 +59,7 @@ function AddActivity() {
         try {
           const response = await axios.post('http://localhost:3001/activity', activity)
           if(response){
-            alert('La actividad fue creada con éxito')
+            await new Promise((resolve) => setTimeout(resolve, 1000));
             dispatch(getActivitiesByRole(Number(roleId)))
             navigate(`/activities/${roleId}`)
           }
@@ -69,7 +71,7 @@ function AddActivity() {
           setError(error)
         }
       }else{
-        return alert('No se encontró el cargo relacionado a esta actividad')
+        return toast.current?.show({ severity: 'error', summary: 'Error!', detail: 'Ha ocurrido un error', life: 2000 });
       }
     }
 
@@ -79,7 +81,8 @@ function AddActivity() {
         try {
           const response = await axios.put('http://localhost:3001/activity/update', data)
           if(response){
-            alert('La actividad fue editada con éxito')
+            toast.current?.show({ severity: 'success', summary: 'Editado!', detail: 'Actividad editada', life: 2000 });
+            await new Promise((resolve) => setTimeout(resolve, 1000));
             dispatch(getActivitiesByRole(Number(roleId)))
             navigate(`/activities/${roleId}`)
           }
@@ -91,12 +94,13 @@ function AddActivity() {
           setError(error)
         }
       }else{
-        return alert('No se encontró el cargo relacionado a esta actividad')
+        return toast.current?.show({ severity: 'error', summary: 'Error!', detail: 'Ha ocurrido un error', life: 2000 });
       }
     }
 
     return (
       <>
+      <Toast ref={toast}/>
         <Link to={`/activities/${roleId}`}><Button icon="pi pi-angle-double-left" label="Atrás" className="m-2" rounded severity="secondary" /></Link>
         <div className="card p-fluid my-3 mx-[10%]">
           {actId ? <h5>Editando Actividad</h5> : <h5>Creando Actividad</h5>}

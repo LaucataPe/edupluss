@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
@@ -9,6 +9,7 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { useAppDispatch } from '../../hooks/typedSelectors'
 import { fetchCompanyAreas, setCurrentArea } from '../../redux/features/areaSlice'
+import { Toast } from 'primereact/toast'
 
 function AddArea() {
     const {areaId} =  useParams()
@@ -25,6 +26,7 @@ function AddArea() {
     })
     const [error, setError] = useState()
     const [modalDelete, setModalDelete] = useState(false);
+    const toast = useRef<Toast>(null);
 
     useEffect(() => {
       if(areaId){
@@ -41,9 +43,10 @@ function AddArea() {
 
     const handleSubmit = async () => {
       try {
-        const response = await axios.post('https://edupluss.onrender.com/area', area)
+        const response = await axios.post('http://localhost:3001/area', area)
         if(response){
-          alert('El área fue creada con éxito')
+          toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Área creada exitosamente', life: 2000 });
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           dispatch(fetchCompanyAreas(currentEmpresa.id))
           navigate('/admin')
         }
@@ -59,9 +62,10 @@ function AddArea() {
     const handleEdit = async () => {
       try {
         const data = { id: Number(areaId), name: area.name}
-        const response = await axios.put('https://edupluss.onrender.com/area/update', data)
+        const response = await axios.put('http://localhost:3001/area/update', data)
         if(response){
-          alert('El área fue editada con éxito')
+          toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Área editada', life: 2000 });
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           dispatch(fetchCompanyAreas(currentEmpresa.id))
           navigate('/admin')
         }
@@ -79,9 +83,10 @@ function AddArea() {
       
       setModalDelete(false)
       try {
-        const response = await axios.delete(`https://edupluss.onrender.com/area/${areaId}`)
+        const response = await axios.delete(`http://localhost:3001/area/${areaId}`)
         if(response){
-          alert('El área fue eliminada')
+          toast.current?.show({ severity: 'success', summary: 'Eliminado!', detail: 'Área eliminada', life: 1000 });
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           dispatch(fetchCompanyAreas(currentEmpresa.id))
           navigate('/admin')
         }
@@ -90,7 +95,7 @@ function AddArea() {
           companyId: currentEmpresa.id 
         })
       } catch (error: any) {
-        console.log(error);        
+        toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Ha ocurrido un error', life: 2000 });     
         setError(error)
       }
     }
@@ -105,6 +110,7 @@ function AddArea() {
     return (
       <>
       <div className="card p-fluid my-3 mx-[10%]">
+        <Toast ref={toast} />
         {areaId ? <h5>Editando Área</h5> : <h5>Creando Área</h5>}
         <div className="field">
           <label>Nombre</label>
