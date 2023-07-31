@@ -68,6 +68,7 @@ const {updateArea} = require('../controllers/Areas/updateArea')
 const {updateActivity} = require('../controllers/Activities/updateActivity')
 const {updateUser} = require('../controllers/Users/updateUser')
 const {updateRole} = require('../controllers/Roles/updateRole')
+const {updateStep} = require('../controllers/Steps/updateStep')
 
 //PUT
 router.put('/activity/state', ActivityState)
@@ -75,6 +76,7 @@ router.put('/area/state', AreaState)
 router.put('/user/update', updateUser)
 router.put('/role/update', updateRole)
 router.put('/area/update', updateArea)
+router.put('/step/update', updateStep)
 router.put('/activity/update', updateActivity)
 
 

@@ -5,6 +5,10 @@ type props = {
 }
 
 function CurrentStep( {step}: props) {
+    const getYouTubeEmbedLink = (videoLink: string) => {
+      const videoId = videoLink.split("v=")[1].split("&")[0];
+      return `https://www.youtube.com/embed/${videoId}`;
+    };
     return (
       <>
       {step ? (
@@ -16,11 +20,8 @@ function CurrentStep( {step}: props) {
           
 
           <div className="flex justify-center w-10">  
-            {step?.video.includes('youtu') ? 
-              <iframe width="560" height="315" src='https://www.youtube.com/watch?v=ptc4Awb0UpU' 
-              title="YouTube video player" allow="accelerometer; autoplay; 
-              clipboard-write; encrypted-media; gyroscope; picture-in-picture;
-              web-share" allowFullScreen></iframe> :
+            {step?.video.includes('youtu') ?  
+              <iframe width="700" height="350" src={getYouTubeEmbedLink(step.video)} title="Youtube video" allowFullScreen></iframe> :
               <video src={step.video} width='700' height='350' controls></video>
             }
           </div>

@@ -15,6 +15,7 @@ function AdminActivities() {
     const activities = useSelector((state: RootState) => state.activities.activities)
 
     const [displayConfirmation, setDisplayConfirmation] = useState(false);
+    const [actId, setActId] = useState(0);
 
     useEffect(() => {
       if(activities.length === 0 && roleId){
@@ -22,16 +23,34 @@ function AdminActivities() {
       }
     }, [roleId])
 
+    const dialogHandler = (id: number) => {
+      setDisplayConfirmation(true)
+      setActId(id)
+    }
+
+    const handleDelete = async () =>{
+      try {
+          let response = await axios.delete(`http://localhost:3001/activity/${actId}`);
+          let data = response.data;
+          if(data){
+            dispatch(getActivitiesByRole(Number(roleId)))
+              setDisplayConfirmation(false)
+          } 
+       } catch (error: any) {
+        console.log(error);          
+       }
+    }
+
     const confirmationDialogFooter = (
       <>
           <Button type="button" label="No" icon="pi pi-times" onClick={() => setDisplayConfirmation(false)} text />
-          <Button type="button" label="Sí" icon="pi pi-check" onClick={() => setDisplayConfirmation(false)} text autoFocus />
+          <Button type="button" label="Sí" icon="pi pi-check" onClick={handleDelete} text autoFocus />
       </>
     );
 
     const handleState = async (id: number = 1, roleId: number) => {
       try {
-        const {data} = await axios.put(`https://edupluss.onrender.com/activity/state?id=${id}`)
+        const {data} = await axios.put(`http://localhost:3001/activity/state?id=${id}`)
         dispatch(getActivitiesByRole(roleId))
         return data 
       } catch (error) {
@@ -58,19 +77,20 @@ function AdminActivities() {
                   <Button icon="pi pi-pencil" rounded outlined severity="success" className="w-3"
                     onClick={() => navigate(`/editActivity/${roleId}/${act.id}`)}/>
                   <Button icon="pi pi-times" rounded outlined severity="danger" className="w-3"
-                  onClick={() => setDisplayConfirmation(true)}/>
+                  onClick={() => dialogHandler(act.id ?? 0)}/>
                 </div>
 
-                <Dialog header="Confirmación" visible={displayConfirmation} onHide={() => setDisplayConfirmation(false)} style={{ width: '350px' }} modal footer={confirmationDialogFooter}>
+                <Dialog header="Eliminar Actividad" visible={displayConfirmation} onHide={() => setDisplayConfirmation(false)} style={{ width: '350px' }} modal footer={confirmationDialogFooter}>
                   <div className="flex align-items-center justify-content-center">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    <span>¿Estás seguro de eliminar esta actividad?</span>
+                    <span>¿Estás seguro de eliminar esta <strong>actividad y sus pasos</strong>?</span>
                   </div>
                 </Dialog>
                 
               </div>
                
-          ))}  
+          ))} 
+          {activities.length === 0 ? <h3>No hay actividades para este cargo</h3> : ''} 
       </div>
       
       <Link to={`/addActivity/${roleId}`}><button className="py-2 px-4 flex absolute bottom-10 right-10

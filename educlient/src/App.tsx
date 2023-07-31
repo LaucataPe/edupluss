@@ -67,7 +67,7 @@ function App() {
 	useEffect(() => {
 		if (session) {
 			axios
-				.get(`https://edupluss.onrender.com/auth/token`, { headers })
+				.get(`http://localhost:3001/auth/token`, { headers })
 				.then((response) => {
 					if(response){
 						dispatch(setLogUser(response.data.data.user))
@@ -111,6 +111,7 @@ function App() {
 					<Route path="/addRole/:areaId" element={<AddRole />} />
 					<Route path="/editRole/:areaId/:roleId" element={<AddRole />} />
 					<Route path="/addStep/:id" element={<AddStep />} />
+					<Route path="/editStep/:id/:stepId" element={<AddStep />} />
 					<Route path="/crud" element={<Crud />} />
 		</Routes>
 		</div>			
