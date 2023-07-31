@@ -52,6 +52,7 @@ const Crud = () => {
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   const [activePassword, setActivePassword] = useState<boolean>(false)
+
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<Demo.User[]>>(null);
 
@@ -77,6 +78,7 @@ const Crud = () => {
   const hideDialog = () => {
     setSubmitted(false);
     setUserDialog(false);
+    setActivePassword(false)
   };
 
   const hideDeleteUserDialog = () => {
@@ -98,7 +100,7 @@ const Crud = () => {
     if (user.username.trim() && user.email.trim() && user.tipo.trim()) {
       if(user.id !== 0){
         try {
-          const {data} = await axios.put('https://edupluss.onrender.com/user/update', user)
+          const {data} = await axios.put('http://localhost:3001/user/update', user)
           if(data){
           dispatch(getUsersByCompany(user.companyId))
           toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado', life: 3000 });
@@ -109,7 +111,7 @@ const Crud = () => {
         }
       } else {
         try {
-          const {data} = await axios.post('https://edupluss.onrender.com/user', user)
+          const {data} = await axios.post('http://localhost:3001/user', user)
           if(data){
             dispatch(getUsersByCompany(user.companyId))
             toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado', life: 3000 });
@@ -124,7 +126,7 @@ const Crud = () => {
   };
 
   const editUser = (user: Demo.User) => {
-    setUser({ ...user });
+    setUser({ ...user, password: '' });
     setUserDialog(true);
   };
 
@@ -155,10 +157,10 @@ const Crud = () => {
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: keyof Demo.User) => {
     const { value } = e.target;
-    setUser((prevState: Demo.User) => ({
-      ...prevState,
-      [name]: value
-    }));
+      setUser((prevState: Demo.User) => ({
+        ...prevState,
+        [name]: value
+      })); 
   };
 
   const onTypeChange = (e: any) => {
@@ -358,11 +360,16 @@ const Crud = () => {
             </div>
             <div className="field">
               <label htmlFor="email">Contraseña</label>
-              <input type="checkbox" checked={activePassword} onChange={() => setActivePassword(!activePassword)} 
-               className='mx-2'/>
-              <Password inputId="password1" value={user.password} onChange={(e) => onInputChange(e, 'password')}
-               toggleMask className="w-full mb-5" promptLabel='Ingresa una contraseña' weakLabel='Poco Segura' mediumLabel='Segura' strongLabel='Muy Segura'
-               disabled={activePassword ? false : true}></Password>
+              {user.id !== 0 && <input type="checkbox" checked={activePassword} onChange={() => setActivePassword(!activePassword)} 
+               className='mx-2'/>}
+              <Password 
+                inputId="password1" 
+                value={user.password} 
+                onChange={(e) => onInputChange(e, 'password')}
+                toggleMask 
+                className="w-full mb-5" promptLabel='Ingresa una contraseña' weakLabel='Poco Segura' mediumLabel='Segura' strongLabel='Muy Segura'
+                disabled={user.id !== 0 ? !activePassword : false}>
+              </Password>
               {submitted && !user.password && <small className="p-error">Ingrese una contraseña</small>}
             </div>
             <div className="field">
