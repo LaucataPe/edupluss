@@ -132,7 +132,7 @@ function AddStep() {
     const handleSubmit = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
       e.preventDefault();
           try {
-              let response = await axios.post(`http://localhost:3001/step`, step);
+              let response = await axios.post(`https://edupluss.onrender.com/step`, step);
               let data = response.data;
               if(data){
                 toast.current?.show({ severity: 'info', summary: 'Success', detail: 'Paso creado', life: 3000 });
@@ -155,7 +155,7 @@ function AddStep() {
     const handleEdit = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
       e.preventDefault();
           try {
-              let response = await axios.put(`http://localhost:3001/step/update`, step);
+              let response = await axios.put(`https://edupluss.onrender.com/step/update`, step);
               let data = response.data;
               if(data){
                 toast.current?.show({ severity: 'info', summary: 'Success', detail: 'Paso creado', life: 3000 });

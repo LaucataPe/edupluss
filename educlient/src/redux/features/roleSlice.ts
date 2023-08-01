@@ -32,8 +32,6 @@ export const getRolesByArea = createAsyncThunk('roles/getRolesByArea', async (ar
 export const getCompanyRoles = createAsyncThunk('roles/getCompanyRoles', async (companyId: number) => {
 	try {
 		const {data} = await axios(`https://edupluss.onrender.com/company/roles/${companyId}`);
-		console.log(data);
-		
         return data
 	} catch (error: any) {
 		throw new Error(error.message);

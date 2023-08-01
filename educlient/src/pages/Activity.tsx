@@ -50,15 +50,15 @@ function Activity() {
 
             {activeIndex > 0 && (
               <Button label="Anterior" icon='pi pi-arrow-left' severity="warning" outlined 
-                onClick={() => setActiveIndex(activeIndex - 1)} className='absolute w-1 bottom-4 left-4'/>
+                onClick={() => setActiveIndex(activeIndex - 1)} className='absolute w-auto bottom-4 left-4'/>
             )}
             {activeIndex < steps.length - 1 ? (
               <Button label="Siguiente" icon='pi pi-arrow-right' severity="success" outlined 
-              onClick={() => setActiveIndex(activeIndex + 1)} className='absolute w-1 bottom-4 right-4'/>
+              onClick={() => setActiveIndex(activeIndex + 1)} className='absolute w-auto bottom-4 right-4'/>
             ) : (
               <Link to="/home">
                 <Button label="Finalizar" icon='pi pi-home' severity="info" outlined 
-                className='absolute w-1 bottom-4 right-4'/>
+                className='absolute w-auto bottom-4 right-4'/>
               </Link>
             )}
           </div>

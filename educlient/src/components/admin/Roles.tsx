@@ -52,7 +52,7 @@ function Roles() {
 
     const handleDelete = async () =>{
       try {
-          let response = await axios.delete(`http://localhost:3001/role/${roleId}`);
+          let response = await axios.delete(`https://edupluss.onrender.com/role/${roleId}`);
           let data = response.data;
           if(data){
            navigate('/admin')
@@ -82,7 +82,7 @@ function Roles() {
         <div className="flex flex-wrap">
           {roles.map((role) => (
               <div key={role.id} onClick={() => handleRoleClick(role)}
-              className="relative border-1 surface-border border-round m-1 text-center py-5 w-3">
+              className="relative border-1 surface-border border-round mx-1 my-2 text-center py-5 w-[300px]">
                 <Button rounded text severity="danger" className="absolute top-0 right-0" icon="pi pi-times" 
                 onClick={() => dialogHandler(role.id ?? 0)}></Button>
                 <div className="mb-3 flex justify-center">

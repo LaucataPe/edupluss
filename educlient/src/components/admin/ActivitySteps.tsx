@@ -94,7 +94,7 @@ function ActivitySteps() {
 
     const handleDelete = async () =>{
         try {
-            let response = await axios.delete(`http://localhost:3001/step/${stepId}`);
+            let response = await axios.delete(`https://edupluss.onrender.com/step/${stepId}`);
             let data = response.data;
             if(data){
                 dispatch(getStepsActivity(Number(id)));

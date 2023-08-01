@@ -57,7 +57,7 @@ function AddActivity() {
     const handleSubmit = async () => {
       if(activity.roleId !== 0){
         try {
-          const response = await axios.post('http://localhost:3001/activity', activity)
+          const response = await axios.post('https://edupluss.onrender.com/activity', activity)
           if(response){
             await new Promise((resolve) => setTimeout(resolve, 1000));
             dispatch(getActivitiesByRole(Number(roleId)))
@@ -79,7 +79,7 @@ function AddActivity() {
       if(activity.roleId !== 0){
         const data = { id: Number(actId), title: activity.title}
         try {
-          const response = await axios.put('http://localhost:3001/activity/update', data)
+          const response = await axios.put('https://edupluss.onrender.com/activity/update', data)
           if(response){
             toast.current?.show({ severity: 'success', summary: 'Editado!', detail: 'Actividad editada', life: 2000 });
             await new Promise((resolve) => setTimeout(resolve, 1000));

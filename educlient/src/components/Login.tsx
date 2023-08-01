@@ -5,6 +5,8 @@ import axios from 'axios'
 import { setLogUser } from '../redux/features/userSlice'
 import { setEmpresa } from '../redux/features/activitiesSlice'
 
+import logo from '../../public/logo.png'
+
 import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
 import { InputText } from 'primereact/inputtext';
@@ -28,7 +30,6 @@ function Login() {
       if(inputs.email && inputs.password){
         try {
           const {data} = await axios.post('https://edupluss.onrender.com/logUser', inputs)
-          console.log(data);          
           if(data){
             toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado', life: 3000 });
             const token = data.token;
@@ -42,9 +43,7 @@ function Login() {
           } else{
             navigate('/home')
           }
-        } catch (error: any) {
-          console.log(error);
-          
+        } catch (error: any) {       
           setError(error.response.data)
         }
       }
@@ -54,6 +53,9 @@ function Login() {
       <>
       <div className="flex flex-column align-items-center justify-content-center">
           <div className="w-[40rem] my-20 surface-card py-8 px-5 sm:px-8" style={{ borderRadius: '53px' }}>
+            <div className='w-[100%] flex items-center justify-center'>
+            <img src={logo} alt="Logo Edupluss" className='h-[130px]' />
+            </div>
             <h1>Inicia Sesión</h1>
             <div>
               <label className="block text-900 text-xl font-medium mb-2">

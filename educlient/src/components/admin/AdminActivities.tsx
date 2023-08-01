@@ -30,7 +30,7 @@ function AdminActivities() {
 
     const handleDelete = async () =>{
       try {
-          let response = await axios.delete(`http://localhost:3001/activity/${actId}`);
+          let response = await axios.delete(`https://edupluss.onrender.com/activity/${actId}`);
           let data = response.data;
           if(data){
             dispatch(getActivitiesByRole(Number(roleId)))
@@ -50,7 +50,7 @@ function AdminActivities() {
 
     const handleState = async (id: number = 1, roleId: number) => {
       try {
-        const {data} = await axios.put(`http://localhost:3001/activity/state?id=${id}`)
+        const {data} = await axios.put(`https://edupluss.onrender.com/activity/state?id=${id}`)
         dispatch(getActivitiesByRole(roleId))
         return data 
       } catch (error) {

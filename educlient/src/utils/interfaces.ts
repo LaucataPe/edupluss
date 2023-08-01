@@ -25,7 +25,8 @@ export interface Step {
 }
 
 export interface CreateStep {
-    number: number,
+    id?: number
+    number: number
     title: string
     description: string
     video: string | ArrayBuffer | null

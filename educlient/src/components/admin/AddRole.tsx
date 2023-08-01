@@ -136,7 +136,7 @@ function AddRole() {
    
     const handleSubmit = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/role', role)
+        const response = await axios.post('https://edupluss.onrender.com/role', role)
         if(response){
           toast.current?.show({ severity: 'success', summary: 'Eliminado!', detail: 'Cargo creado', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -160,7 +160,7 @@ function AddRole() {
 
     const handleEdit = async () => {
       try {
-        const response = await axios.put('http://localhost:3001/role/update', role)
+        const response = await axios.put('https://edupluss.onrender.com/role/update', role)
         if(response){
           toast.current?.show({ severity: 'success', summary: 'Editado!', detail: 'Cargo editado', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -185,10 +185,10 @@ function AddRole() {
 
     return (
       <>
-          <div className="card p-fluid mx-[25%]">
+          <div className="card p-fluid mx-[10%] my-2">
           <Toast ref={toast} />
               {roleId ? <h5>Editando Cargo</h5> : <h5>Creando Cargo</h5>}
-              <div className="formgrid grid mb-3">
+              <div className="formgrid grid">
                   <div className="field col">
                       <label>Nombre del Cargo</label>
                       <InputText id="name2" type="text" value={role.name} onChange={(e) => onInputChange(e, 'name')}/>
