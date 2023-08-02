@@ -3,7 +3,7 @@ const cloudinary = require('../../utils/cloudinary')
 
 
 const createStep = async (req, res) =>{
-    const {title, description, video, activityId } = req.body
+    const {title, description, video, file, activityId } = req.body
     //console.log(req.body);
     try {
         let urlVideo = video
@@ -26,7 +26,7 @@ const createStep = async (req, res) =>{
           }
 
         const newStep = await Step.create({number: nextNumber, title, description, 
-            video: urlVideo, 
+            video: urlVideo, file,
             activityId})
         res.status(200).json(newStep)
     } catch (error) {
