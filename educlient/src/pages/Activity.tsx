@@ -45,7 +45,7 @@ function Activity() {
       <div className="grid p-fluid mx-5">
         <div className="col-12">
           <div className="card w-[100%] relative">
-            <Steps model={steps.map((step) => ({ label: step.title, command: () => {} }))} activeIndex={activeIndex} onSelect={handleStepChange} readOnly={false} />
+            <Steps model={steps.map((step) => ({ label: `Paso ${step.number}`, command: () => {} }))} activeIndex={activeIndex} onSelect={handleStepChange} readOnly={false} />
             {steps && <CurrentStep step={steps[activeIndex]} />}
 
             {activeIndex > 0 && (

@@ -20,7 +20,7 @@ function ActivitySteps() {
     const activities = useSelector((state: RootState) => state.activities.activities)
     const role = useSelector((state: RootState) => state.roles.currentRole)
 
-    const [layout, setLayout] = useState<LayoutType>('grid');
+    const [layout, setLayout] = useState<LayoutType>('list');
     const [displayConfirmation, setDisplayConfirmation] = useState(false);
     const [stepId, setStepId] = useState(0);
 
@@ -50,7 +50,7 @@ function ActivitySteps() {
                          alt='Foto Random' className="w-2 shadow-2 my-3 mx-0" />
                     <div className="flex-1 flex flex-column align-items-center text-center md:text-left">
                         <span className="font-semibold"> Paso #{data.number}</span>
-                        <div className="font-bold text-2xl">{data.title}</div>   
+                        <div className="font-bold text-xl">{data.title}</div>   
                     </div>
                     <div className="car-buttons">
                         <Link to={`/editStep/${data.activityId}/${data.id}`}><Button rounded severity="success" className="mr-2" icon="pi pi-pencil"></Button></Link> 
@@ -69,7 +69,7 @@ function ActivitySteps() {
                         <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb0F6jSm5InKXo4zd2UdiyuE0k36u1ZzHBEw&usqp=CAU'
                          alt='Foto Random' className="w-9 shadow-2 my-3 mx-0" />
                         <span className="font-semibold"> Paso #{data.number}</span>
-                        <div className="text-2xl font-bold">{data.title}</div>
+                        <div className="text-xl font-bold">{data.title}</div>
                     </div>
                     <div className="car-buttons text-center">
                         <Link to={`/editStep/${data.activityId}/${data.id}`}><Button rounded severity="success" className="mr-2" icon="pi pi-pencil"></Button></Link> 

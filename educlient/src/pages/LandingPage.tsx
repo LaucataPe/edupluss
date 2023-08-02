@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useRef, useState } from 'react';
-import logo from '../../public/logo.png'
-import admin from '../../public/admin.jpg'
+import logo from '../assets/logo.png'
+import admin from '../assets/admin.jpg'
 import { Link } from 'react-router-dom';
 
 import { StyleClass } from 'primereact/styleclass';

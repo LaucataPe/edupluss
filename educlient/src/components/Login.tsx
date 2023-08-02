@@ -5,12 +5,13 @@ import axios from 'axios'
 import { setLogUser } from '../redux/features/userSlice'
 import { setEmpresa } from '../redux/features/activitiesSlice'
 
-import logo from '../../public/logo.png'
+import logo from '../assets/logo.png'
 
 import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
+import { uploadFile } from '../firebase/config';
 
 function Login() {
     const dispatch = useDispatch()
@@ -74,6 +75,9 @@ function Login() {
                     </div>
                     <p>{error}</p>
             </div>
+
+
+          <input type="file" onChange={(e) => uploadFile(e.target.files?.[0])} />
       </>
     );
   }

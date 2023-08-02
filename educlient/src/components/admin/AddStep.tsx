@@ -14,6 +14,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 
 import { StepErrors, validate } from '../../utils/validateSteps';
+import { uploadFile } from '../../firebase/config';
 
 function AddStep() {
     const dispatch = useAppDispatch()
@@ -30,10 +31,12 @@ function AddStep() {
       title: '',
       description: '',
       video: '',
+      file: '',
       activityId: Number(id)
     })
     const [errors, setErrors] = useState<StepErrors>({title: ''});
     const [changeVideo, setChangeVideo] = useState<boolean>(false);
+    const [changeFile, setChangeFile] = useState<boolean>(false);
 
     //Videos
     const [videoOrigin, setVideoOrigin] = useState<boolean>(false);
@@ -223,9 +226,22 @@ function AddStep() {
                         />
                       ) : (
                         <input type="file" name="video" onChange={(e) => handleVideo(e)} accept="video/*"
-                         size={16000000} disabled={stepId ? !changeVideo : false}/>
+                         size={16000000} disabled={stepId ? !changeVideo : false} className='mb-2'/>
                       )}
                       <p className='font-semibold text-red-600'>{errors.video ? errors.video : ''}</p>
+                    </div> 
+                    <div className="field">
+                      <div className='flex my-3'>
+                        <label className='m-0'>{stepId ? 'Cambiar Archivo Descargable:': 'Agregar Archivo Descargable:'}</label>
+                        {stepId && <input type="checkbox" checked={changeFile} 
+                        onChange={() => setChangeFile(!changeFile)} className='mx-2'/>}
+                      </div>
+                      <InputText
+                          name="file"
+                          type="file"
+                          onChange={(e) => setStep({...step, file: e.target.files?.[0]})}
+                          disabled={stepId ? !changeFile : false}
+                        />    
                     </div> 
         <Button label={stepId ? "Editar" : "Crear Paso"} severity="info" outlined type='submit' 
           onClick={(e) => {!stepId ? handleSubmit(e) : handleEdit(e)}}
