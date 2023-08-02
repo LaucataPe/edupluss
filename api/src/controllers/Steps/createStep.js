@@ -3,8 +3,9 @@ const cloudinary = require('../../utils/cloudinary')
 
 
 const createStep = async (req, res) =>{
-    const {title, description, video, file, activityId } = req.body
-    //console.log(req.body);
+    const {title, description, video, activityId, file } = req.body
+
+    console.log(`Create step: ${req.body}`);
     try {
         let urlVideo = video
 
