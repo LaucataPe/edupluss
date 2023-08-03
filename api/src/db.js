@@ -11,10 +11,14 @@ const {
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 });*/
 
-const sequelize = new Sequelize('edupluss', DB_USER, DB_PASSWORD, {
+const sequelize = new Sequelize('pspcgwcy_edupluss', DB_USER, DB_PASSWORD, {
   host: DB_HOST,
   dialect: 'mysql',
-  port: 3306
+  dialectOptions: {
+    supportBigNumbers: true,
+    bigNumberStrings: true,
+    json: true
+  }
 });
 
 async function probandoDb() {

@@ -1,4 +1,4 @@
-const { DataTypes, STRING, NUMBER, INTEGER } = require('sequelize');
+const { DataTypes } = require('sequelize');
 // Exportamos una funcion que define el modelo
 // Luego le injectamos la conexion a sequelize.
 module.exports = (database) => {
@@ -14,22 +14,24 @@ module.exports = (database) => {
       allowNull: false,
     },
     hardSkills: {
-      type: DataTypes.ARRAY(STRING),
+      type: DataTypes.JSON,
       allowNull: false
     },
     softSkills: {
-      type: DataTypes.ARRAY(STRING)
+      type: DataTypes.JSON,
+      allowNull: true
     },
     schedule: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: true
     },
     salary: {
       type: DataTypes.STRING,
       allowNull: false
     },
     experience: {
-      type: DataTypes.ARRAY(INTEGER),
-      allowNull: false
+      type: DataTypes.JSON,
+      allowNull: true
     },
     remote: {
       type: DataTypes.BOOLEAN,
