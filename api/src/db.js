@@ -6,10 +6,28 @@ const {
   DB_USER, DB_PASSWORD, DB_HOST,
 } = process.env;
 
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/edupluss`, {
+/*const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/edupluss`, {
   logging: false, // set to console.log to see the raw SQL queries
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+});*/
+
+const sequelize = new Sequelize('edupluss', DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  dialect: 'mysql',
+  port: 3306
 });
+
+async function probandoDb() {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+}
+
+probandoDb()
+
 const basename = path.basename(__filename);
 
 const modelDefiners = [];
