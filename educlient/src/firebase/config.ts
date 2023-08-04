@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from 'uuid';
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -20,14 +20,32 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app)
 
-export async function uploadFile(file: File | undefined) {
-    const storageRef = ref(storage, `descargables/${v4()}`)
-    if(file){
-        try {
-            return await uploadBytes(storageRef, file)
-        } catch (error) {
-            return error
-        }
-    }
-}      
+function generateRandomId(){
+  const id = v4();
+  return id.slice(3,5);
+}
+
+export async function uploadFile(file: File | undefined): Promise<string> {
+  if (!file) {
+    throw new Error('No se proporcionó ningún archivo.');
+  }
+
+  const extension = file.name.split('.').pop();
+  if (!extension) {
+    throw new Error('No se pudo obtener la extensión del archivo.');
+  }
+
+  const randomId = generateRandomId(); // Genera un identificador de 6 caracteres
+  const filename = `${file.name.split('.').shift()}-${randomId}.${extension}`;
+  const storageRef = ref(storage, `descargables/${filename}`);
+
+  try {
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+    return url;
+  } catch (error: any) {
+    throw new Error('Error al subir el archivo: ' + error.message);
+  }
+}
+
 

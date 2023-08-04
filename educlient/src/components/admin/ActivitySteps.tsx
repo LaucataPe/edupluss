@@ -46,7 +46,7 @@ function ActivitySteps() {
         return (
             <div className="col-12">
                 <div className="flex flex-column md:flex-row align-items-center p-3 w-full">
-                <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb0F6jSm5InKXo4zd2UdiyuE0k36u1ZzHBEw&usqp=CAU'
+                <img src='https://images.pexels.com/photos/15401447/pexels-photo-15401447/free-photo-of-texto-cartas-dados-fondo-blanco.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
                          alt='Foto Random' className="w-2 shadow-2 my-3 mx-0" />
                     <div className="flex-1 flex flex-column align-items-center text-center md:text-left">
                         <span className="font-semibold"> Paso #{data.number}</span>
@@ -66,7 +66,7 @@ function ActivitySteps() {
             <div className="col-12 lg:col-4">
                 <div className="card m-3 border-1 surface-border">
                     <div className="flex flex-column align-items-center text-center mb-3">
-                        <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb0F6jSm5InKXo4zd2UdiyuE0k36u1ZzHBEw&usqp=CAU'
+                        <img src='https://images.pexels.com/photos/15401447/pexels-photo-15401447/free-photo-of-texto-cartas-dados-fondo-blanco.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
                          alt='Foto Random' className="w-9 shadow-2 my-3 mx-0" />
                         <span className="font-semibold"> Paso #{data.number}</span>
                         <div className="text-xl font-bold">{data.title}</div>
