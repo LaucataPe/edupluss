@@ -110,17 +110,18 @@ function Roles() {
           <TabPanel header="General">
             <p>Salario: {role?.salary}</p>
             <p>Horario: {role?.schedule}</p>
-            {/* <p>Experiencia: De {role?.experience[0]} a {role?.experience[1]}</p> */}
+            <p>Experiencia: {role?.experience?.[1] !== 0 ? `De ${role?.experience?.[0]} a ${role?.experience?.[1]} años` :
+             'No especifíca'}</p> 
             <p>Remoto: {role?.remote ? 'Sí' : 'No'}</p>
           </TabPanel>
-          <TabPanel header="Requerimientos">
+          <TabPanel header="Técnicas">
             <ul>
               {role?.hardSkills.map((skill) => (
                 <li>- {skill}</li>
               ))}
             </ul>
           </TabPanel>
-          <TabPanel header="Extra">
+          <TabPanel header="Blandas">
             <ul>
               {role?.softSkills && role?.softSkills.map((skill) => (
                 <li>- {skill}</li>

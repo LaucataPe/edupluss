@@ -1,5 +1,5 @@
 import AppMenuitem from './AppMenuitem';
-import { AppMenuItem } from '../utils/types/types';
+import { AppMenuItem, MenuModel } from '../utils/types/types';
 
 import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
@@ -8,14 +8,17 @@ const AppMenu = () => {
     const areas = useSelector((state: RootState) => state.areas.areas)
     const logUser = useSelector((state: RootState) => state.user.logUser)
 
-    const navItems = areas.map((area) => {
+    const navItems: MenuModel[] = areas.map((area) => {
         return {
             label: area.name,
             icon: 'pi pi-fw pi-angle-right',
             to: `${area.id}`, 
-            area: area
+            area: area 
         }
     })
+
+    const editAreas = [...navItems]
+    editAreas.unshift({  label: 'Crear', icon: 'pi pi-plus-circle', to: `/addArea`})
 
     const model: AppMenuItem[] = [
         {
@@ -30,14 +33,8 @@ const AppMenu = () => {
             {  label: 'Usuarios', icon: 'pi pi-users', to: `/crud` }]
         },
         {
-            label: 'Áreas',
-            items: navItems
-        },
-        {
-            label: 'Gestionar Áreas',
-            items: [
-                {  label: 'Crear', icon: 'pi pi-plus-circle', to: `/addArea` },
-            ]
+            label: 'Áreas',  
+            items: editAreas
         }
     ];
     

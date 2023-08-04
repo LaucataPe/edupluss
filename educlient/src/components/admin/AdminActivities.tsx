@@ -61,14 +61,14 @@ function AdminActivities() {
     return (
       <>
       {/*Mapea todas las actividades*/}
-      <div className="card p-fluid my-2">
+      <div className="card p-fluid my-3 h-[720px] overflow-auto">
           {activities?.map((act) => (
                
             <div key={act.id} className="py-4 px-3 border rounded m-3 flex items-center hover:bg-slate-100">
 
             <div className="col-12">
-                <div className="flex flex-column md:flex-row align-items-center p-3 w-full">
-                    <div className="flex-1 flex flex-column align-items-center text-center md:text-left">
+                <div className="flex flex-column md:flex-row align-items-center w-full">
+                    <div className="flex-1 flex flex-column md:text-left">
                         <div className="font-bold text-2xl">{act.title}</div>   
                     </div>
                     <div className="car-buttons">
@@ -103,7 +103,7 @@ function AdminActivities() {
 
       
       
-      <Link to={`/addActivity/${roleId}`}><button className="py-2 px-4 flex absolute bottom-10 right-10
+      <Link to={`/addActivity/${roleId}`}><button className="py-2 px-4 flex absolute bottom-5 right-5
       justify-center items-center rounded-full 
       font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-all text-xl
        dark:focus:ring-offset-gray-800">+ Crear Actividad</button></Link>
