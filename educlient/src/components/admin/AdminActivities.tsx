@@ -64,21 +64,29 @@ function AdminActivities() {
       <div className="card p-fluid my-2">
           {activities?.map((act) => (
                
-            <div key={act.id} className="py-4 px-3 border rounded m-3 flex items-center">
-                <div className="flex w-[80%] gap-2 cursor-pointer hover:bg-slate-300" onClick={() => navigate(`/actvitySteps/${act.id}`)}>
-                <p className=" text-black m-0 text-xl">{act.title}</p>
-                </div>
+            <div key={act.id} className="py-4 px-3 border rounded m-3 flex items-center hover:bg-slate-100">
 
-                <div className="flex w-[20%] gap-2">
-                  {act.active ? <Button label="Desactivar" severity="danger" outlined 
-                  onClick={()=>handleState(act.id, act.roleId)} />
-                  : <Button label="Activar" severity="success" outlined 
-                  onClick={()=>handleState(act.id, act.roleId)} />}
-                  <Button icon="pi pi-pencil" rounded outlined severity="success" className="w-3"
-                    onClick={() => navigate(`/editActivity/${roleId}/${act.id}`)}/>
-                  <Button icon="pi pi-times" rounded outlined severity="danger" className="w-3"
-                  onClick={() => dialogHandler(act.id ?? 0)}/>
+            <div className="col-12">
+                <div className="flex flex-column md:flex-row align-items-center p-3 w-full">
+                    <div className="flex-1 flex flex-column align-items-center text-center md:text-left">
+                        <div className="font-bold text-2xl">{act.title}</div>   
+                    </div>
+                    <div className="car-buttons">
+                        <Button icon="pi pi-arrow-right" rounded outlined severity="info" className="mx-2"
+                          onClick={() => navigate(`/actvitySteps/${act.id}`)}/>
+                        <Button icon="pi pi-pencil" rounded outlined severity="success" className="mx-2"
+                          onClick={() => navigate(`/editActivity/${roleId}/${act.id}`)}/>
+                        <Button icon="pi pi-times" rounded outlined severity="danger" className="mx-2"
+                          onClick={() => dialogHandler(act.id ?? 0)}/>
+                    </div>
+                    <div className="mx-2">
+                    {act.active ? <Button label="Desactivar" severity="danger" outlined 
+                      onClick={()=>handleState(act.id, act.roleId)} />
+                      : <Button label="Activar" severity="success" outlined 
+                      onClick={()=>handleState(act.id, act.roleId)} />}
+                    </div>
                 </div>
+            </div>        
 
                 <Dialog header="Eliminar Actividad" visible={displayConfirmation} onHide={() => setDisplayConfirmation(false)} style={{ width: '350px' }} modal footer={confirmationDialogFooter}>
                   <div className="flex align-items-center justify-content-center">
@@ -92,6 +100,8 @@ function AdminActivities() {
           ))} 
           {activities.length === 0 ? <h3>No hay actividades para este cargo</h3> : ''} 
       </div>
+
+      
       
       <Link to={`/addActivity/${roleId}`}><button className="py-2 px-4 flex absolute bottom-10 right-10
       justify-center items-center rounded-full 

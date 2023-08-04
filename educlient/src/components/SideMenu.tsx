@@ -44,7 +44,7 @@ const AppMenu = () => {
     const menuItems = logUser.tipo === 'admin' ? xd : model;
 
     return (
-      <nav className="layout-menu border-2 p-3 h-[100%] w-[14rem]">
+      <nav className="layout-menu border-2 p-3 h-[100%] w-[14rem] bg-white my-4 mx-3 rounded-lg col-2">
         {menuItems.map((item, i) => (
           !item?.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator"></li>
         ))}

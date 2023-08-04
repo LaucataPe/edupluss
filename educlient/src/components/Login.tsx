@@ -5,13 +5,13 @@ import axios from 'axios'
 import { setLogUser } from '../redux/features/userSlice'
 import { setEmpresa } from '../redux/features/activitiesSlice'
 
-import logo from '../assets/logo.png'
+//import logo from '../assets/logo.png'
+import edupluss from '../assets/edupluss.png'
 
 import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import { uploadFile } from '../firebase/config';
 
 function Login() {
     const dispatch = useDispatch()
@@ -55,9 +55,9 @@ function Login() {
       <div className="flex flex-column align-items-center justify-content-center">
           <div className="w-[40rem] my-20 surface-card py-8 px-5 sm:px-8" style={{ borderRadius: '53px' }}>
             <div className='w-[100%] flex items-center justify-center'>
-            <img src={logo} alt="Logo Edupluss" className='h-[130px]' />
+            <img src={edupluss} alt="Logo Edupluss" className='h-[200px]' />
             </div>
-            <h1>Inicia Sesión</h1>
+            <h3>Inicia Sesión</h3>
             <div>
               <label className="block text-900 text-xl font-medium mb-2">
                 Correo
@@ -69,15 +69,13 @@ function Login() {
                             </label>
                             <Password name='password' value={inputs.password} onChange={(e) => handleInputs(e)} 
                             toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem" placeholder="Ingresar contraseña"
-                            weakLabel='Poco Segura' mediumLabel='Segura' strongLabel='Muy Segura'></Password>
-                            <Button label="Ingresar" className="w-full p-3 text-xl" onClick={handleSubmit}></Button>
+                            feedback={false}></Password>
+                            <Button label="Ingresar" className="w-full p-3 text-xl" onClick={handleSubmit}
+                            disabled={inputs.email === '' || inputs.password === '' ? true : false}></Button>
                         </div>
                     </div>
                     <p>{error}</p>
             </div>
-
-
-          <input type="file" onChange={(e) => uploadFile(e.target.files?.[0])} />
       </>
     );
   }

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useRef, useState } from 'react';
-import logo from '../assets/logo.png'
+import logo from '../assets/edupluss.png'
 import admin from '../assets/admin.jpg'
 import { Link } from 'react-router-dom';
 

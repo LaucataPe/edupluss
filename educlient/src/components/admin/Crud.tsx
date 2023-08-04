@@ -229,10 +229,10 @@ const Crud = () => {
     return (
       <>
         {findArea &&
-          <span key={findArea.id} className="p-badge p-mr-1">
+          <span key={findArea.id} className="p-badge p-mr-1 h-auto">
           {findArea.name}
         </span>}
-        {!findArea && <span className="p-badge p-mr-1">No encontrada</span>}
+        {!findArea && <span className="p-badge p-mr-1 h-auto">No encontrada</span>}
       </>
     );
   };
@@ -242,10 +242,10 @@ const Crud = () => {
     return (
       <>
         {findRole &&
-          <span key={findRole.id} className="p-badge p-badge-info p-mr-1">
+          <span key={findRole.id} className="p-badge p-badge-info h-auto">
           {findRole.name}
         </span>}
-        {!findRole && <span className="p-badge p-badge-info p-mr-1">No encontrado</span>}
+        {!findRole && <span className="p-badge p-badge-info h-auto">No encontrado</span>}
       </>
     );
   };
@@ -299,7 +299,7 @@ const Crud = () => {
   ); 
 
   return (
-    <div className="grid crud-demo">
+    <div className="grid crud-demo my-1">
       <div className="col-12">
         <div className="card">
           <Toast ref={toast} />
@@ -314,12 +314,13 @@ const Crud = () => {
             paginator
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
-            className="datatable-responsive overscroll-contain"
+            className="datatable-responsive p-datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
             globalFilter={globalFilter}
             emptyMessage="No se encontraron usuarios."
             header={header}
+            scrollable
           >
             <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
             <Column field="id" header="ID" sortable></Column>

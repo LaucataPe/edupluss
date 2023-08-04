@@ -47,7 +47,11 @@ function AddStep() {
       if(steps.length === 0){
         dispatch(getStepsActivity(Number(id)))
       }
+    }, [steps])
+
+    useEffect(() => {
       if(stepId){
+        dispatch(getStepsActivity(Number(id)))
         const findStep = steps.find((step) => step.id === Number(stepId))
         if(findStep){
           setStep(findStep)
@@ -63,8 +67,8 @@ function AddStep() {
         }
         NextStep()
       }
-    }, [steps, stepId])
-    
+    }, [stepId])
+ 
 
     const handleInputs = (event: React.ChangeEvent<HTMLInputElement>) =>{
       setStep({...step, 
@@ -135,6 +139,12 @@ function AddStep() {
     const handleSubmit = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
       e.preventDefault();
           try {
+              if (step.file instanceof File) {
+                // Subir el archivo a Firebase y obtener el enlace de descarga
+                const fileUpload = await uploadFile(step.file);        
+                // Asignar el enlace devuelto al estado del paso
+                setStep((prevStep) => ({...prevStep, file: fileUpload}));
+              }
               let response = await axios.post(`https://edupluss.onrender.com/step`, step);
               let data = response.data;
               if(data){
@@ -151,12 +161,18 @@ function AddStep() {
            } catch (error: any) {
             console.log(error);
             
-            setErrors({...errors, send: `Se presentó el siguiente error al enviar ${error.message}`})  
+            setErrors({...errors, send: `Se presentó el siguiente error al enviar ${error.response.data}`})  
            }     
     }
 
     const handleEdit = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
       e.preventDefault();
+              if (step.file instanceof File && typeof step.file !== 'string') {
+                // Subir el archivo a Firebase y obtener el enlace de descarga
+                const fileUpload = await uploadFile(step.file);        
+                // Asignar el enlace devuelto al estado del paso
+                setStep((prevStep) => ({...prevStep, file: fileUpload}));
+              }
           try {
               let response = await axios.put(`https://edupluss.onrender.com/step/update`, step);
               let data = response.data;
@@ -172,6 +188,7 @@ function AddStep() {
                 })
               } 
            } catch (error: any) {
+            console.log(error);            
             setErrors({...errors, send: `Se presentó el siguiente error al enviar ${error.message}`})  
            }     
     }
@@ -241,6 +258,7 @@ function AddStep() {
                           type="file"
                           onChange={(e) => setStep({...step, file: e.target.files?.[0]})}
                           disabled={stepId ? !changeFile : false}
+                          accept=".pdf,.doc,.docx,.xls,.xlsx,image/jpeg,image/png,image/gif"
                         />    
                     </div> 
         <Button label={stepId ? "Editar" : "Crear Paso"} severity="info" outlined type='submit' 
