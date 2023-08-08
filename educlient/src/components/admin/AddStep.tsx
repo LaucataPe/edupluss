@@ -43,6 +43,9 @@ function AddStep() {
     const [videoURL, setVideoURL] = useState<string>('');
     const [videoFile, setVideoFile] = useState<string | ArrayBuffer | null>(null);
 
+    //Loader
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
       if(steps.length === 0){
         dispatch(getStepsActivity(Number(id)))
@@ -51,7 +54,6 @@ function AddStep() {
 
     useEffect(() => {
       if(stepId){
-        dispatch(getStepsActivity(Number(id)))
         const findStep = steps.find((step) => step.id === Number(stepId))
         if(findStep){
           setStep(findStep)
@@ -126,9 +128,9 @@ function AddStep() {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () =>{
-
           setVideoFile(reader.result);
-          setStep({...step, video: videoFile})
+          console.log(reader.result);
+          
           setErrors(validate({
                 ...step,
                 video: reader.result,
@@ -138,14 +140,22 @@ function AddStep() {
 
     const handleSubmit = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
       e.preventDefault();
+      setIsLoading(true); 
           try {
-              if (step.file instanceof File) {
+            let updatedStep = { ...step }; // Crear una copia del paso
+
+            if (step.file instanceof File) {
                 // Subir el archivo a Firebase y obtener el enlace de descarga
-                const fileUpload = await uploadFile(step.file);        
+                const fileUpload = await uploadFile(step.file);
                 // Asignar el enlace devuelto al estado del paso
-                setStep((prevStep) => ({...prevStep, file: fileUpload}));
-              }
-              let response = await axios.post(`https://edupluss.onrender.com/step`, step);
+                updatedStep.file = fileUpload;
+            }
+    
+            // Esperar a que se cargue el archivo de video si es necesario
+            if (videoFile) {
+                updatedStep.video = videoFile;
+            }
+              let response = await axios.post(`https://edupluss.onrender.com/step`, updatedStep);
               let data = response.data;
               if(data){
                 toast.current?.show({ severity: 'info', summary: 'Success', detail: 'Paso creado', life: 3000 });
@@ -162,19 +172,30 @@ function AddStep() {
             console.log(error);
             
             setErrors({...errors, send: `Se presentó el siguiente error al enviar ${error.response.data}`})  
-           }     
+           } finally{
+            setIsLoading(false)
+           }   
     }
 
     const handleEdit = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
       e.preventDefault();
-              if (step.file instanceof File && typeof step.file !== 'string') {
-                // Subir el archivo a Firebase y obtener el enlace de descarga
-                const fileUpload = await uploadFile(step.file);        
-                // Asignar el enlace devuelto al estado del paso
-                setStep((prevStep) => ({...prevStep, file: fileUpload}));
-              }
+      setIsLoading(true)
           try {
-              let response = await axios.put(`https://edupluss.onrender.com/step/update`, step);
+            let updatedStep = { ...step }; // Crear una copia del paso
+
+            if (step.file instanceof File) {
+                // Subir el archivo a Firebase y obtener el enlace de descarga
+                const fileUpload = await uploadFile(step.file);
+                // Asignar el enlace devuelto al estado del paso
+                updatedStep.file = fileUpload;
+            }
+    
+            // Esperar a que se cargue el archivo de video si es necesario
+            if (videoFile) {
+                updatedStep.video = videoFile;
+            }
+
+              let response = await axios.put(`https://edupluss.onrender.com/step/update`, updatedStep);
               let data = response.data;
               if(data){
                 toast.current?.show({ severity: 'info', summary: 'Success', detail: 'Paso creado', life: 3000 });
@@ -190,7 +211,9 @@ function AddStep() {
            } catch (error: any) {
             console.log(error);            
             setErrors({...errors, send: `Se presentó el siguiente error al enviar ${error.message}`})  
-           }     
+           }  finally{
+            setIsLoading(false)
+           }  
     }
 
     return (
@@ -263,11 +286,12 @@ function AddStep() {
                     </div> 
         <Button label={stepId ? "Editar" : "Crear Paso"} severity="info" outlined type='submit' 
           onClick={(e) => {!stepId ? handleSubmit(e) : handleEdit(e)}}
-          disabled={Object.keys(errors).length > 0 ? true : false}/>              
+          disabled={Object.keys(errors).length > 0 ? true : false}
+          loading={isLoading}/>              
       </div>   
       </form>
 
-      <p className='font-semibold text-red-600'>{errors.send ? errors.send : ''}</p>    
+      <p className='font-semibold text-red-600'>{errors.send ? errors.send : ''}</p>
       </>
     );
   }

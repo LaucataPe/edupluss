@@ -1,15 +1,13 @@
 const { Step } = require('../../db')
 const cloudinary = require('../../utils/cloudinary')
-
+const regExpurl = new RegExp("https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)");
 
 const createStep = async (req, res) =>{
     const {title, description, video, activityId, file } = req.body
-
-    console.log(`Create step: ${req.body}`);
     try {
         let urlVideo = video
 
-        if(!video.includes('https://') && video.includes('video')){
+        if(!regExpurl.test(video) && video.startsWith("data:video/")){
             const uploadVideo = await cloudinary.uploader.upload(video, {
                 resource_type: 'video',
                 folder: 'edupluss'
