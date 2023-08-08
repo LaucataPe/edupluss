@@ -314,7 +314,7 @@ const Crud = () => {
             paginator
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
-            className="datatable-responsive p-datatable-responsive"
+            className="datatable-responsive p-datatable-responsive  overflow-auto"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
             globalFilter={globalFilter}

@@ -18,7 +18,7 @@ const AppMenu = () => {
     })
 
     const editAreas = [...navItems]
-    editAreas.unshift({  label: 'Crear', icon: 'pi pi-plus-circle', to: `/addArea`})
+    editAreas.unshift({  label: 'Crear',  icon: 'pi pi-plus-circle', to: `/addArea`})
 
     const model: AppMenuItem[] = [
         {

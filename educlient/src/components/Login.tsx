@@ -44,7 +44,9 @@ function Login() {
           } else{
             navigate('/home')
           }
-        } catch (error: any) {       
+        } catch (error: any) {  
+          console.log(error.response.data);
+               
           setError(error.response.data)
         }
       }
@@ -53,7 +55,7 @@ function Login() {
     return (
       <>
       <div className="flex flex-column align-items-center justify-content-center">
-          <div className="w-[40rem] my-20 surface-card py-8 px-5 sm:px-8" style={{ borderRadius: '53px' }}>
+          <div className="w-[40rem] my-20 surface-card py-3 px-2 sm:px-8" style={{ borderRadius: '53px' }}>
             <div className='w-[100%] flex items-center justify-center'>
             <img src={edupluss} alt="Logo Edupluss" className='h-[200px]' />
             </div>
@@ -70,11 +72,11 @@ function Login() {
                             <Password name='password' value={inputs.password} onChange={(e) => handleInputs(e)} 
                             toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem" placeholder="Ingresar contraseña"
                             feedback={false}></Password>
+                            <p className='p-error font-bold'>{error}</p>
                             <Button label="Ingresar" className="w-full p-3 text-xl" onClick={handleSubmit}
                             disabled={inputs.email === '' || inputs.password === '' ? true : false}></Button>
                         </div>
                     </div>
-                    <p>{error}</p>
             </div>
       </>
     );

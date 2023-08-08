@@ -62,9 +62,10 @@ function AdminActivities() {
       <>
       {/*Mapea todas las actividades*/}
       <div className="card p-fluid my-3 h-[720px] overflow-auto">
+          <h3 className="text-blue-500 text-bold">Actividades:</h3>
           {activities?.map((act) => (
                
-            <div key={act.id} className="py-4 px-3 border rounded m-3 flex items-center hover:bg-slate-100">
+            <div key={act.id} className="py-1 px-2 border rounded m-3 flex items-center hover:bg-slate-100">
 
             <div className="col-12">
                 <div className="flex flex-column md:flex-row align-items-center w-full">

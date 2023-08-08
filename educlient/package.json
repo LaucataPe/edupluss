@@ -1,9 +1,8 @@
 {
   "name": "educlient",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://www.colkrea.com/",
+  "homepage": ".",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
