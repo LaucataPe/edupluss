@@ -30,7 +30,7 @@ function Login() {
     const handleSubmit = async () => {
       if(inputs.email && inputs.password){
         try {
-          const {data} = await axios.post('http://38.242.216.20/logUser', inputs)
+          const {data} = await axios.post('https://api.colkrea.com/logUser', inputs)
           if(data){
             toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado', life: 3000 });
             const token = data.token;

@@ -67,7 +67,7 @@ function App() {
 	useEffect(() => {
 		if (session) {
 			axios
-				.get(`http://38.242.216.20/auth/token`, { headers })
+				.get(`https://api.colkrea.com/auth/token`, { headers })
 				.then((response) => {
 					if(response){
 						dispatch(setLogUser(response.data.data.user))

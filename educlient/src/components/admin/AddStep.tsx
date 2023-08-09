@@ -155,7 +155,7 @@ function AddStep() {
             if (videoFile) {
                 updatedStep.video = videoFile;
             }
-              let response = await axios.post(`http://38.242.216.20/step`, updatedStep);
+              let response = await axios.post(`https://api.colkrea.com/step`, updatedStep);
               let data = response.data;
               if(data){
                 toast.current?.show({ severity: 'info', summary: 'Success', detail: 'Paso creado', life: 3000 });
@@ -195,7 +195,7 @@ function AddStep() {
                 updatedStep.video = videoFile;
             }
 
-              let response = await axios.put(`http://38.242.216.20/step/update`, updatedStep);
+              let response = await axios.put(`https://api.colkrea.com/step/update`, updatedStep);
               let data = response.data;
               if(data){
                 toast.current?.show({ severity: 'info', summary: 'Success', detail: 'Paso creado', life: 3000 });

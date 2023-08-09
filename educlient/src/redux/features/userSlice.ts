@@ -28,7 +28,7 @@ const initialState:initState = {
 //
 export const fetchUsers = createAsyncThunk('user/fetchUsers', async () => {
 	try {
-		const { data } = await axios(`http://38.242.216.20/users`);
+		const { data } = await axios(`https://api.colkrea.com/users`);
 		return data
 	} catch (error: any) {
 		throw new Error(error.message);
@@ -37,7 +37,7 @@ export const fetchUsers = createAsyncThunk('user/fetchUsers', async () => {
 
 export const getUsersByCompany = createAsyncThunk('user/getUsersByCompany', async (id: number) => {
 	try {
-		const { data } = await axios(`http://38.242.216.20/users/${id}`);
+		const { data } = await axios(`https://api.colkrea.com/users/${id}`);
 		return data
 	} catch (error: any) {
 		throw new Error(error.message);
