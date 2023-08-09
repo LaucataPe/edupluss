@@ -22,7 +22,7 @@ const initialState:initState = {
 ///
 export const fetchCompanyAreas = createAsyncThunk('areas/fetchCompanyAreas', async (id: number) => {
 	try {
-		const {data} = await axios(`https://edupluss.onrender.com/areas/${id}`);
+		const {data} = await axios(`http://38.242.216.20/areas/${id}`);
 		const active = data.filter((area: Area) => area.active === true)
 		return active;
 	} catch (error: any) {
@@ -32,7 +32,7 @@ export const fetchCompanyAreas = createAsyncThunk('areas/fetchCompanyAreas', asy
 
 export const getUserAreas = createAsyncThunk('areas/getUserAreas', async (id: number) => {
 	try {
-		const {data} = await axios(`https://edupluss.onrender.com/user/areas/${id}`);
+		const {data} = await axios(`http://38.242.216.20/user/areas/${id}`);
 		return data;
 	} catch (error: any) {
 		throw new Error(error.message);

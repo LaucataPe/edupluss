@@ -52,7 +52,7 @@ function Roles() {
 
     const handleDelete = async () =>{
       try {
-          let response = await axios.delete(`https://edupluss.onrender.com/role/${roleId}`);
+          let response = await axios.delete(`http://38.242.216.20/role/${roleId}`);
           let data = response.data;
           if(data){
            navigate('/admin')

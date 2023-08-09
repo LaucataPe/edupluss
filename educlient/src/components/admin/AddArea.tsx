@@ -43,7 +43,7 @@ function AddArea() {
 
     const handleSubmit = async () => {
       try {
-        const response = await axios.post('https://edupluss.onrender.com/area', area)
+        const response = await axios.post('http://38.242.216.20/area', area)
         if(response){
           toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Área creada exitosamente', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -62,7 +62,7 @@ function AddArea() {
     const handleEdit = async () => {
       try {
         const data = { id: Number(areaId), name: area.name}
-        const response = await axios.put('https://edupluss.onrender.com/area/update', data)
+        const response = await axios.put('http://38.242.216.20/area/update', data)
         if(response){
           toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Área editada', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -81,7 +81,7 @@ function AddArea() {
     const handleDelete = async () => {
       setModalDelete(false)
       try {
-        const response = await axios.delete(`https://edupluss.onrender.com/area/${areaId}`)
+        const response = await axios.delete(`http://38.242.216.20/area/${areaId}`)
         if(response){
           toast.current?.show({ severity: 'success', summary: 'Eliminado!', detail: 'Área eliminada', life: 1000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));

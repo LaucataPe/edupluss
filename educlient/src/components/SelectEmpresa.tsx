@@ -15,7 +15,7 @@ function SelectEmpresa() {
   useEffect(() => {
     const fetchEmpresas = async () =>{
       try {
-        const empresas = await axios('https://edupluss.onrender.com/empresas')
+        const empresas = await axios('http://38.242.216.20/empresas')
         setEmpresas(empresas.data);
         
       } catch (error: any) {

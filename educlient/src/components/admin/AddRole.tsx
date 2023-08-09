@@ -136,7 +136,7 @@ function AddRole() {
    
     const handleSubmit = async () => {
       try {
-        const response = await axios.post('https://edupluss.onrender.com/role', role)
+        const response = await axios.post('http://38.242.216.20/role', role)
         if(response){
           toast.current?.show({ severity: 'success', summary: 'Eliminado!', detail: 'Cargo creado', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -160,7 +160,7 @@ function AddRole() {
 
     const handleEdit = async () => {
       try {
-        const response = await axios.put('https://edupluss.onrender.com/role/update', role)
+        const response = await axios.put('http://38.242.216.20/role/update', role)
         if(response){
           toast.current?.show({ severity: 'success', summary: 'Editado!', detail: 'Cargo editado', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
