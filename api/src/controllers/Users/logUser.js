@@ -11,13 +11,13 @@ const logUser = async (req, res) =>{
                 email
             },
         })
-        if (!logUser?.email) {
+        if (!logUser || !logUser.email) {
             throw new Error(
                 "El correo electrónico que ingresaste no se encuentra registrado."
             );
         }
 
-		if (!logUser?.active) {
+		if (!logUser.active) {
             throw new Error(
                 "El usuario se encuentra desactivado"
             );

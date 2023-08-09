@@ -7,7 +7,7 @@ const createUser = async (req, res) => {
   try {
     const userFound = await User.findOne({ where: { email } });
 
-    if (userFound?.email) {
+    if (userFound && userFound.email) {
       throw new Error("Ya existe una cuenta creada con ese e-mail");
     }
 

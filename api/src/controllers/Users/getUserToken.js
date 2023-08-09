@@ -3,7 +3,8 @@ const { Company } = require('../../db')
 
 const getByToken = async (req, res) =>{
     const { authorization } = req.headers;
-	const token = authorization?.split(" ")[1];
+	const token = authorization ? authorization.split(" ")[1] : null;
+
 
 	if (token) {
 		const data = verifyToken(token);
