@@ -36,8 +36,8 @@ function NavBar() {
 
     return (
       <>
-      <nav className=" py-3 bg-blue-500 flex relative justify-center items-center">
-        <p className="text-3xl font-bold text-white m-0">{currentEmpresa ? currentEmpresa : 'Selecciona la empresa'}</p>
+      <nav className=" py-3 layout-topbar bg-blue-500 flex relative justify-center items-center">
+        <h2 className="text-white font-bold m-0">{currentEmpresa ? currentEmpresa : 'Selecciona la empresa'}</h2>
         {pathname !== '/' && pathname !== '/login' ?
         <Avatar icon='pi pi-user' size="large" shape="circle"  onClick={toggleMenu} className="absolute right-2"></Avatar>: '' }
         <Menu ref={menu} model={overlayMenuItems} popup />

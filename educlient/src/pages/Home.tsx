@@ -4,7 +4,6 @@ import Activities from "../components/Activities";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { RootState } from "../redux/store";
 import { getActivitiesByRole } from "../redux/features/activitiesSlice";
-//import AppMenu from "../components/SideMenu";
 
 function Home() {
     const Mydispatch = useAppDispatch()
