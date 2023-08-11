@@ -30,7 +30,7 @@ export interface CreateStep {
     number: number
     title: string
     description: string
-    video: string | ArrayBuffer | null
+    video: File| string | ArrayBuffer | null
     file?: File| string | ArrayBuffer | null
     activityId?: number
 }

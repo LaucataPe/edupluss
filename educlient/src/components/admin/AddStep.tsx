@@ -41,7 +41,7 @@ function AddStep() {
     //Videos
     const [videoOrigin, setVideoOrigin] = useState<boolean>(false);
     const [videoURL, setVideoURL] = useState<string>('');
-    const [videoFile, setVideoFile] = useState<string | ArrayBuffer | null>(null);
+    const [videoFile, setVideoFile] = useState<File | null>(null);
 
     //Loader
     const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +50,7 @@ function AddStep() {
       if(steps.length === 0){
         dispatch(getStepsActivity(Number(id)))
       }
-    }, [steps])
+    }, [])
 
     useEffect(() => {
       if(stepId){
@@ -114,17 +114,21 @@ function AddStep() {
     };
     
 
-    const handleVideo = (e: React.ChangeEvent<HTMLInputElement>) =>{
-      if(e.target.files !== null){
+    const handleVideo = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files !== null) {
         const file = e.target.files[0];
-        if(file){
-          setFileToBase(file);
-          setVideoURL('');
+        if (file) {
+          setVideoFile(file); // Almacenar el archivo localmente
+          setErrors(validate({
+            ...step,
+            video: file,
+          }))
+          setVideoURL(""); // Limpiar la URL si está presente
         }
       }
-    }
+    };
 
-    const setFileToBase = (file: Blob) =>{
+    /*const setFileToBase = (file: Blob) =>{
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () =>{
@@ -136,7 +140,28 @@ function AddStep() {
                 video: reader.result,
           }))
       }
-    }
+    }*/
+
+    const handleVideoUpload = async (file: File) => {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("tags", "codeinfuse, medium, gist");
+        formData.append("upload_preset", "edupluss"); // Reemplaza con tu upload preset de Cloudinary
+        formData.append("api_key", "177349447724448");
+    
+        const response = await axios.post(
+          "https://api.cloudinary.com/v1_1/dlzrjejko/video/upload",
+          formData,
+          {
+            headers: { "X-Requested-With": "XMLHttpRequest" },
+          }
+        );
+          return response.data.secure_url
+      } catch (error) {
+        console.error("Error uploading video:", error);
+      }
+    };
 
     const handleSubmit = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
       e.preventDefault();
@@ -153,8 +178,8 @@ function AddStep() {
     
             // Esperar a que se cargue el archivo de video si es necesario
             if (videoFile) {
-                updatedStep.video = videoFile;
-            }
+              updatedStep.video = await handleVideoUpload(videoFile);
+            }        
               let response = await axios.post(`https://api.colkrea.com/step`, updatedStep);
               let data = response.data;
               if(data){
@@ -192,9 +217,9 @@ function AddStep() {
     
             // Esperar a que se cargue el archivo de video si es necesario
             if (videoFile) {
-                updatedStep.video = videoFile;
-            }
-
+              updatedStep.video = await handleVideoUpload(videoFile);
+            } 
+            
               let response = await axios.put(`https://api.colkrea.com/step/update`, updatedStep);
               let data = response.data;
               if(data){
