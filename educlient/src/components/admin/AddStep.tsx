@@ -128,6 +128,10 @@ function AddStep() {
       }
     };
 
+    const deleteDownloadFile = () =>{
+      setStep({...step, file: ''})
+      setErrors(validate({...step}))
+    } 
     /*const setFileToBase = (file: Blob) =>{
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -244,9 +248,9 @@ function AddStep() {
     return (
       <>
       <Link to={`/actvitySteps/${id}`}><Button icon="pi pi-angle-double-left" label='Atrás' rounded 
-        severity="secondary" className='m-2' /></Link>
-      <form action="">
-      <div className="card p-fluid mx-5">
+        severity="secondary" className='mt-3 mx-3 mb-2' /></Link>
+      <form>
+      <div className="card p-fluid mx-3">
         <h5>Paso #{stepNumber}</h5>
           <div className="field">
             <label>Título:</label>
@@ -296,18 +300,25 @@ function AddStep() {
                       <p className='font-semibold text-red-600'>{errors.video ? errors.video : ''}</p>
                     </div> 
                     <div className="field">
-                      <div className='flex my-3'>
-                        <label className='m-0'>{stepId ? 'Cambiar Archivo Descargable:': 'Agregar Archivo Descargable:'}</label>
+                      <div className='flex my-3 items-center'>
+                        <label className='m-0'>{stepId && step.file ? 'Cambiar Archivo Descargable:': 'Agregar Archivo Descargable:'}</label>
                         {stepId && <input type="checkbox" checked={changeFile} 
                         onChange={() => setChangeFile(!changeFile)} className='mx-2'/>}
+                        {(stepId && step.file && !(step.file instanceof File)) ? 
+                        <div className='flex items-center ml-5'>
+                          <p className='text-red-600 m-0'>Eliminar archivo actual</p>   
+                          <Button icon="pi pi-times" rounded severity="danger" text 
+                            onClick={deleteDownloadFile}/>
+                        </div> : ''}
                       </div>
+                      
                       <InputText
                           name="file"
                           type="file"
                           onChange={(e) => setStep({...step, file: e.target.files?.[0]})}
                           disabled={stepId ? !changeFile : false}
                           accept=".pdf,.doc,.docx,.xls,.xlsx,image/jpeg,image/png,image/gif"
-                        />    
+                      />                      
                     </div> 
         <Button label={stepId ? "Editar" : "Crear Paso"} severity="info" outlined type='submit' 
           onClick={(e) => {!stepId ? handleSubmit(e) : handleEdit(e)}}
