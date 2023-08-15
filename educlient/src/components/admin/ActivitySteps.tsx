@@ -45,9 +45,9 @@ function ActivitySteps() {
     const dataviewListItem = (data: Step) => {
         return (
             <div className="col-12">
-                <div className="flex flex-column md:flex-row align-items-center p-3 w-full">
+                <div className="flex flex-column md:flex-row align-items-center px-3 w-full">
                 <img src='https://images.pexels.com/photos/15401447/pexels-photo-15401447/free-photo-of-texto-cartas-dados-fondo-blanco.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-                         alt='Foto Random' className="w-2 shadow-2 my-3 mx-0" />
+                         alt='Foto Random' className="w-2 shadow-2 my-2 mx-0" />
                     <div className="flex-1 flex flex-column align-items-center text-center md:text-left">
                         <span className="font-semibold"> Paso #{data.number}</span>
                         <div className="font-bold text-xl">{data.title}</div>   
@@ -114,14 +114,14 @@ function ActivitySteps() {
     
     return (
         <>
-        <Link to={`/activities/${role.id}`}><Button icon="pi pi-angle-double-left" label="Atrás" className="m-2" rounded severity="secondary" /></Link>
+        <Link to={`/activities/${role.id}`}><Button icon="pi pi-angle-double-left" label="Atrás" className="mt-3 mx-2" rounded severity="secondary" /></Link>
         <div className="list-demo relative">
                 <div className="col-12">
-                    <div className="card">
+                    <div className="card h-[700px] overflow-auto">
                         <DataView value={steps} emptyMessage="No hay pasos en este actividad" layout={layout} rows={9}  itemTemplate={itemTemplate} header={dataViewHeader}></DataView>
                     </div>
                 </div>
-        <Link to={`/addStep/${id}`}><Button label="+ Crear Paso" severity="info" rounded 
+            <Link to={`/addStep/${id}`}><Button label="+ Crear Paso" severity="info" rounded 
             className="absolute right-4 bottom-4 "/></Link>
         </div>
 

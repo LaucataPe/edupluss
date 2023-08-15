@@ -203,7 +203,7 @@ function AddRole() {
                   </div>
                   <div className="field col-2">
                       <label htmlFor="email2">Remoto</label><br />
-                      <InputSwitch checked={role.remote ? role.remote : false }  onChange={(e) => onSwitchChange(e)} />
+                      <InputSwitch checked={role.remote ? role.remote : false } onChange={(e) => onSwitchChange(e)} />
                   </div>
               </div>
               <div className="formgrid grid mb-3">
@@ -239,7 +239,7 @@ function AddRole() {
                   <div className='p-inputgroup'>
                     <InputText placeholder="Escribe un requerimiento técnico" value={hardSkill}
                     onChange={(e) => setHardSkill(e.target.value)}/>
-                    <Button label="+ Agregar" 
+                    <Button label="+ Agregar" severity='info'
                     onClick={() => {
                       addHardSkill(hardSkill);
                       setHardSkill('');
@@ -251,8 +251,8 @@ function AddRole() {
                   <div className='p-inputgroup'>
                     <InputText placeholder="Escribe una habilidad blanda" value={softSkill}
                     onChange={(e) => setSoftSkill(e.target.value)}/>
-                    <Button label="+ Agregar" 
-                    onClick={() => {
+                    <Button label="+ Agregar" severity='info'
+                      onClick={() => {
                       addSoftSkill(softSkill);
                       setSoftSkill('');
                     }}/>
@@ -283,7 +283,8 @@ function AddRole() {
                       </ul>           
                   </div>
               </div>
-              <Button label={roleId ? 'Editar' : 'Crear cargo'} onClick={roleId ? handleEdit : handleSubmit}/>
+              <Button label={roleId ? 'Editar' : 'Crear cargo'} outlined severity='info'
+               onClick={roleId ? handleEdit : handleSubmit}/>
           </div>
       </>
     );

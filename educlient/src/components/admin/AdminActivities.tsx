@@ -73,17 +73,17 @@ function AdminActivities() {
                         <div className="font-bold text-2xl">{act.title}</div>   
                     </div>
                     <div className="car-buttons">
-                        <Button icon="pi pi-arrow-right" rounded outlined severity="info" className="mx-2"
+                        <Button icon="pi pi-arrow-right" rounded severity="info" className="mx-2"
                           onClick={() => navigate(`/actvitySteps/${act.id}`)}/>
-                        <Button icon="pi pi-pencil" rounded outlined severity="success" className="mx-2"
+                        <Button icon="pi pi-pencil" rounded severity="success" className="mx-2"
                           onClick={() => navigate(`/editActivity/${roleId}/${act.id}`)}/>
-                        <Button icon="pi pi-times" rounded outlined severity="danger" className="mx-2"
+                        <Button icon="pi pi-times" rounded severity="danger" className="mx-2"
                           onClick={() => dialogHandler(act.id ?? 0)}/>
                     </div>
                     <div className="mx-2">
-                    {act.active ? <Button label="Desactivar" severity="danger" outlined 
+                    {act.active ? <Button label="Desactivar" severity="danger" outlined
                       onClick={()=>handleState(act.id, act.roleId)} />
-                      : <Button label="Activar" severity="success" outlined 
+                      : <Button label="Activar" severity="success" outlined
                       onClick={()=>handleState(act.id, act.roleId)} />}
                     </div>
                 </div>

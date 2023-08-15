@@ -113,7 +113,7 @@ function AddActivity() {
             <label>Cargo</label>
             <InputText type="text" value={currentRole?.name} disabled/>
           </div>
-          <Button label={actId ? 'Editar' : 'Crear Actividad'} onClick={actId ? handleEdit : handleSubmit} 
+          <Button label={actId ? 'Editar' : 'Crear Actividad'} severity='info' onClick={actId ? handleEdit : handleSubmit} 
           disabled={(activity.title.length > 0 && activity.roleId !== 0) ? false : true}/>
         </div>
         <p className='text-red-500 font-semibold'>{error}</p>

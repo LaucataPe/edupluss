@@ -120,7 +120,7 @@ function AddArea() {
           <InputText type="text" value={currentEmpresa.name} disabled/>
         </div>
         <Button label={areaId ? 'Editar' : 'Crear Área'} onClick={areaId ? handleEdit : handleSubmit} 
-        disabled={area.name.length > 0 ? false : true}/>
+        disabled={area.name.length > 0 ? false : true} severity='info'/>
         {areaId ? <Button label='Eliminar Área' outlined severity="danger" className='my-3' 
         onClick={() => setModalDelete(true)}/> : ''}
       </div>
