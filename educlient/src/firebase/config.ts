@@ -24,6 +24,11 @@ function generateRandomId(){
   const id = v4();
   return id.slice(3,5);
 }
+const session = window.localStorage.getItem("token");
+const metadata = {
+  customMetadata: {
+    session: `${session}`
+  }}
 
 export async function uploadFile(file: File | undefined): Promise<string> {
   if (!file) {
@@ -40,7 +45,7 @@ export async function uploadFile(file: File | undefined): Promise<string> {
   const storageRef = ref(storage, `descargables/${filename}`);
 
   try {
-    await uploadBytes(storageRef, file);
+    await uploadBytes(storageRef, file, metadata);
     const url = await getDownloadURL(storageRef);
     return url;
   } catch (error: any) {
