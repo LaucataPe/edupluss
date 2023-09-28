@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+progress::-webkit-progress-value {
+  background-color: #349cfc;
+  border-radius: 10px;
+}
+
+/* Establece el color del riel de la barra de progreso (sin relleno) */
+progress::-webkit-progress-bar {
+  background-color: rgb(156 163 175);
+}
