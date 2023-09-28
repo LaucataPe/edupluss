@@ -1,5 +1,5 @@
 const { Area } = require('../../db');
-
+const { catchedAsync } = require('../../utils');
 const createArea = async (req, res) => {
   const { name, companyId } = req.body;
   try {
@@ -10,4 +10,4 @@ const createArea = async (req, res) => {
   }
 };
 
-module.exports = { createArea };
+module.exports = { createArea: catchedAsync(createArea) };
