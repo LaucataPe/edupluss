@@ -2,15 +2,14 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
+const {
+  DB_USER, DB_PASSWORD, DB_HOST,
+} = process.env;
 
-const sequelize = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/edupluss`,
-  {
-    logging: false, // set to console.log to see the raw SQL queries
-    native: false, // lets Sequelize know we can use pg-native for ~30% more speed
-  }
-);
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/edupluss`, {
+  logging: false, // set to console.log to see the raw SQL queries
+  native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+});
 
 // const sequelize = new Sequelize('pspcgwcy_edupluss', DB_USER, DB_PASSWORD, {
 //   host: DB_HOST,
@@ -60,7 +59,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
 
-const { Company, Step, Activity, User, Area, Role } = sequelize.models;
+const { Company, Step, Activity, User, Area, Role, UserActivityStep } = sequelize.models;
 console.log(sequelize.models);
 
 // Aca vendrian las relaciones
@@ -92,11 +91,16 @@ Role.hasOne(User, {
   foreignKey: 'roleId',
 });
 
+User.hasMany(UserActivityStep, {
+  foreignKey: 'userId'
+});
+
 User.beforeUpdate((user) => {
   if (user.tipo !== 'empleado' && user.roleId) {
     throw new Error('Solo los usuarios de tipo: empleado pueden tener un rol');
   }
 });
+
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
