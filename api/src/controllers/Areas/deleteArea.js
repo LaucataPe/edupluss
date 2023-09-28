@@ -1,8 +1,8 @@
 const { Area, Role, Activity, Step } = require('../../db');
-
+const { catchedAsync } = require('../../utils');
 const deleteAreaCascade = async (req, res) => {
-    const { id } = req.params;
-    try {
+  const { id } = req.params;
+  try {
     // Buscar el área por su ID y también incluir los roles asociados
     const area = await Area.findOne({
       where: { id },
@@ -12,11 +12,11 @@ const deleteAreaCascade = async (req, res) => {
           include: [
             {
               model: Activity,
-              include: [Step] // Incluir también los pasos asociados a las actividades
-            }
-          ]
-        }
-      ]
+              include: [Step], // Incluir también los pasos asociados a las actividades
+            },
+          ],
+        },
+      ],
     });
 
     if (!area) {
@@ -38,10 +38,13 @@ const deleteAreaCascade = async (req, res) => {
 
     await area.destroy();
 
-    res.status(200).json({ message: 'Área y registros relacionados eliminados correctamente' });
-
+    res
+      .status(200)
+      .json({
+        message: 'Área y registros relacionados eliminados correctamente',
+      });
   } catch (error) {
     res.status(404).send(error.message);
-  };
-}
-module.exports = { deleteAreaCascade };
+  }
+};
+module.exports = { deleteAreaCascade: catchedAsync(deleteAreaCascade) };

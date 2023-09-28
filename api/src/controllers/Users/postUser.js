@@ -1,4 +1,5 @@
 const { User, Area } = require('../../db');
+const { catchedAsync } = require('../../utils');
 const { encrypt } = require('../../utils/bcryptHandler');
 
 const createUser = async (req, res) => {
@@ -8,7 +9,7 @@ const createUser = async (req, res) => {
     const userFound = await User.findOne({ where: { email } });
 
     if (userFound && userFound.email) {
-      throw new Error("Ya existe una cuenta creada con ese e-mail");
+      throw new Error('Ya existe una cuenta creada con ese e-mail');
     }
 
     const passwordHash = await encrypt(password);
@@ -19,7 +20,7 @@ const createUser = async (req, res) => {
       companyId,
       active: true,
       roleId,
-      tipo
+      tipo,
     });
 
     res.status(200).json(newUser);
@@ -28,4 +29,4 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = { createUser };
+module.exports = { createUser: catchedAsync(createUser) };

@@ -1,5 +1,5 @@
 const { Role, Area } = require('../../db');
-
+const { catchedAsync } = require('../../utils');
 const getCompanyRoles = async (req, res) => {
   const { companyId } = req.params;
   try {
@@ -24,4 +24,4 @@ const getCompanyRoles = async (req, res) => {
   }
 };
 
-module.exports = { getCompanyRoles };
+module.exports = { getCompanyRoles: catchedAsync(getCompanyRoles) };
