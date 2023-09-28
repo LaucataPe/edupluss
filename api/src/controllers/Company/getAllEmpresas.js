@@ -1,12 +1,12 @@
-const { Company } = require('../../db')
+const { Company } = require('../../db');
+const { catchedAsync } = require('../../utils');
+const getAllCompanies = async (req, res) => {
+  try {
+    const companies = await Company.findAll();
+    return res.status(200).json(companies);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+};
 
-const getAllCompanies = async (req, res) =>{
-    try {
-        const companies = await Company.findAll()
-        return res.status(200).json(companies)
-    } catch (error) {
-        return res.status(500).send(error.message)
-    }
-}
-
-module.exports = {getAllCompanies}
+module.exports = { getAllCompanies: catchedAsync(getAllCompanies) };
