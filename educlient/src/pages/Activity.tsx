@@ -89,7 +89,6 @@ function Activity() {
               />
             ) : (
               <>
-              <Review></Review>
                 <Link to="/home">
                   <Button
                     label="Finalizar"
