@@ -1,8 +1,14 @@
 import { Rating } from "primereact/rating";
 import { useState } from "react";
+// import { useParams } from "react-router-dom";
 
 function RateActivity() {
+  // const { id } = useParams();
   const [ratingValue, setRatingValue] = useState<number | null>(null);
+
+  // const handlerSendRate = () => {
+  //   //Handler to send the rate given to activity
+  // }
 
   return (
     <div className="flex flex-col justify-center items-center">
