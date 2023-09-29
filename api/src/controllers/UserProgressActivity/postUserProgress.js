@@ -1,2 +1,7 @@
 const { User, Activity, UserActivityStep } = require('../../db.js');
-const { catchedAsync } = require('../../utils');
+
+module.exports = async (req, res) => {
+  try {
+    const { userId, activityId, stepId } = req.body;
+  } catch (error) {}
+};
