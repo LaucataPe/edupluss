@@ -3,29 +3,16 @@ const { DataTypes } = require('sequelize');
 // Luego le injectamos la conexion a sequelize.
 module.exports = (database) => {
   // defino el modelo
-  database.define('Activity', {
+  database.define('UserStep', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    hasTest: {
+    finished: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: false
     },
-    numberSteps: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    }
   },{
     timestamps: false
   });
