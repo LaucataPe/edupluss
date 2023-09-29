@@ -15,7 +15,7 @@ function SelectEmpresa() {
   useEffect(() => {
     const fetchEmpresas = async () =>{
       try {
-        const empresas = await axios('https://api.colkrea.com/empresas')
+        const empresas = await axios('http://localhost:3001/empresas')
         setEmpresas(empresas.data);
         
       } catch (error: any) {
