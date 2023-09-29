@@ -59,7 +59,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
 
-const { Company, Step, Activity, User, Area, Role, UserActivityStep } = sequelize.models;
+const { Company, Step, Activity, User, Area, Role } = sequelize.models;
 console.log(sequelize.models);
 
 // Aca vendrian las relaciones
@@ -91,9 +91,13 @@ Role.hasOne(User, {
   foreignKey: 'roleId',
 });
 
-User.hasMany(UserActivityStep, {
-  foreignKey: 'userId'
-});
+User.belongsToMany(Step, {through: "UserStep"});
+
+Step.belongsToMany(User, {through: "UserStep"});
+
+// User.hasMany(UserActivityStep, {
+//   foreignKey: 'userId'
+// });
 
 User.beforeUpdate((user) => {
   if (user.tipo !== 'empleado' && user.roleId) {

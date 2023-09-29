@@ -13,6 +13,15 @@ module.exports = (database) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    hasTest: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    numberSteps: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
     active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

@@ -27,7 +27,11 @@ module.exports = (sequelize) => {
     file: {
       type: DataTypes.TEXT,
       allowNull: true
-    }
+    },
+    finished: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
   },{
     timestamps: false,
   });
