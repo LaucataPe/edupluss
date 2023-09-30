@@ -7,26 +7,27 @@ import CurrentStep from "../components/Step";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { getStepsActivity } from "../redux/features/stepsSlider";
 import { Button } from "primereact/button";
-import { createUserStep } from "../redux/features/userStepsSlice"; // Asegúrate de proporcionar la ruta correcta
+import { createUserStep } from "../redux/features/userStepsSlice";
+import axios from "axios";
 
 function Activity() {
   const { id } = useParams();
   const dispatch = useAppDispatch();
-
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-
+  const [activeIndex, setActiveIndex] = useState<number>(1);
   const activities = useSelector(
     (state: RootState) => state.activities.activities
   );
   const steps = useSelector((state: RootState) => state.steps.steps);
+
   useEffect(() => {
     dispatch(getStepsActivity(Number(id)));
   }, [id]);
+
   const findActivityName = () => {
     const activityName = activities.find((act) => act.id === Number(id));
     return activityName?.title;
   };
-  const currentUser = useSelector((state: RootState) => state.user.logUser.id);
+
   useEffect(() => {
     const currentPath = window.location.pathname;
     const currentIndex = steps.findIndex((step) =>
@@ -39,37 +40,53 @@ function Activity() {
     setActiveIndex(e.index);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const percentage = (activeIndex / (steps.length - 1)) * 100;
-      console.log(
-        "Todos los steps",
-        steps.length,
-        "Step actual",
-        activeIndex,
-        "Porcentaje de progreso",
-        percentage.toFixed(2) + "%",
-        steps.length - 1 === activeIndex ? true : false
-      );
-    }, 1500);
+  const currentUser = useSelector((state: RootState) => state.user.logUser.id);
+  const activityName = activities.find((act) => act.id === Number(id));
+  const activityId = activityName?.id;
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [activeIndex, steps]);
-  const handleNextClick = () => {
-    // Datos que deseas enviar al servidor al hacer clic en "Siguiente"
+  const handleNextClick = async () => {
+    const actualIndex = activeIndex === 0 ? 1 : activeIndex + 1;
+
     const userData = {
+      userId: currentUser,
+      stepId: actualIndex,
+      activityId: activityId,
       finished: false,
-      UserId: currentUser,
-      StepId: activeIndex, // Utiliza el índice actual como StepId
+    };
+    try {
+      // Realiza la petición POST usando axios
+      const response = await axios.post(
+        "http://localhost:3001/userStep",
+        userData
+      );
+
+      // Aquí puedes manejar la respuesta si es necesario
+      console.log("Respuesta de la petición POST:", response.data);
+    } catch (error) {
+      // Maneja los errores de la petición
+      console.warn("Error al hacer la petición POST:", error);
+    }
+    setActiveIndex(activeIndex + 1);
+  };
+
+  const handleFinishClick = async () => {
+    const userData = {
+      userId: currentUser,
+      StepId: steps.length,
+      activityId: activityId,
+      finished: true,
     };
 
-    // Realiza el dispatch para crear el paso de usuario
-    dispatch(createUserStep(userData));
-
-    // Cambia el índice activo al siguiente paso
-    setActiveIndex(activeIndex + 1);
+    try {
+      // Realiza la petición POST usando axios
+      const response = await axios.post(
+        "http://localhost:3001/userStep",
+        userData
+      );
+      console.log("Respuesta de la petición POST:", response.data);
+    } catch (error) {
+      console.warn("Error al hacer la petición POST:", error);
+    }
   };
 
   return (
@@ -127,6 +144,7 @@ function Activity() {
                     icon="pi pi-home"
                     severity="info"
                     outlined
+                    onClick={handleFinishClick}
                     className="absolute w-auto bottom-4 right-4"
                   />
                 </Link>
