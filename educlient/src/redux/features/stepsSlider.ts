@@ -13,7 +13,6 @@ const initialState:initState = {
     status: 'idle'
 };
 
-///
 export const getStepsActivity = createAsyncThunk('steps/getStepsActivity', async (id: number) => {
 	try {
 		const { data } = await axios(`http://localhost:3001/steps/${id}`);

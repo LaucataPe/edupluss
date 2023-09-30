@@ -7,6 +7,7 @@ import CurrentStep from "../components/Step";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { getStepsActivity } from "../redux/features/stepsSlider";
 import { Button } from "primereact/button";
+import { createUserStep } from "../redux/features/userStepsSlice"; // Asegúrate de proporcionar la ruta correcta
 
 function Activity() {
   const { id } = useParams();
@@ -18,26 +19,57 @@ function Activity() {
     (state: RootState) => state.activities.activities
   );
   const steps = useSelector((state: RootState) => state.steps.steps);
-
   useEffect(() => {
     dispatch(getStepsActivity(Number(id)));
   }, [id]);
-
   const findActivityName = () => {
     const activityName = activities.find((act) => act.id === Number(id));
     return activityName?.title;
   };
-
+  const currentUser = useSelector((state: RootState) => state.user.logUser.id);
   useEffect(() => {
     const currentPath = window.location.pathname;
     const currentIndex = steps.findIndex((step) =>
       currentPath.endsWith(`/${step.number}`)
     );
-    setActiveIndex(currentIndex !== -1 ? currentIndex : 0);
+    setActiveIndex(currentIndex === -1 ? currentIndex : 0);
   }, [steps]);
 
   const handleStepChange = (e: { index: number }) => {
     setActiveIndex(e.index);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const percentage = (activeIndex / (steps.length - 1)) * 100;
+      console.log(
+        "Todos los steps",
+        steps.length,
+        "Step actual",
+        activeIndex,
+        "Porcentaje de progreso",
+        percentage.toFixed(2) + "%",
+        steps.length - 1 === activeIndex ? true : false
+      );
+    }, 1500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [activeIndex, steps]);
+  const handleNextClick = () => {
+    // Datos que deseas enviar al servidor al hacer clic en "Siguiente"
+    const userData = {
+      finished: false,
+      UserId: currentUser,
+      StepId: activeIndex, // Utiliza el índice actual como StepId
+    };
+
+    // Realiza el dispatch para crear el paso de usuario
+    dispatch(createUserStep(userData));
+
+    // Cambia el índice activo al siguiente paso
+    setActiveIndex(activeIndex + 1);
   };
 
   return (
@@ -84,7 +116,7 @@ function Activity() {
                 icon="pi pi-arrow-right"
                 severity="success"
                 outlined
-                onClick={() => setActiveIndex(activeIndex + 1)}
+                onClick={handleNextClick}
                 className="absolute w-auto bottom-4 right-4"
               />
             ) : (
