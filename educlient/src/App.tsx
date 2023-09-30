@@ -67,7 +67,7 @@ function App() {
 	useEffect(() => {
 		if (session) {
 			axios
-				.get(`https://api.colkrea.com/auth/token`, { headers })
+				.get(`https://localhost:3001/auth/token`, { headers })
 				.then((response) => {
 					if(response){
 						dispatch(setLogUser(response.data.data.user))
