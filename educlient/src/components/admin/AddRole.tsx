@@ -136,7 +136,7 @@ function AddRole() {
    
     const handleSubmit = async () => {
       try {
-        const response = await axios.post('https://api.colkrea.com/role', role)
+        const response = await axios.post('http://localhost:3001/role', role)
         if(response){
           toast.current?.show({ severity: 'success', summary: 'Eliminado!', detail: 'Cargo creado', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -160,7 +160,7 @@ function AddRole() {
 
     const handleEdit = async () => {
       try {
-        const response = await axios.put('https://api.colkrea.com/role/update', role)
+        const response = await axios.put('http://localhost:3001/role/update', role)
         if(response){
           toast.current?.show({ severity: 'success', summary: 'Editado!', detail: 'Cargo editado', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
