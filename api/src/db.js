@@ -64,7 +64,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
 
-const { Company, Step, Activity, User, Area, Role, UserStep } =
+const { Company, Step, Activity, User, Area, Role, UserStep, TestGrade } =
   sequelize.models;
 console.log(sequelize.models);
 
@@ -107,6 +107,19 @@ Step.belongsToMany(User, {
   through: UserStep,
   as: 'Users',
   foreignKey: 'StepId',
+});
+
+Activity.hasOne(TestGrade, {
+  foreignKey: 'activityId',
+  unique: true, 
+});
+
+User.hasMany(TestGrade, {
+  foreignKey: 'userId',
+});
+
+TestGrade.belongsTo(User, {
+  foreignKey: 'userId',
 });
 
 // User.hasMany(UserActivityStep, {
