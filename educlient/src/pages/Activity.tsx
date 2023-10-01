@@ -31,9 +31,10 @@ function Activity() {
     const currentIndex = steps.findIndex((step) =>
       currentPath.endsWith(`/${step.number}`)
     );
-    setActiveIndex(currentIndex === -1 ? currentIndex : 0);
+    console.log("Indice actual:", currentIndex);
+    setActiveIndex(currentIndex < 1 ? 0 : currentIndex - (currentIndex));
   }, [steps]);
-
+  console.log(activeIndex);
   const handleStepChange = (e: { index: number }) => {
     setActiveIndex(e.index);
   };
@@ -96,7 +97,6 @@ function Activity() {
       }
     }
   };
-
   return (
     <>
       <Link to={`/home`}>
@@ -118,7 +118,6 @@ function Activity() {
               model={steps.map((step) => ({
                 label: `Paso ${step.number}`,
                 command: () => {},
-                
               }))}
               activeIndex={activeIndex}
               onSelect={handleStepChange}
