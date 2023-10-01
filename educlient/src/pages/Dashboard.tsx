@@ -7,7 +7,10 @@ import { Button } from "primereact/button";
 import { getCompanyRoles } from "../redux/features/roleSlice";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { getUsersByCompany } from "../redux/features/userSlice";
+import { fetchActivities } from "../redux/features/activitiesSlice";
+
 import ProgressModal from "../components/ProgressModal";
+import axios from "axios";
 
 function Dashboard() {
   const dispatch = useAppDispatch();
@@ -21,6 +24,9 @@ function Dashboard() {
   const [showProgressModal, setShowProgressModal] = useState(false);
   const usersByRole: { [roleName: string]: any[] } = {};
   const [currentPage, setCurrentPage] = useState(1);
+  const activities = useSelector(
+    (state: RootState) => state.activities.activities
+  );
   const itemsPerPage = 3;
 
   // Calcula el número total de páginas
@@ -38,10 +44,10 @@ function Dashboard() {
     }
   });
 
-  for (const roleName in usersByRole) {
-    console.log(`Rol: ${roleName}`);
-    console.log(usersByRole[roleName]);
-  }
+  useEffect(() => {
+    dispatch(fetchActivities());
+  }, [dispatch]);
+
   useEffect(() => {
     try {
       dispatch(getCompanyRoles(currentEmpresa));
@@ -76,12 +82,20 @@ function Dashboard() {
     };
   }, []);
 
-  const activities = [
-    { id: 1, title: "Actividad 1", roleId: 1, active: true },
-    { id: 2, title: "Actividad 2", roleId: 2, active: false },
-    { id: 3, title: "Actividad 3", roleId: 3, active: true },
-    { id: 4, title: "Actividad 4", roleId: 4, active: false },
-  ];
+  useEffect(() => {
+    const fetchUserSteps = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/userStep");
+        const allProgress = response.data; // Los datos de UserSteps
+
+        console.warn("Todos los datos de UserSteps:", allProgress);
+      } catch (error) {
+        console.error("Error al obtener datos de UserSteps:", error);
+      }
+    };
+
+    fetchUserSteps(); // Llama a la función para realizar la solicitud "GET"
+  }, []); // El segundo argumento del useEffect es un arreglo vacío para que se ejecute una sola vez al montar el componente
 
   // Función para manejar el clic en el botón
   const handleButtonClick = () => {
