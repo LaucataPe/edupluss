@@ -1,9 +1,6 @@
-const {
-  CLOUD_NAME,
-  CLOUD_KEY,
-  CLOUD_KEY_SECRET,
-} = require('../config/varEnv.js');
-const cloudinary = require('cloudinary').v2;
+require("dotenv").config();
+const { CLOUD_NAME, CLOUD_KEY, CLOUD_KEY_SECRET } = process.env;
+const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
   cloud_name: CLOUD_NAME,
