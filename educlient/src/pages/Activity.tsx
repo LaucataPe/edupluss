@@ -7,7 +7,6 @@ import CurrentStep from "../components/Step";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { getStepsActivity } from "../redux/features/stepsSlider";
 import { Button } from "primereact/button";
-import { createUserStep } from "../redux/features/userStepsSlice";
 import axios from "axios";
 
 function Activity() {
@@ -18,7 +17,6 @@ function Activity() {
     (state: RootState) => state.activities.activities
   );
   const steps = useSelector((state: RootState) => state.steps.steps);
-
   useEffect(() => {
     dispatch(getStepsActivity(Number(id)));
   }, [id]);
@@ -43,49 +41,59 @@ function Activity() {
   const currentUser = useSelector((state: RootState) => state.user.logUser.id);
   const activityName = activities.find((act) => act.id === Number(id));
   const activityId = activityName?.id;
+  const stepsList = steps.map((step) => step.id);
 
   const handleNextClick = async () => {
-    const actualIndex = activeIndex === 0 ? 1 : activeIndex + 1;
+    if (activeIndex < stepsList.length - 1) {
+      const actualIndex = stepsList[activeIndex];
+      const userData = {
+        userId: currentUser,
+        stepId: actualIndex,
+        activityId: activityId,
+        finished: "false",
+      };
+      try {
+        // @ts-ignore
+        const response = await axios.post(
+          "http://localhost:3001/userStep",
+          userData
+        );
 
-    const userData = {
-      userId: currentUser,
-      stepId: actualIndex,
-      activityId: activityId,
-      finished: false,
-    };
-    try {
-      // Realiza la petición POST usando axios
-      const response = await axios.post(
-        "http://localhost:3001/userStep",
-        userData
-      );
+        // Aquí puedes manejar la respuesta si es necesario
+      } catch (error: any) {
+        if (error.response && error.response.status === 409) {
+          console.log("Este paso ya fue visitado");
+        } else {
+          console.warn("Error al hacer la petición POST:", error);
+        }
+      }
 
-      // Aquí puedes manejar la respuesta si es necesario
-      console.log("Respuesta de la petición POST:", response.data);
-    } catch (error) {
-      // Maneja los errores de la petición
-      console.warn("Error al hacer la petición POST:", error);
+      setActiveIndex(activeIndex + 1);
+    } else {
+      console.log("No more steps to process.");
     }
-    setActiveIndex(activeIndex + 1);
   };
 
   const handleFinishClick = async () => {
     const userData = {
       userId: currentUser,
-      StepId: steps.length,
+      stepId: stepsList[stepsList.length - 1],
       activityId: activityId,
-      finished: true,
+      finished: "true",
     };
 
     try {
-      // Realiza la petición POST usando axios
+      // @ts-ignore
       const response = await axios.post(
         "http://localhost:3001/userStep",
         userData
       );
-      console.log("Respuesta de la petición POST:", response.data);
-    } catch (error) {
-      console.warn("Error al hacer la petición POST:", error);
+    } catch (error: any) {
+      if (error.response && error.response.status === 409) {
+        console.log("Este paso ya fue visitado y Completado.");
+      } else {
+        console.warn("Error al hacer la petición POST:", error);
+      }
     }
   };
 
@@ -110,6 +118,7 @@ function Activity() {
               model={steps.map((step) => ({
                 label: `Paso ${step.number}`,
                 command: () => {},
+                
               }))}
               activeIndex={activeIndex}
               onSelect={handleStepChange}
