@@ -19,6 +19,9 @@ const {
 } = require('../controllers/Company/getCompanyActivities');
 const { getCompanyRoles } = require('../controllers/Roles/getCompanyRoles');
 
+
+const { getReviewsByUser } = require('../controllers/Reviews/getReviewsByUser');
+
 //USER GET
 const { getAllUsers } = require('../controllers/Users/getAllUsers');
 const { getUserByCompany } = require('../controllers/Users/getUsersByCompany');
@@ -48,6 +51,9 @@ router.get('/search', SearchActivity);
 router.get('/users', getAllUsers);
 router.get('/users/:companyId', getUserByCompany);
 router.get('/user/areas/:id', getUserAreas);
+
+
+router.get('/reviews/user', getReviewsByUser);
 
 //Session
 router.get('/auth/token', checkSession, getByToken);
