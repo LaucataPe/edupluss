@@ -209,44 +209,27 @@ function Dashboard() {
   const closeProgressModal = () => {
     setShowProgressModal(false);
   };
-  // Suponiendo que userStepsInfo, roleIdSum y usersRoles contienen los datos necesarios
 
-const userIds = userStepsInfo[0]; // Obtener los userIds desde userStepsInfo
-const stepsCount = userStepsInfo[1]; // Obtener los pasos hechos por usuario desde userStepsInfo
+  const userIds = userStepsInfo[0];
+  const stepsCount = userStepsInfo[1];
+  const result = userIds.map((userId, index: any) => {
+    const userRoleId = usersRoles[1][usersRoles[0].indexOf(userId)];
 
-// En lugar de asignar roles directamente por índice, mapea los userId a sus roles correspondientes
-const userRolesMap = {};
-usersRoles[0].forEach((userId, index) => {
-  userRolesMap[userId] = usersRoles[1][index];
-});
+    if (userRoleId !== undefined) {
+      const totalStepsForRole = roleIdSum[index + 1];
+      // console.log("Usuarios", usersRoles[0], "Rol", usersRoles[1]);
+      // console.log("Pasos por usuarios indice 0 y 1", stepsCount);
 
-const result = userIds.map((userId, index) => {
-  const userRoleId = userRolesMap[userId]; // Obtener el roleId del usuario
-  console.log(userIds, stepsCount, `Rol: ${userRoleId} Cantidad de Steps: ${stepsCount[index]}`);
-  if (userRoleId !== undefined) {
-    const totalStepsForRole = roleIdSum[userRoleId]; // Obtener los pasos totales para el roleId del usuario
-    console.warn(`Resultado de ${stepsCount[index]} Divido ${totalStepsForRole} Por 100`);
-    const progress = (stepsCount[index] / totalStepsForRole) * 100; // Calcular el progreso como un porcentaje
-    return [userId, progress]; // Devolver el resultado como [userId, progress]
-  }
-  return [userId, 0]; // Si no se encuentra el roleId, establecer el progreso en 0
-});
+      // console.log(roleIdSum[index + 1]);
+      const progress = (stepsCount[index] / totalStepsForRole) * 100; // Calcular el progreso como un porcentaje
+      console.log("Esto:", stepsCount[index], "Contra:", totalStepsForRole);
 
-console.info(result);
+      return [userId, progress];
+    }
+    return [userId, 0];
+  });
 
-
-  // currentUsers.length > 0
-  //   ? console.log("Pasos Hechos por usuario:", userStepsInfo)
-  //   : null;
-  // currentUsers.length > 0
-  //   ? console.log("Pasos totales por Rol:", roleIdSum)
-  //   : null;
-  // currentUsers.length > 0
-  //   ? console.log("Roles de Usuarios:", usersRoles)
-  //   : null;
-  // currentUsers.length > 0 ? console.warn("currentUsers:", currentUsers) : null;
-  // currentUsers.length > 0 ? console.warn("activities:", activities) : null;
-  // currentUsers.length > 0 ? console.warn("userSteps:", userSteps) : null;
+  console.warn(result);
 
   return (
     <div className="flex">
