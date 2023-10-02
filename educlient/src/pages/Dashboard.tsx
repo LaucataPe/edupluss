@@ -8,7 +8,6 @@ import { getCompanyRoles } from "../redux/features/roleSlice";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { getUsersByCompany } from "../redux/features/userSlice";
 import { fetchActivities } from "../redux/features/activitiesSlice";
-
 import ProgressModal from "../components/ProgressModal";
 import axios from "axios";
 
@@ -27,9 +26,10 @@ function Dashboard() {
   const activities = useSelector(
     (state: RootState) => state.activities.activities
   );
+  const [userSteps, setUserSteps] = useState([]);
+
   const itemsPerPage = 3;
 
-  // Calcula el número total de páginas
   const totalPages = Math.ceil(Object.keys(usersByRole).length / itemsPerPage);
 
   currentUsers.forEach((user) => {
@@ -69,10 +69,10 @@ function Dashboard() {
   useEffect(() => {
     const interval = setInterval(() => {
       setValue(() => {
-        const randomPercentage = Math.floor(Math.random() * 71) + 30; // Genera un número aleatorio entre 30 y 100.
+        const randomPercentage = Math.floor(Math.random() * 71) + 30;
         return randomPercentage;
       });
-    }, 3000);
+    }, 5000);
 
     intervalRef.current = interval;
 
@@ -83,30 +83,72 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    const fetchUserSteps = async () => {
+    const fetchData = async () => {
       try {
+        // Realiza la petición GET y espera a que se resuelva
         const response = await axios.get("http://localhost:3001/userStep");
-        const allProgress = response.data; // Los datos de UserSteps
-
-        console.warn("Todos los datos de UserSteps:", allProgress);
+        setUserSteps(response.data);
       } catch (error) {
         console.error("Error al obtener datos de UserSteps:", error);
       }
     };
+    fetchData();
+  }, []);
 
-    fetchUserSteps(); // Llama a la función para realizar la solicitud "GET"
-  }, []); // El segundo argumento del useEffect es un arreglo vacío para que se ejecute una sola vez al montar el componente
+  useEffect(() => {
+    // Realiza cualquier otro trabajo con userSteps aquí, una vez que estén disponibles
+    if (userSteps.length > 0) {
+      // Filtra las actividades que tienen roleId igual a 1
+      const activitiesWithRoleId1 = activities.filter(
+        (activity) => activity.roleId === 1
+      );
 
-  // Función para manejar el clic en el botón
+      // Calcula la suma de numberSteps de las actividades con roleId 1
+      const sumOfNumberSteps = activitiesWithRoleId1.reduce(
+        (total, activity) => total + activity.numberSteps,
+        0
+      );
+
+      // Inicializa el arreglo ARREGLORO
+      const usersRoles = [[], []];
+
+      // Obtén todos los userId únicos de userSteps y colócalos en el índice 0 de ARREGLORO
+      usersRoles[0] = [...new Set(userSteps.map((step) => step.UserId))];
+
+      // Verifica si hay usuarios disponibles en currentUsers antes de asignar roles
+      if (currentUsers.length > 0) {
+        // Obtén los roleIds correspondientes de currentUsers y colócalos en el índice 1 de ARREGLORO
+        usersRoles[1] = usersRoles[0].map((userId) => {
+          const user = currentUsers.find((user) => user.id === userId);
+          if (user && user.roleId !== undefined) {
+            return user.roleId;
+          } else {
+            // Si no existe roleId, emite una advertencia
+            console.warn("aun no hay roles");
+          }
+        });
+
+        // Verifica si todos los roleIds son definidos antes de console.log
+        if (usersRoles[1].every((roleId) => roleId !== undefined)) {
+          // Console.loguea ARREGLORO solo si todos los roleIds están definidos
+          console.log("ARREGLORO:", usersRoles);
+        }
+      } else {
+        // Si no hay usuarios disponibles, genera un error
+        console.warn("Esperando roles");
+      }
+    }
+  }, [userSteps, activities, currentUsers]);
+
   const handleButtonClick = () => {
-    // Muestra el modal de progreso al hacer clic en el botón
     setShowProgressModal(true);
   };
 
-  // Función para cerrar el modal de progreso
   const closeProgressModal = () => {
     setShowProgressModal(false);
   };
+  // currentUsers.length > 0 ? console.warn("currentUsers:", currentUsers) : null;
+  // currentUsers.length > 0 ? console.warn("activities:", activities) : null;
 
   return (
     <div className="flex">
