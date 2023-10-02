@@ -62,6 +62,7 @@ const { createActivity } = require('../controllers/Activities/createActivity');
 const { createStep } = require('../controllers/Steps/createStep');
 const { postUserStepValidation } = require('../Middlewares');
 const { postUserStep } = require('../controllers/UserStep');
+const { createReview } = require('../controllers/Reviews/createReview');
 //POST
 router.post('/empresa', createCompany);
 router.post('/user', createUser);
@@ -71,6 +72,8 @@ router.post('/role', createRole);
 router.post('/activity', createActivity);
 router.post('/step', createStep);
 router.post('/userStep', postUserStepValidation, postUserStep);
+router.post('/review', createReview);
+
 //PUT Controllers
 const { ActivityState } = require('../controllers/Activities/ActivityState');
 const { AreaState } = require('../controllers/Areas/AreaState');
