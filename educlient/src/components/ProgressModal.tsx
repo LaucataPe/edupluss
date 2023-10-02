@@ -43,8 +43,7 @@ function ProgressModal({
     ); //@ts-ignore
     return matchingStep?.title;
   });
-
-  // console.log(matchingStepIds);
+  console.log(matchingStepTitles);
 
   return (
     <>
@@ -77,26 +76,33 @@ function ProgressModal({
       </header>
       <div className="rounded-b-md max-w-md px-4 py-6 border-x-2 border-b-2 lg:max-w-lg">
         {activities.map((activity: Activity, index: number) => {
-          const activityStatus = activity.active ? "" : "opacity-30";
           const stepTitle = matchingStepTitles[index];
           const progressValue = matchingStepTitles.includes(stepTitle)
             ? 100
-            : 0; // Check if stepTitle exists in matchingStepTitles
+            : 0;
+          let showSinSteps = true; // Variable para controlar si mostrar "Sin Steps"
 
           return (
-            <div
-              key={activity.id}
-              className={`py-2 px-6 flex items-center justify-between gap-4 ${activityStatus}`}
-            >
-              <span className="max-w-[500px] text-lg font-semibold text-black">
-                {stepTitle ? stepTitle : activity.title}
-              </span>
-              <progress
-                className="w-100 h-4 border-2 border-gray-400 rounded-md"
-                max="100"
-                value={progressValue}
-              />
-            </div>
+            <>
+              {stepTitle ? (
+                <div
+                  key={activity.id}
+                  className={`py-2 px-6 flex items-center justify-between gap-4 `}
+                >
+                  <span className="max-w-[500px] text-lg font-semibold text-black">
+                    {stepTitle ? stepTitle : ""}
+                  </span>
+                  <progress
+                    className="w-100 h-4 border-2 border-gray-400 rounded-md"
+                    max="100"
+                    value={progressValue}
+                  />
+                </div>
+              ) : showSinSteps ? (
+                <div key={index}></div>
+              ) : null}
+              {stepTitle && showSinSteps && (showSinSteps = false)}
+            </>
           );
         })}
       </div>

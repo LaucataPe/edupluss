@@ -32,6 +32,8 @@ function Dashboard() {
 
   const itemsPerPage = 3;
 
+  console.log(useSelector((state: RootState) => state.activities.activities));
+
   currentUsers.forEach((user) => {
     const roleId = user.roleId;
     const roleName = roles.find((role) => role.id === roleId)?.name;
@@ -45,7 +47,7 @@ function Dashboard() {
   });
 
   const totalPages = Math.ceil(Object.keys(usersByRole).length / itemsPerPage);
-  console.log(totalPages);
+  // console.log(totalPages);
   useEffect(() => {
     dispatch(fetchActivities());
   }, [dispatch]);
@@ -200,6 +202,7 @@ function Dashboard() {
   // console.log(stepsCount);
   // console.warn(generalProgress);
   // console.warn(userStepsInfo);
+
   return (
     <div className="flex">
       <div className="w-[100%]">
