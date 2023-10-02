@@ -56,24 +56,27 @@ router.get("/userStep", getUserSteps);
 router.get("/auth/token", checkSession, getByToken);
 
 //POST Controllers
-const { createUser } = require("../controllers/Users/postUser");
-const { logUser } = require("../controllers/Users/logUser");
-const { createCompany } = require("../controllers/Company/createEmpresa");
-const { createArea } = require("../controllers/Areas/createArea");
-const { createRole } = require("../controllers/Roles/createRole");
-const { createActivity } = require("../controllers/Activities/createActivity");
-const { createStep } = require("../controllers/Steps/createStep");
-const { postUserStepValidation } = require("../Middlewares");
-const { postUserStep } = require("../controllers/UserStep");
+const { createUser } = require('../controllers/Users/postUser');
+const { logUser } = require('../controllers/Users/logUser');
+const { createCompany } = require('../controllers/Company/createEmpresa');
+const { createArea } = require('../controllers/Areas/createArea');
+const { createRole } = require('../controllers/Roles/createRole');
+const { createActivity } = require('../controllers/Activities/createActivity');
+const { createStep } = require('../controllers/Steps/createStep');
+const { postUserStepValidation } = require('../Middlewares');
+const { postUserStep } = require('../controllers/UserStep');
+const { createReview } = require('../controllers/Reviews/createReview');
 //POST
-router.post("/empresa", createCompany);
-router.post("/user", createUser);
-router.post("/logUser", logUser);
-router.post("/area", createArea);
-router.post("/role", createRole);
-router.post("/activity", createActivity);
-router.post("/step", createStep);
-router.post("/userStep", postUserStepValidation, postUserStep);
+router.post('/empresa', createCompany);
+router.post('/user', createUser);
+router.post('/logUser', logUser);
+router.post('/area', createArea);
+router.post('/role', createRole);
+router.post('/activity', createActivity);
+router.post('/step', createStep);
+router.post('/userStep', postUserStepValidation, postUserStep);
+router.post('/review', createReview);
+
 //PUT Controllers
 const { ActivityState } = require("../controllers/Activities/ActivityState");
 const { AreaState } = require("../controllers/Areas/AreaState");

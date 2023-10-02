@@ -1,5 +1,6 @@
 const { Activity, User, Step } = require('../../db');
 const { catchedAsync } = require('../../utils');
+const { ClientError } = require("../../utils/index.js");
 
 const getActivitiesByUser = async (req, res) => {
     const {id} = req.params;
