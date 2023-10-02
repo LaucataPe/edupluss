@@ -15,9 +15,9 @@ const { getAllCompanies } = require("../controllers/Company/getAllEmpresas");
 const {
   getActivitiesByArea,
 } = require("../controllers/Areas/getActivitiesByArea");
-const {
-  getCompanyActivities,
-} = require("../controllers/Company/getCompanyActivities");
+const { getCompanyActivities } = require('../controllers/Company/getCompanyActivities');
+const { getCompanyRoles } = require('../controllers/Roles/getCompanyRoles');
+const { getReviewsByActivity } = require('../controllers/Reviews/getReviewsByActivity');
 const { getCompanyRoles } = require("../controllers/Roles/getCompanyRoles");
 
 //USER GET
@@ -25,9 +25,7 @@ const { getAllUsers } = require("../controllers/Users/getAllUsers");
 const { getUserByCompany } = require("../controllers/Users/getUsersByCompany");
 const { getUserAreas } = require("../controllers/Users/getUserAreas");
 const { getByToken } = require("../controllers/Users/getUserToken");
-const {
-  getActivitiesByRole,
-} = require("../controllers/Roles/getActivitiesByRole");
+const { getActivitiesByRole } = require("../controllers/Roles/getActivitiesByRole");
 const { getRolesByArea } = require("../controllers/Roles/getRolesByArea");
 const { getUserSteps } = require("../controllers/UserStep/getUserStep");
 const { checkSession } = require("../Middlewares/session");
@@ -51,6 +49,8 @@ router.get("/users/:companyId", getUserByCompany);
 router.get("/user/areas/:id", getUserAreas);
 
 router.get("/userStep", getUserSteps);
+
+router.get('/reviews/activity', getReviewsByActivity);
 
 //Session
 router.get("/auth/token", checkSession, getByToken);
