@@ -211,23 +211,29 @@ function Dashboard() {
   };
   // Suponiendo que userStepsInfo, roleIdSum y usersRoles contienen los datos necesarios
 
-  const userIds = userStepsInfo[0]; // Obtener los userIds desde userStepsInfo
-  const stepsCount = userStepsInfo[1]; // Obtener los pasos hechos por usuario desde userStepsInfo
+const userIds = userStepsInfo[0]; // Obtener los userIds desde userStepsInfo
+const stepsCount = userStepsInfo[1]; // Obtener los pasos hechos por usuario desde userStepsInfo
 
-  const result = userIds.map((userId, index) => {
-    const userRoleId = usersRoles[1][usersRoles[0].indexOf(userId)]; // Obtener el roleId del usuario
+// En lugar de asignar roles directamente por índice, mapea los userId a sus roles correspondientes
+const userRolesMap = {};
+usersRoles[0].forEach((userId, index) => {
+  userRolesMap[userId] = usersRoles[1][index];
+});
 
-    if (userRoleId !== undefined) {
-      const totalStepsForRole = roleIdSum[userRoleId]; // Obtener los pasos totales para el roleId del usuario
-      const progress = (stepsCount[index] / totalStepsForRole) * 100; // Calcular el progreso como un porcentaje
-      console.log(stepsCount[index], totalStepsForRole);
-      return [userId, progress]; // Devolver el resultado como [userId, progress]
-    }
+const result = userIds.map((userId, index) => {
+  const userRoleId = userRolesMap[userId]; // Obtener el roleId del usuario
+  console.log(userIds, stepsCount, `Rol: ${userRoleId} Cantidad de Steps: ${stepsCount[index]}`);
+  if (userRoleId !== undefined) {
+    const totalStepsForRole = roleIdSum[userRoleId]; // Obtener los pasos totales para el roleId del usuario
+    console.warn(`Resultado de ${stepsCount[index]} Divido ${totalStepsForRole} Por 100`);
+    const progress = (stepsCount[index] / totalStepsForRole) * 100; // Calcular el progreso como un porcentaje
+    return [userId, progress]; // Devolver el resultado como [userId, progress]
+  }
+  return [userId, 0]; // Si no se encuentra el roleId, establecer el progreso en 0
+});
 
-    return [userId, 0]; // Si no se encuentra el roleId, establecer el progreso en 0
-  });
+console.info(result);
 
-  console.log(result); // Este será el arreglo
 
   // currentUsers.length > 0
   //   ? console.log("Pasos Hechos por usuario:", userStepsInfo)
