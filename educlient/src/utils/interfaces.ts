@@ -64,6 +64,7 @@ export interface Activity {
 export interface UserStep {
   id?: number;
   finished?: boolean;
-  UserId?: number;
-  StepId?: number;
+  activityId?: number;
+  userId?: number;
+  stepId?: number;
 }

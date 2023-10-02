@@ -1,15 +1,10 @@
-const { Sequelize } = require('sequelize');
-const fs = require('fs');
-const path = require('path');
-const {
-  DB_USER,
-  DB_PASSWORD,
-  DB_HOST,
-  DB_NAME,
-} = require('./config/varEnv.js');
-
+require("dotenv").config();
+const { Sequelize } = require("sequelize");
+const fs = require("fs");
+const path = require("path");
+const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
 const sequelize = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/edupluss`,
   {
     logging: false, // set to console.log to see the raw SQL queries
     native: false, // lets Sequelize know we can use pg-native for ~30% more speed
@@ -29,9 +24,9 @@ const sequelize = new Sequelize(
 async function probandoDb() {
   try {
     await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error("Unable to connect to the database:", error);
   }
 }
 
@@ -42,13 +37,13 @@ const basename = path.basename(__filename);
 const modelDefiners = [];
 
 // Leemos todos los archivos de la carpeta Models, los requerimos y agregamos al arreglo modelDefiners
-fs.readdirSync(path.join(__dirname, '/models'))
+fs.readdirSync(path.join(__dirname, "/models"))
   .filter(
     (file) =>
-      file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
+      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
   )
   .forEach((file) => {
-    modelDefiners.push(require(path.join(__dirname, '/models', file)));
+    modelDefiners.push(require(path.join(__dirname, "/models", file)));
   });
 
 // Injectamos la conexion (sequelize) a todos los modelos
@@ -70,43 +65,43 @@ console.log(sequelize.models);
 
 // Aca vendrian las relaciones
 Company.hasMany(Area, {
-  foreignKey: 'companyId',
+  foreignKey: "companyId",
 });
 
 Company.hasMany(Role, {
-  foreignKey: 'companyId',
+  foreignKey: "companyId",
 });
 
 Company.hasMany(User, {
-  foreignKey: 'companyId',
+  foreignKey: "companyId",
 });
 
 Area.hasMany(Role, {
-  foreignKey: 'areaId',
+  foreignKey: "areaId",
 });
 
 Role.hasMany(Activity, {
-  foreignKey: 'roleId',
+  foreignKey: "roleId",
 });
 
 Activity.hasMany(Step, {
-  foreignKey: 'activityId',
+  foreignKey: "activityId",
 });
 
 Role.hasOne(User, {
-  foreignKey: 'roleId',
+  foreignKey: "roleId",
 });
 
 User.belongsToMany(Step, {
   through: UserStep,
-  as: 'Steps',
-  foreignKey: 'UserId',
+  as: "Steps",
+  foreignKey: "UserId",
 });
 
 Step.belongsToMany(User, {
   through: UserStep,
-  as: 'Users',
-  foreignKey: 'StepId',
+  as: "Users",
+  foreignKey: "StepId",
 });
 
 Activity.hasOne(TestGrade, {
@@ -136,8 +131,8 @@ User.hasMany(Review, {
 // });
 
 User.beforeUpdate((user) => {
-  if (user.tipo !== 'empleado' && user.roleId) {
-    throw new Error('Solo los usuarios de tipo: empleado pueden tener un rol');
+  if (user.tipo !== "empleado" && user.roleId) {
+    throw new Error("Solo los usuarios de tipo: empleado pueden tener un rol");
   }
 });
 
