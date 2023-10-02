@@ -27,6 +27,9 @@ function Dashboard() {
     (state: RootState) => state.activities.activities
   );
   const [userSteps, setUserSteps] = useState([]);
+  const [usersRoles, setUsersRoles] = useState([[], []]);
+  const [userStepsInfo, setUserStepsInfo] = useState([[], []]);
+  const [roleIdSum, setRoleIdSum] = useState({});
 
   const itemsPerPage = 3;
 
@@ -97,45 +100,104 @@ function Dashboard() {
 
   useEffect(() => {
     // Realiza cualquier otro trabajo con userSteps aquí, una vez que estén disponibles
-    if (userSteps.length > 0) {
-      // Filtra las actividades que tienen roleId igual a 1
-      const activitiesWithRoleId1 = activities.filter(
-        (activity) => activity.roleId === 1
-      );
+    if (userSteps.length > 0 && currentUsers.length > 0) {
+      // Obtén todos los userId únicos de userSteps y colócalos en el índice 0 de ARREGLORO
+      const uniqueUserIds = [...new Set(userSteps.map((step) => step.UserId))];
 
-      // Calcula la suma de numberSteps de las actividades con roleId 1
-      const sumOfNumberSteps = activitiesWithRoleId1.reduce(
-        (total, activity) => total + activity.numberSteps,
-        0
-      );
+      // Obtén los roleIds correspondientes de currentUsers y colócalos en el índice 1 de ARREGLORO
+      const roleIds = uniqueUserIds.map((userId) => {
+        const user = currentUsers.find((user) => user.id === userId);
+        if (user && user.roleId !== undefined) {
+          return user.roleId;
+        } else {
+          // Si no existe roleId, emite una advertencia
+          console.warn("aun no hay roles");
+        }
+      });
 
+      // Actualiza el estado con los valores calculados
+      setUsersRoles([uniqueUserIds, roleIds]);
+    }
+  }, [userSteps, currentUsers]);
+
+  useEffect(() => {
+    // Inicializa los arreglos
+    const userIds = [];
+    const stepsCount = [];
+
+    // Tu lógica para calcular userStepsInfo, similar a lo que mencioné anteriormente...
+    userSteps.forEach((step) => {
+      const userId = step.UserId;
+      const userIndex = userIds.indexOf(userId);
+
+      if (userIndex === -1) {
+        // Si el UserID no está en el arreglo userIds, agrégalo y establece el contador en 1
+        userIds.push(userId);
+        stepsCount.push(1);
+      } else {
+        // Si el UserID ya está en el arreglo userIds, incrementa el contador en 1
+        stepsCount[userIndex]++;
+      }
+    });
+
+    // Después de calcular userStepsInfo, actualiza el estado usando setUserStepsInfo
+    setUserStepsInfo([userIds, stepsCount]);
+  }, [userSteps]);
+
+  useEffect(() => {
+    // Realiza cualquier otro trabajo con userSteps aquí, una vez que estén disponibles
+
+    if (userSteps.length > 0 && currentUsers.length > 0) {
       // Inicializa el arreglo ARREGLORO
-      const usersRoles = [[], []];
+      const usersRolesTemp = [[], []];
 
       // Obtén todos los userId únicos de userSteps y colócalos en el índice 0 de ARREGLORO
-      usersRoles[0] = [...new Set(userSteps.map((step) => step.UserId))];
+      usersRolesTemp[0] = [...new Set(userSteps.map((step) => step.UserId))];
 
-      // Verifica si hay usuarios disponibles en currentUsers antes de asignar roles
-      if (currentUsers.length > 0) {
-        // Obtén los roleIds correspondientes de currentUsers y colócalos en el índice 1 de ARREGLORO
-        usersRoles[1] = usersRoles[0].map((userId) => {
-          const user = currentUsers.find((user) => user.id === userId);
-          if (user && user.roleId !== undefined) {
-            return user.roleId;
-          } else {
-            // Si no existe roleId, emite una advertencia
-            console.warn("aun no hay roles");
-          }
-        });
-
-        // Verifica si todos los roleIds son definidos antes de console.log
-        if (usersRoles[1].every((roleId) => roleId !== undefined)) {
-          // Console.loguea ARREGLORO solo si todos los roleIds están definidos
-          console.log("ARREGLORO:", usersRoles);
+      // Obtén los roleIds correspondientes de currentUsers y colócalos en el índice 1 de ARREGLORO
+      usersRolesTemp[1] = usersRolesTemp[0].map((userId) => {
+        const user = currentUsers.find((user) => user.id === userId);
+        if (user && user.roleId !== undefined) {
+          return user.roleId;
+        } else {
+          // Si no existe roleId, emite una advertencia
+          console.warn("aun no hay roles");
         }
+      });
+
+      // Verificar si usersRolesTemp[1] existe antes de continuar
+      if (usersRolesTemp[1] && usersRolesTemp[1].length > 0) {
+        // Filtra los roleId válidos (que no son undefined)
+        const validRoleIds = usersRolesTemp[1].filter(
+          (roleId) => roleId !== undefined
+        );
+
+        // Calcular la suma de numberSteps para cada roleId válido
+        validRoleIds.forEach((roleId) => {
+          const activitiesWithRoleId = activities.filter(
+            (activity) => activity.roleId === roleId
+          );
+          const sumOfNumberSteps = activitiesWithRoleId.reduce(
+            (total, activity) => total + activity.numberSteps,
+            0
+          );
+
+          // console.log(`Pasos totales del Rol ${roleId}: ${sumOfNumberSteps}`);
+
+          // Actualizar el estado roleIdSum con el nuevo valor
+          setRoleIdSum((prevRoleIdSum) => ({
+            ...prevRoleIdSum,
+            [roleId]: sumOfNumberSteps,
+          }));
+        });
       } else {
-        // Si no hay usuarios disponibles, genera un error
-        console.warn("Esperando roles");
+        // Si no hay usuarios disponibles o pasos de usuario, emite una advertencia o error según corresponda
+        if (userSteps.length === 0) {
+          console.warn("No hay pasos de usuario disponibles");
+        }
+        if (currentUsers.length === 0) {
+          console.warn("Esperando roles");
+        }
       }
     }
   }, [userSteps, activities, currentUsers]);
@@ -147,8 +209,38 @@ function Dashboard() {
   const closeProgressModal = () => {
     setShowProgressModal(false);
   };
+  // Suponiendo que userStepsInfo, roleIdSum y usersRoles contienen los datos necesarios
+
+  const userIds = userStepsInfo[0]; // Obtener los userIds desde userStepsInfo
+  const stepsCount = userStepsInfo[1]; // Obtener los pasos hechos por usuario desde userStepsInfo
+
+  const result = userIds.map((userId, index) => {
+    const userRoleId = usersRoles[1][usersRoles[0].indexOf(userId)]; // Obtener el roleId del usuario
+
+    if (userRoleId !== undefined) {
+      const totalStepsForRole = roleIdSum[userRoleId]; // Obtener los pasos totales para el roleId del usuario
+      const progress = (stepsCount[index] / totalStepsForRole) * 100; // Calcular el progreso como un porcentaje
+      console.log(stepsCount[index], totalStepsForRole);
+      return [userId, progress]; // Devolver el resultado como [userId, progress]
+    }
+
+    return [userId, 0]; // Si no se encuentra el roleId, establecer el progreso en 0
+  });
+
+  console.log(result); // Este será el arreglo
+
+  // currentUsers.length > 0
+  //   ? console.log("Pasos Hechos por usuario:", userStepsInfo)
+  //   : null;
+  // currentUsers.length > 0
+  //   ? console.log("Pasos totales por Rol:", roleIdSum)
+  //   : null;
+  // currentUsers.length > 0
+  //   ? console.log("Roles de Usuarios:", usersRoles)
+  //   : null;
   // currentUsers.length > 0 ? console.warn("currentUsers:", currentUsers) : null;
   // currentUsers.length > 0 ? console.warn("activities:", activities) : null;
+  // currentUsers.length > 0 ? console.warn("userSteps:", userSteps) : null;
 
   return (
     <div className="flex">
