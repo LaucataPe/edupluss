@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { useRef } from "react";
 import { ProgressBar } from "primereact/progressbar";
 import { Button } from "primereact/button";
 import { getCompanyRoles } from "../redux/features/roleSlice";
@@ -10,7 +9,6 @@ import { getUsersByCompany } from "../redux/features/userSlice";
 import { fetchActivities } from "../redux/features/activitiesSlice";
 import ProgressModal from "../components/ProgressModal";
 import axios from "axios";
-import { userInfo } from "os";
 
 function Dashboard() {
   const dispatch = useAppDispatch();
@@ -18,8 +16,6 @@ function Dashboard() {
   const currentEmpresa = useSelector(
     (state: RootState) => state.user.logUser.companyId
   );
-  const [value, setValue] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const roles = useSelector((state: RootState) => state.roles.roles);
   const [showProgressModal, setShowProgressModal] = useState(false);
   const usersByRole: { [roleName: string]: any[] } = {};
@@ -31,7 +27,8 @@ function Dashboard() {
   const [usersRoles, setUsersRoles] = useState([[], []]);
   const [userStepsInfo, setUserStepsInfo] = useState([[], []]);
   const [roleIdSum, setRoleIdSum] = useState({});
-  const [generalProgress, setGeneralProgress] = useState([]); // Inicializa el estado como un arreglo vacío
+  const [generalProgress, setGeneralProgress] = useState([]); 
+  const [selectedUserId, setSelectedUserId] = useState(0); 
 
   const itemsPerPage = 3;
 
@@ -74,7 +71,6 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Realiza la petición GET y espera a que se resuelva
         const response = await axios.get("http://localhost:3001/userStep");
         setUserSteps(response.data);
       } catch (error) {
@@ -85,83 +81,65 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    // Realiza cualquier otro trabajo con userSteps aquí, una vez que estén disponibles
     if (userSteps.length > 0 && currentUsers.length > 0) {
-      // Obtén todos los userId únicos de userSteps y colócalos en el índice 0 de ARREGLORO
       //@ts-ignore
       const uniqueUserIds = [...new Set(userSteps.map((step) => step.UserId))]; //@ts-ignore
-      // Obtén los roleIds correspondientes de currentUsers y colócalos en el índice 1 de ARREGLORO
       const roleIds = uniqueUserIds.map((userId) => {
         const user = currentUsers.find((user) => user.id === userId);
         if (user && user.roleId !== undefined) {
           return user.roleId;
         } else {
-          // Si no existe roleId, emite una advertencia
           console.warn("aun no hay roles");
         }
       });
       //@ts-ignore
 
-      // Actualiza el estado con los valores calculados
       setUsersRoles([uniqueUserIds, roleIds]);
     }
   }, [userSteps, currentUsers]);
 
   useEffect(() => {
-    // Inicializa los arreglos
     const userIds: any = [];
     const stepsCount: any = [];
 
-    // Tu lógica para calcular userStepsInfo, similar a lo que mencioné anteriormente...
     userSteps.forEach((step) => {
       //@ts-ignore
       const userId = step.UserId;
       const userIndex = userIds.indexOf(userId);
 
       if (userIndex === -1) {
-        // Si el UserID no está en el arreglo userIds, agrégalo y establece el contador en 1
         userIds.push(userId);
         stepsCount.push(1);
       } else {
-        // Si el UserID ya está en el arreglo userIds, incrementa el contador en 1
         stepsCount[userIndex]++;
       }
     });
 
-    // Después de calcular userStepsInfo, actualiza el estado usando setUserStepsInfo
     setUserStepsInfo([userIds, stepsCount]);
   }, [userSteps]);
 
   useEffect(() => {
-    // Realiza cualquier otro trabajo con userSteps aquí, una vez que estén disponibles
 
     if (userSteps.length > 0 && currentUsers.length > 0) {
-      // Inicializa el arreglo ARREGLORO
       const usersRolesTemp = [[], []];
 
-      // Obtén todos los userId únicos de userSteps y colócalos en el índice 0 de ARREGLORO
       //@ts-ignore
       usersRolesTemp[0] = [...new Set(userSteps.map((step) => step.UserId))];
-      // Obtén los roleIds correspondientes de currentUsers y colócalos en el índice 1 de ARREGLORO
       //@ts-ignore
       usersRolesTemp[1] = usersRolesTemp[0].map((userId) => {
         const user = currentUsers.find((user) => user.id === userId);
         if (user && user.roleId !== undefined) {
           return user.roleId;
         } else {
-          // Si no existe roleId, emite una advertencia
           console.warn("aun no hay roles");
         }
       });
 
-      // Verificar si usersRolesTemp[1] existe antes de continuar
       if (usersRolesTemp[1] && usersRolesTemp[1].length > 0) {
-        // Filtra los roleId válidos (que no son undefined)
         const validRoleIds = usersRolesTemp[1].filter(
           (roleId) => roleId !== undefined
         );
 
-        // Calcular la suma de numberSteps para cada roleId válido
         validRoleIds.forEach((roleId) => {
           const activitiesWithRoleId = activities.filter(
             (activity) => activity.roleId === roleId
@@ -172,16 +150,12 @@ function Dashboard() {
             0
           );
 
-          // console.log(`Pasos totales del Rol ${roleId}: ${sumOfNumberSteps}`);
-
-          // Actualizar el estado roleIdSum con el nuevo valor
           setRoleIdSum((prevRoleIdSum) => ({
             ...prevRoleIdSum,
             [roleId]: sumOfNumberSteps,
           }));
         });
       } else {
-        // Si no hay usuarios disponibles o pasos de usuario, emite una advertencia o error según corresponda
         if (userSteps.length === 0) {
           console.warn("No hay pasos de usuario disponibles");
         }
@@ -192,8 +166,9 @@ function Dashboard() {
     }
   }, [userSteps, activities, currentUsers]);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (userId: any) => {
     setShowProgressModal(true);
+    setSelectedUserId(userId); 
   };
 
   const closeProgressModal = () => {
@@ -204,7 +179,7 @@ function Dashboard() {
   const stepsCount = userStepsInfo[1];
 
   useEffect(() => {
-    const newProgress: any = []; // Crear un nuevo arreglo para el progreso actualizado
+    const newProgress: any = []; 
 
     userIds.forEach((userId, index) => {
       const userRoleId = usersRoles[1][usersRoles[0].indexOf(userId)];
@@ -215,19 +190,17 @@ function Dashboard() {
           (stepsCount[index] / totalStepsForRole) * 100
         );
 
-        // Agregar un objeto que contiene userId y progreso al nuevo arreglo
         newProgress.push({ userId, progress });
       } else {
-        // Agregar un objeto con userId y progreso 0 en caso de que no haya coincidencia de rol
         newProgress.push({ userId, progress: 0 });
       }
     });
 
-    setGeneralProgress(newProgress); // Actualiza el estado "generalProgress" con el nuevo progreso
-  }, [userIds, stepsCount, usersRoles, roleIdSum]); // Dependencias del efecto
-
-  console.warn(generalProgress);
-
+    setGeneralProgress(newProgress); 
+  }, [userIds, stepsCount, usersRoles, roleIdSum]); 
+  // console.log(stepsCount);
+  // console.warn(generalProgress);
+  // console.warn(userStepsInfo);
   return (
     <div className="flex">
       <div className="w-[100%]">
@@ -250,7 +223,7 @@ function Dashboard() {
                 onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
                 disabled={currentPage === totalPages}
                 className="btn btn-primary"
-                style={{ marginLeft: "10px" }} // Agregamos un margen izquierdo de 10px
+                style={{ marginLeft: "10px" }} 
               ></Button>
             </div>
           </h3>
@@ -261,6 +234,8 @@ function Dashboard() {
                 <ProgressModal
                   activities={activities}
                   closeModal={closeProgressModal}
+                  userSteps={userSteps}
+                  selectedUser={selectedUserId}
                 />
               </div>
             </div>
@@ -285,7 +260,6 @@ function Dashboard() {
                       >
                         <strong>{user.username}</strong>
                         <div className="col-10 col-xl-3 mx-auto">
-                          {/* Utiliza el progreso real del usuario desde generalProgress */}
                           <ProgressBar
                             value={
                               generalProgress.find(
@@ -295,7 +269,6 @@ function Dashboard() {
                             }
                           />
                           <div className="col-6 col-xl-3 mx-auto">
-                            {/* Aquí deberías tener tu componente Button */}
                             <Button
                               rounded
                               severity={
@@ -311,7 +284,7 @@ function Dashboard() {
                                   : "secondary"
                               }
                               icon="pi pi-arrow-right"
-                              onClick={handleButtonClick}
+                              onClick={() => handleButtonClick(user.id)} // Abre el modal y pasa user.id
                             ></Button>
                           </div>
                         </div>
