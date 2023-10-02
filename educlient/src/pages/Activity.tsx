@@ -7,6 +7,7 @@ import CurrentStep from "../components/Step";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { getStepsActivity } from "../redux/features/stepsSlider";
 import { Button } from "primereact/button";
+import RateActivity from "../components/RateActivity";
 import axios from "axios";
 
 function Activity() {
@@ -32,7 +33,7 @@ function Activity() {
       currentPath.endsWith(`/${step.number}`)
     );
     console.log("Indice actual:", currentIndex);
-    setActiveIndex(currentIndex < 1 ? 0 : currentIndex - (currentIndex));
+    setActiveIndex(currentIndex < 1 ? 0 : currentIndex - currentIndex);
   }, [steps]);
   console.log(activeIndex);
   const handleStepChange = (e: { index: number }) => {
@@ -146,6 +147,7 @@ function Activity() {
               />
             ) : (
               <>
+                <RateActivity />
                 <Link to="/home">
                   <Button
                     label="Finalizar"

@@ -12,12 +12,13 @@ function RateActivity() {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="flex flex-col justify-center items-center p-4 bg-gray-200 rounded-lg md:p-6">
-        <h5 className="mb-1 md:text-2xl">Ayudanos a mejorar</h5>
-        <p className=" md:text-lg">Califica esta actividad</p>
+      <div className="flex flex-col justify-center items-center m-8 p-8 bg-gray-100 rounded-lg shadow-xl">
+        <h5 className="mb-1 text-3xl">Ayudanos a mejorar</h5>
+        <p className="text-lg">Califica esta actividad</p>
         <Rating
           value={ratingValue as number}
           onChange={(e) => setRatingValue(e.value ?? 0)}
+          style={{ transform: "scale(2)" }}
         />
       </div>
     </div>

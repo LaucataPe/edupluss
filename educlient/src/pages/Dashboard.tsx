@@ -27,12 +27,10 @@ function Dashboard() {
   const [usersRoles, setUsersRoles] = useState([[], []]);
   const [userStepsInfo, setUserStepsInfo] = useState([[], []]);
   const [roleIdSum, setRoleIdSum] = useState({});
-  const [generalProgress, setGeneralProgress] = useState([]); 
-  const [selectedUserId, setSelectedUserId] = useState(0); 
+  const [generalProgress, setGeneralProgress] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(0);
 
   const itemsPerPage = 3;
-
-  const totalPages = Math.ceil(Object.keys(usersByRole).length / itemsPerPage);
 
   currentUsers.forEach((user) => {
     const roleId = user.roleId;
@@ -46,6 +44,8 @@ function Dashboard() {
     }
   });
 
+  const totalPages = Math.ceil(Object.keys(usersByRole).length / itemsPerPage);
+  console.log(totalPages);
   useEffect(() => {
     dispatch(fetchActivities());
   }, [dispatch]);
@@ -119,7 +119,6 @@ function Dashboard() {
   }, [userSteps]);
 
   useEffect(() => {
-
     if (userSteps.length > 0 && currentUsers.length > 0) {
       const usersRolesTemp = [[], []];
 
@@ -168,7 +167,7 @@ function Dashboard() {
 
   const handleButtonClick = (userId: any) => {
     setShowProgressModal(true);
-    setSelectedUserId(userId); 
+    setSelectedUserId(userId);
   };
 
   const closeProgressModal = () => {
@@ -179,7 +178,7 @@ function Dashboard() {
   const stepsCount = userStepsInfo[1];
 
   useEffect(() => {
-    const newProgress: any = []; 
+    const newProgress: any = [];
 
     userIds.forEach((userId, index) => {
       const userRoleId = usersRoles[1][usersRoles[0].indexOf(userId)];
@@ -196,8 +195,8 @@ function Dashboard() {
       }
     });
 
-    setGeneralProgress(newProgress); 
-  }, [userIds, stepsCount, usersRoles, roleIdSum]); 
+    setGeneralProgress(newProgress);
+  }, [userIds, stepsCount, usersRoles, roleIdSum]);
   // console.log(stepsCount);
   // console.warn(generalProgress);
   // console.warn(userStepsInfo);
@@ -212,7 +211,11 @@ function Dashboard() {
                 rounded
                 severity="info"
                 icon="pi pi-arrow-left"
-                onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+                onClick={() => {
+                  if (currentPage > 1) {
+                    setCurrentPage((prevPage) => prevPage - 1);
+                  }
+                }}
                 disabled={currentPage === 1}
                 className="btn btn-primary"
               ></Button>
@@ -220,10 +223,14 @@ function Dashboard() {
                 rounded
                 severity="info"
                 icon="pi pi-arrow-right"
-                onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+                onClick={() => {
+                  if (currentPage < totalPages) {
+                    setCurrentPage((prevPage) => prevPage + 1);
+                  }
+                }}
                 disabled={currentPage === totalPages}
                 className="btn btn-primary"
-                style={{ marginLeft: "10px" }} 
+                style={{ marginLeft: "10px" }}
               ></Button>
             </div>
           </h3>
