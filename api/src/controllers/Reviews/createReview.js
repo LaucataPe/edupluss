@@ -27,7 +27,6 @@ const createReview = async (req, res) => {
             },
         });
         if (previousReview.length > 0) {
-            console.log(previousReview);
             throw new Error("Ya existe una reseña creada anteriormente.");
         } else {
             const newReview = await Review.create({ text, rating, activityId, userId });
