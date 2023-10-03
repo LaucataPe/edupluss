@@ -53,8 +53,6 @@ router.get("/user/areas/:id", getUserAreas);
 router.get("/userStep", getUserSteps);
 
 router.get('/reviews/activity', getReviewsByActivity);
-
-
 router.get('/reviews/user', getReviewsByUser);
 
 //Session
@@ -71,6 +69,8 @@ const { createStep } = require('../controllers/Steps/createStep');
 const { postUserStepValidation } = require('../Middlewares');
 const { postUserStep } = require('../controllers/UserStep');
 const { createReview } = require('../controllers/Reviews/createReview');
+const { postTestGrade } = require("../controllers/TestGrade/postTestGrade");
+
 //POST
 router.post('/empresa', createCompany);
 router.post('/user', createUser);
@@ -81,6 +81,7 @@ router.post('/activity', createActivity);
 router.post('/step', createStep);
 router.post('/userStep', postUserStepValidation, postUserStep);
 router.post('/review', createReview);
+router.post('/test', postTestGrade);
 
 //PUT Controllers
 const { ActivityState } = require("../controllers/Activities/ActivityState");
