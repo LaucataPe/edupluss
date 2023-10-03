@@ -4,28 +4,24 @@ import { RootState } from "../store";
 import { UserStep } from "../../utils/interfaces";
 
 interface initState {
-  userSteps: Array<UserStep>;
+  userStep: Array<UserStep>;
   status: string;
 }
 
 const initialState: initState = {
-  userSteps: [],
+  userStep: [],
   status: "idle",
 };
-
 export const createUserStep = createAsyncThunk(
   "userSteps/createUserStep",
   async (userData: UserStep) => {
-    // userData es un objeto que contiene los datos del formulario
     try {
       const { data } = await axios.post(
-        "http://localhost:3001/userSteps",
+        "http://localhost:3001/userStep",
         userData
       );
-
       return data;
     } catch (error: any) {
-      console.warn("Aún no existe la ruta 'http://localhost:3001/userSteps'");
       throw new Error(error.message);
     }
   }
@@ -47,7 +43,7 @@ const userStepsSlice = createSlice({
   initialState,
   reducers: {
     resetUserSteps: (state) => {
-      state.userSteps = [];
+      state.userStep = [];
       state.status = "idle";
     },
   },
@@ -60,7 +56,7 @@ const userStepsSlice = createSlice({
       (state, action: PayloadAction<UserStep>) => {
         state.status = "success";
         // Puedes hacer algo con la respuesta si es necesario, como agregarla a la lista de userSteps
-        state.userSteps.push(action.payload);
+        state.userStep.push(action.payload);
       }
     );
     builder.addCase(createUserStep.rejected, (state) => {
@@ -75,7 +71,7 @@ const userStepsSlice = createSlice({
       fetchUserSteps.fulfilled,
       (state, action: PayloadAction<UserStep[]>) => {
         state.status = "success";
-        state.userSteps = action.payload;
+        state.userStep = action.payload;
       }
     );
 

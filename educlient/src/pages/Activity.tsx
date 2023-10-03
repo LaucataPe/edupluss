@@ -7,7 +7,8 @@ import CurrentStep from "../components/Step";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { getStepsActivity } from "../redux/features/stepsSlider";
 import { Button } from "primereact/button";
-import { createUserStep } from "../redux/features/userStepsSlice"; // Asegúrate de proporcionar la ruta correcta
+import RateActivity from "../components/RateActivity";
+import axios from "axios";
 
 function Activity() {
   const { id } = useParams();
@@ -33,11 +34,12 @@ function Activity() {
   useEffect(() => {
     dispatch(getStepsActivity(Number(id)));
   }, [id]);
+
   const findActivityName = () => {
     const activityName = activities.find((act) => act.id === Number(id));
     return activityName?.title;
   };
-  const currentUser = useSelector((state: RootState) => state.user.logUser.id);
+
   useEffect(() => {
     const currentPath = window.location.pathname;
     const currentIndex = steps.findIndex((step) =>
@@ -47,44 +49,70 @@ function Activity() {
       currentIndex === -1 ? currentIndex : currentIndex >= 0 ? currentStep : 0
     );
   }, [steps]);
-
+    
+  console.log(activeIndex);
   const handleStepChange = (e: { index: number }) => {
     setActiveIndex(e.index);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const percentage = (activeIndex / (steps.length - 1)) * 100;
-      console.log(
-        "Todos los steps",
-        steps.length,
-        "Step actual",
-        activeIndex,
-        "Porcentaje de progreso",
-        percentage.toFixed(2) + "%",
-        steps.length - 1 === activeIndex ? true : false
-      );
-    }, 1500);
+  const currentUser = useSelector((state: RootState) => state.user.logUser.id);
+  const activityName = activities.find((act) => act.id === Number(id));
+  const activityId = activityName?.id;
+  const stepsList = steps.map((step) => step.id);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [activeIndex, steps]);
-  const handleNextClick = () => {
-    // Datos que deseas enviar al servidor al hacer clic en "Siguiente"
-    const userData = {
-      finished: false,
-      UserId: currentUser,
-      StepId: activeIndex, // Utiliza el índice actual como StepId
-    };
+  const handleNextClick = async () => {
+    if (activeIndex < stepsList.length - 1) {
+      const actualIndex = stepsList[activeIndex];
+      const userData = {
+        userId: currentUser,
+        stepId: actualIndex,
+        activityId: activityId,
+        finished: "false",
+      };
+      try {
+        // @ts-ignore
+        const response = await axios.post(
+          "http://localhost:3001/userStep",
+          userData
+        );
 
-    // Realiza el dispatch para crear el paso de usuario
-    dispatch(createUserStep(userData));
+        // Aquí puedes manejar la respuesta si es necesario
+      } catch (error: any) {
+        if (error.response && error.response.status === 409) {
+          console.log("Este paso ya fue visitado");
+        } else {
+          console.warn("Error al hacer la petición POST:", error);
+        }
+      }
 
-    // Cambia el índice activo al siguiente paso
-    setActiveIndex(activeIndex + 1);
+      setActiveIndex(activeIndex + 1);
+    } else {
+      console.log("No more steps to process.");
+    }
   };
 
+  const handleFinishClick = async () => {
+    const userData = {
+      userId: currentUser,
+      stepId: stepsList[stepsList.length - 1],
+      activityId: activityId,
+      finished: "true",
+    };
+
+    try {
+      // @ts-ignore
+      const response = await axios.post(
+        "http://localhost:3001/userStep",
+        userData
+      );
+    } catch (error: any) {
+      if (error.response && error.response.status === 409) {
+        console.log("Este paso ya fue visitado y Completado.");
+      } else {
+        console.warn("Error al hacer la petición POST:", error);
+      }
+    }
+  };
   return (
     <>
       <Link to={`/home`}>
@@ -140,12 +168,14 @@ function Activity() {
               />
             ) : (
               <>
+                <RateActivity />
                 <Link to="/home">
                   <Button
                     label="Finalizar"
                     icon="pi pi-home"
                     severity="info"
                     outlined
+                    onClick={handleFinishClick}
                     className="absolute w-auto bottom-4 right-4"
                   />
                 </Link>

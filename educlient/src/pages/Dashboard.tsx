@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { useRef } from "react";
 import { ProgressBar } from "primereact/progressbar";
 import { Button } from "primereact/button";
 import { getCompanyRoles } from "../redux/features/roleSlice";
 import { useAppDispatch } from "../hooks/typedSelectors";
 import { getUsersByCompany } from "../redux/features/userSlice";
+import { fetchActivities } from "../redux/features/activitiesSlice";
 import ProgressModal from "../components/ProgressModal";
+import axios from "axios";
 
 function Dashboard() {
   const dispatch = useAppDispatch();
@@ -15,16 +16,21 @@ function Dashboard() {
   const currentEmpresa = useSelector(
     (state: RootState) => state.user.logUser.companyId
   );
-  const [value, setValue] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const roles = useSelector((state: RootState) => state.roles.roles);
   const [showProgressModal, setShowProgressModal] = useState(false);
   const usersByRole: { [roleName: string]: any[] } = {};
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const activities = useSelector(
+    (state: RootState) => state.activities.activities
+  );
+  const [userSteps, setUserSteps] = useState([]);
+  const [usersRoles, setUsersRoles] = useState([[], []]);
+  const [userStepsInfo, setUserStepsInfo] = useState([[], []]);
+  const [roleIdSum, setRoleIdSum] = useState({});
+  const [generalProgress, setGeneralProgress] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(0);
 
-  // Calcula el número total de páginas
-  const totalPages = Math.ceil(Object.keys(usersByRole).length / itemsPerPage);
+  const itemsPerPage = 3;
 
   currentUsers.forEach((user) => {
     const roleId = user.roleId;
@@ -38,10 +44,12 @@ function Dashboard() {
     }
   });
 
-  for (const roleName in usersByRole) {
-    console.log(`Rol: ${roleName}`);
-    console.log(usersByRole[roleName]);
-  }
+  const totalPages = Math.ceil(Object.keys(usersByRole).length / itemsPerPage);
+  console.log(totalPages);
+  useEffect(() => {
+    dispatch(fetchActivities());
+  }, [dispatch]);
+
   useEffect(() => {
     try {
       dispatch(getCompanyRoles(currentEmpresa));
@@ -61,39 +69,137 @@ function Dashboard() {
   }, [dispatch, currentEmpresa]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setValue(() => {
-        const randomPercentage = Math.floor(Math.random() * 71) + 30; // Genera un número aleatorio entre 30 y 100.
-        return randomPercentage;
-      });
-    }, 3000);
-
-    intervalRef.current = interval;
-
-    return () => {
-      clearInterval(intervalRef.current as NodeJS.Timeout);
-      intervalRef.current = null;
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/userStep");
+        setUserSteps(response.data);
+      } catch (error) {
+        console.error("Error al obtener datos de UserSteps:", error);
+      }
     };
+    fetchData();
   }, []);
 
-  const activities = [
-    { id: 1, title: "Actividad 1", roleId: 1, active: true },
-    { id: 2, title: "Actividad 2", roleId: 2, active: false },
-    { id: 3, title: "Actividad 3", roleId: 3, active: true },
-    { id: 4, title: "Actividad 4", roleId: 4, active: false },
-  ];
+  useEffect(() => {
+    if (userSteps.length > 0 && currentUsers.length > 0) {
+      //@ts-ignore
+      const uniqueUserIds = [...new Set(userSteps.map((step) => step.UserId))]; //@ts-ignore
+      const roleIds = uniqueUserIds.map((userId) => {
+        const user = currentUsers.find((user) => user.id === userId);
+        if (user && user.roleId !== undefined) {
+          return user.roleId;
+        } else {
+          console.warn("aun no hay roles");
+        }
+      });
+      //@ts-ignore
 
-  // Función para manejar el clic en el botón
-  const handleButtonClick = () => {
-    // Muestra el modal de progreso al hacer clic en el botón
+      setUsersRoles([uniqueUserIds, roleIds]);
+    }
+  }, [userSteps, currentUsers]);
+
+  useEffect(() => {
+    const userIds: any = [];
+    const stepsCount: any = [];
+
+    userSteps.forEach((step) => {
+      //@ts-ignore
+      const userId = step.UserId;
+      const userIndex = userIds.indexOf(userId);
+
+      if (userIndex === -1) {
+        userIds.push(userId);
+        stepsCount.push(1);
+      } else {
+        stepsCount[userIndex]++;
+      }
+    });
+
+    setUserStepsInfo([userIds, stepsCount]);
+  }, [userSteps]);
+
+  useEffect(() => {
+    if (userSteps.length > 0 && currentUsers.length > 0) {
+      const usersRolesTemp = [[], []];
+
+      //@ts-ignore
+      usersRolesTemp[0] = [...new Set(userSteps.map((step) => step.UserId))];
+      //@ts-ignore
+      usersRolesTemp[1] = usersRolesTemp[0].map((userId) => {
+        const user = currentUsers.find((user) => user.id === userId);
+        if (user && user.roleId !== undefined) {
+          return user.roleId;
+        } else {
+          console.warn("aun no hay roles");
+        }
+      });
+
+      if (usersRolesTemp[1] && usersRolesTemp[1].length > 0) {
+        const validRoleIds = usersRolesTemp[1].filter(
+          (roleId) => roleId !== undefined
+        );
+
+        validRoleIds.forEach((roleId) => {
+          const activitiesWithRoleId = activities.filter(
+            (activity) => activity.roleId === roleId
+          );
+          const sumOfNumberSteps = activitiesWithRoleId.reduce(
+            //@ts-ignore
+            (total, activity) => total + activity.numberSteps,
+            0
+          );
+
+          setRoleIdSum((prevRoleIdSum) => ({
+            ...prevRoleIdSum,
+            [roleId]: sumOfNumberSteps,
+          }));
+        });
+      } else {
+        if (userSteps.length === 0) {
+          console.warn("No hay pasos de usuario disponibles");
+        }
+        if (currentUsers.length === 0) {
+          console.warn("Esperando roles");
+        }
+      }
+    }
+  }, [userSteps, activities, currentUsers]);
+
+  const handleButtonClick = (userId: any) => {
     setShowProgressModal(true);
+    setSelectedUserId(userId);
   };
 
-  // Función para cerrar el modal de progreso
   const closeProgressModal = () => {
     setShowProgressModal(false);
   };
 
+  const userIds = userStepsInfo[0];
+  const stepsCount = userStepsInfo[1];
+
+  useEffect(() => {
+    const newProgress: any = [];
+
+    userIds.forEach((userId, index) => {
+      const userRoleId = usersRoles[1][usersRoles[0].indexOf(userId)];
+      if (userRoleId !== undefined) {
+        const totalStepsForRole =
+          roleIdSum[usersRoles[1][usersRoles[0].indexOf(userId)]];
+        const progress = Math.floor(
+          (stepsCount[index] / totalStepsForRole) * 100
+        );
+
+        newProgress.push({ userId, progress });
+      } else {
+        newProgress.push({ userId, progress: 0 });
+      }
+    });
+
+    setGeneralProgress(newProgress);
+  }, [userIds, stepsCount, usersRoles, roleIdSum]);
+  // console.log(stepsCount);
+  // console.warn(generalProgress);
+  // console.warn(userStepsInfo);
   return (
     <div className="flex">
       <div className="w-[100%]">
@@ -105,7 +211,11 @@ function Dashboard() {
                 rounded
                 severity="info"
                 icon="pi pi-arrow-left"
-                onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+                onClick={() => {
+                  if (currentPage > 1) {
+                    setCurrentPage((prevPage) => prevPage - 1);
+                  }
+                }}
                 disabled={currentPage === 1}
                 className="btn btn-primary"
               ></Button>
@@ -113,10 +223,14 @@ function Dashboard() {
                 rounded
                 severity="info"
                 icon="pi pi-arrow-right"
-                onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+                onClick={() => {
+                  if (currentPage < totalPages) {
+                    setCurrentPage((prevPage) => prevPage + 1);
+                  }
+                }}
                 disabled={currentPage === totalPages}
                 className="btn btn-primary"
-                style={{ marginLeft: "10px" }} // Agregamos un margen izquierdo de 10px
+                style={{ marginLeft: "10px" }}
               ></Button>
             </div>
           </h3>
@@ -127,6 +241,8 @@ function Dashboard() {
                 <ProgressModal
                   activities={activities}
                   closeModal={closeProgressModal}
+                  userSteps={userSteps}
+                  selectedUser={selectedUserId}
                 />
               </div>
             </div>
@@ -143,20 +259,41 @@ function Dashboard() {
                   <div className="border-2 shadow-2xl p-4 rounded-2xl">
                     <h4>Rol: {roleName}</h4>
                     {users.map((user) => (
-                      <div key={user.id} className="card mb-3 text-center">
-                        <strong>Usuario:</strong> {user.username}
+                      <div
+                        key={user.id}
+                        className={`card mb-3 text-center ${
+                          user.progress === 0 ? "gray-card" : ""
+                        }`}
+                      >
+                        <strong>{user.username}</strong>
                         <div className="col-10 col-xl-3 mx-auto">
-                          {/* Aquí deberías tener tu componente ProgressBar */}
-                          <ProgressBar value={value} />
-                        </div>
-                        <div className="col-6 col-xl-3 mx-auto">
-                          {/* Aquí deberías tener tu componente Button */}
-                          <Button
-                            rounded
-                            severity="info"
-                            icon="pi pi-arrow-right"
-                            onClick={handleButtonClick}
-                          ></Button>
+                          <ProgressBar
+                            value={
+                              generalProgress.find(
+                                //@ts-ignore
+                                (item) => item.userId === user.id //@ts-ignore
+                              )?.progress || 0
+                            }
+                          />
+                          <div className="col-6 col-xl-3 mx-auto">
+                            <Button
+                              rounded
+                              severity={
+                                generalProgress.find(
+                                  //@ts-ignore
+                                  (item) => item.userId === user.id //@ts-ignore
+                                )?.progress <= 100 &&
+                                generalProgress.find(
+                                  //@ts-ignore
+                                  (item) => item.userId === user.id //@ts-ignore
+                                )?.progress > 0
+                                  ? "info"
+                                  : "secondary"
+                              }
+                              icon="pi pi-arrow-right"
+                              onClick={() => handleButtonClick(user.id)} // Abre el modal y pasa user.id
+                            ></Button>
+                          </div>
                         </div>
                       </div>
                     ))}
