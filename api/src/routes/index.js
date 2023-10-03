@@ -16,7 +16,6 @@ const {
   getActivitiesByArea,
 } = require("../controllers/Areas/getActivitiesByArea");
 const { getCompanyActivities } = require('../controllers/Company/getCompanyActivities');
-const { getCompanyRoles } = require('../controllers/Roles/getCompanyRoles');
 const { getReviewsByActivity } = require('../controllers/Reviews/getReviewsByActivity');
 const { getCompanyRoles } = require("../controllers/Roles/getCompanyRoles");
 
@@ -107,6 +106,7 @@ const { deleteActivity } = require("../controllers/Activities/deleteActivity");
 const { deleteStep } = require("../controllers/Steps/deleteStep");
 const { deleteUser } = require("../controllers/Users/deleteUser");
 const { deleteRole } = require("../controllers/Roles/deleteRole");
+const { deleteReview } = require('../controllers/Reviews/deleteReview');
 
 //DELETE
 router.delete("/area/:id", deleteAreaCascade);
@@ -114,5 +114,6 @@ router.delete("/activity/:id", deleteActivity);
 router.delete("/role/:id", deleteRole);
 router.delete("/step/:id", deleteStep);
 router.delete("/user/:id", deleteUser);
+router.delete('/reviews', deleteReview);
 
 module.exports = { router };
