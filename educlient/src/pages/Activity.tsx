@@ -14,6 +14,17 @@ function Activity() {
   const dispatch = useAppDispatch();
 
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [currentStep, setCurrentStep] = useState<number>(0);
+
+  useEffect(() => {
+    const stepSaved = window.localStorage.getItem(`Activity ${id}`);
+    if (stepSaved !== null) {
+      const value = JSON.parse(stepSaved);
+      value >= 0 ? setCurrentStep(value) : null;
+    } else {
+      window.localStorage.setItem(`Activity ${id}`, JSON.stringify(0));
+    }
+  }, []);
 
   const activities = useSelector(
     (state: RootState) => state.activities.activities
@@ -32,7 +43,9 @@ function Activity() {
     const currentIndex = steps.findIndex((step) =>
       currentPath.endsWith(`/${step.number}`)
     );
-    setActiveIndex(currentIndex === -1 ? currentIndex : 0);
+    setActiveIndex(
+      currentIndex === -1 ? currentIndex : currentIndex >= 0 ? currentStep : 0
+    );
   }, [steps]);
 
   const handleStepChange = (e: { index: number }) => {
@@ -98,7 +111,13 @@ function Activity() {
               onSelect={handleStepChange}
               readOnly={false}
             />
-            {steps && <CurrentStep step={steps[activeIndex]} />}
+            {steps && id && (
+              <CurrentStep
+                step={steps[activeIndex]}
+                activityId={id}
+                activeIndex={activeIndex}
+              />
+            )}
 
             {activeIndex > 0 && (
               <Button
