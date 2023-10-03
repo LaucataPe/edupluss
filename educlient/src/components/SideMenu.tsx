@@ -70,13 +70,39 @@ const AppMenu = () => {
     };
   }, []);
 
+  const [buttonOpacity, setButtonOpacity] = useState(0.1);
+  let timer: any;
+
+  const handleMouseLeave = () => {
+    const timer = setTimeout(() => {
+      setButtonOpacity(0.1);
+    }, 100); // 2000 milisegundos (2 segundos)
+  };
+
+  // Función para cambiar la opacidad a 0.2 después de 2 segundos sin el mouse
+  const handleMouseEnter = () => {
+    clearTimeout(timer);
+    setButtonOpacity(1); // Restablecer la opacidad
+  };
+
+  useEffect(() => {
+    // Suscribirse al evento de cambio de tamaño de ventana
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
+
   return (
     <>
       <Button
         className="ml-1 py-5 px-4 rounded-lg h-[2rem] w-[5rem] z-10 shadow-xl"
         severity="info"
-        style={{ position: "sticky" }}
+        style={{ position: "fixed", opacity: buttonOpacity }} // Aplicar opacidad dinámica
         onClick={() => setShowNav(!showNav)} // Toggle the nav visibility
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <i className="pi pi-bars" style={{ fontSize: "2rem" }}></i>
       </Button>
