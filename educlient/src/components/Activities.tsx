@@ -112,7 +112,7 @@ const Activities = () => {
       />
     </div>
   );
-
+  // Tengo que colocarles su UserSteps
   const dataviewListItem = (data: Activity) => {
     return (
       <div className="col-12 border-none">
@@ -159,8 +159,34 @@ const Activities = () => {
   return (
     <div className="grid list-demo">
       <div className="col-12">
+        <div
+          className="card flex mx-[5%]"
+          id="pending-activities"
+          style={{ overflowX: "auto" }}
+        >
+          <h3 className="flex align-items-center gap-2">
+            <i className="pi pi-bookmark text-4xl gap-2" />
+            Pendientes:
+          </h3>
+          {Array(6)
+            .fill(0)
+            .map((_, index) => (
+              <div
+                className="col-12 w-auto flex-wrap"
+                id={`activities-list-${index}`}
+                key={index}
+              >
+                <div className="card m-3 border-1 surface-border hover:bg-slate-100">
+                  <h3 className="m-0">Clase de Excel {index}</h3>
+                </div>
+              </div>
+            ))}
+        </div>
         <div className="card mx-[5%]">
-          <h3>Tus tareas:</h3>
+          <h3>
+            <i className="pi pi-book text-4xl mx-2" />
+            Tus actividades:
+          </h3>
           <DataView
             value={filteredValue.length > 0 ? filteredValue : dataViewValue}
             layout={layout}
