@@ -453,10 +453,20 @@ function AddStep() {
                 />
               </>
             )}
+            <Button
+              label={stepId ? "Editar" : "Crear Paso"}
+              severity="info"
+              outlined
+              type="submit"
+              onClick={(e) => {
+                !stepId ? handleSubmit(e) : handleEdit(e);
+              }}
+              disabled={Object.keys(errors).length > 0 ? true : false}
+              loading={isLoading}
+            />
           </div>
         </div>
       </form>
-
       <p className="font-semibold text-red-600">
         {errors.send ? errors.send : ""}
       </p>

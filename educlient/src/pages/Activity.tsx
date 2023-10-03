@@ -32,10 +32,10 @@ function Activity() {
     const currentIndex = steps.findIndex((step) =>
       currentPath.endsWith(`/${step.number}`)
     );
-    console.log("Indice actual:", currentIndex);
+  
     setActiveIndex(currentIndex < 1 ? 0 : currentIndex - currentIndex);
   }, [steps]);
-  console.log(activeIndex);
+
   const handleStepChange = (e: { index: number }) => {
     setActiveIndex(e.index);
   };

@@ -8,6 +8,7 @@ import { LayoutType, SortOrderType } from "../utils/types/types";
 import { Link } from "react-router-dom";
 import { RootState } from "../redux/store";
 import { Activity } from "../utils/interfaces";
+import axios from "axios";
 
 const Activities = () => {
   const activities = useSelector(
@@ -22,6 +23,7 @@ const Activities = () => {
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState<SortOrderType>(0);
   const [sortField, setSortField] = useState("");
+  const [userSteps, setUserSteps] = useState([]);
 
   const sortOptions = [
     { label: "A - Z", value: "title" },
@@ -72,6 +74,19 @@ const Activities = () => {
 
     setFilteredValue(sortedData);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/userStep");
+        setUserSteps(response.data);
+      } catch (error) {
+        console.error("Error al obtener datos de UserSteps:", error);
+      }
+    };
+    fetchData();
+  }, []);
+  console.log(userSteps);
 
   const dataViewHeader = (
     <div className="flex flex-column md:flex-row md:justify-content-between gap-2 rounded-lg">
