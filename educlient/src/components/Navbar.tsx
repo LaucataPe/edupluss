@@ -4,6 +4,7 @@ import { RootState } from "../redux/store";
 import { useNavigate, useLocation } from "react-router-dom";
 import { resetActivities } from "../redux/features/activitiesSlice";
 import { Avatar } from "primereact/avatar";
+import { Button } from "primereact/button";
 
 import { Menu } from "primereact/menu";
 
@@ -39,7 +40,14 @@ function NavBar() {
 
   return (
     <>
-      <nav className=" py-3 layout-topbar bg-blue-500 flex relative justify-center items-center">
+      <nav className=" py-3 layout-topbar bg-blue-500 flex relative justify-center items-center z-2">
+        {/* <Button
+          className="ml-1 py-5 px-4 rounded-lg h-[2rem] w-[5rem] z-10 shadow-xl"
+          severity="info"
+          style={{ position: "fixed" }}
+        >
+          <i className="pi pi-bars" style={{ fontSize: "2rem" }}></i>
+        </Button> */}
         <h2 className="text-white font-bold m-0">
           {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
         </h2>
