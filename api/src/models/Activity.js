@@ -19,6 +19,14 @@ module.exports = (database) => {
       allowNull: false,
       defaultValue: 0,
     },
+    formURL: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    excelURL: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
