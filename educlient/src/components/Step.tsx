@@ -1,11 +1,27 @@
+import { useEffect } from "react";
 import { Step } from "../utils/interfaces";
 import { Button } from "primereact/button";
 
 type props = {
   step: Step;
+  activityId: string;
+  activeIndex: number;
 };
 
-function CurrentStep({ step }: props) {
+function CurrentStep({ step, activityId, activeIndex }: props) {
+  useEffect(() => {
+    const currentStep = window.localStorage.getItem(`Activity ${activityId}`);
+    if (currentStep !== null) {
+      const value = JSON.parse(currentStep);
+      activeIndex > value
+        ? window.localStorage.setItem(
+            `Activity ${activityId}`,
+            JSON.stringify(activeIndex)
+          )
+        : null;
+    }
+  }, [activeIndex]);
+
   const getYouTubeEmbedLink = (videoLink: string) => {
     if (videoLink) {
       const videoId = videoLink.split("v=")[1].split("&")[0];
