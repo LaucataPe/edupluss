@@ -104,9 +104,12 @@ Step.belongsToMany(User, {
   foreignKey: "StepId",
 });
 
-Activity.hasOne(TestGrade, {
+Activity.hasMany(TestGrade, {
+  foreignKey: 'activityId', 
+});
+
+TestGrade.belongsTo(Activity, {
   foreignKey: 'activityId',
-  unique: true, 
 });
 
 User.hasMany(TestGrade, {
