@@ -4,13 +4,16 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useSelector } from "react-redux";
 import { LayoutType, SortOrderType } from "../utils/types/types";
-
+import { getStepsActivity } from "../redux/features/stepsSlider";
 import { Link } from "react-router-dom";
 import { RootState } from "../redux/store";
 import { Activity } from "../utils/interfaces";
+import { useAppDispatch } from "../hooks/typedSelectors";
 import axios from "axios";
 
 const Activities = () => {
+  const dispatch = useAppDispatch();
+
   const activities = useSelector(
     (state: RootState) => state.activities.activities
   );
@@ -24,7 +27,17 @@ const Activities = () => {
   const [sortOrder, setSortOrder] = useState<SortOrderType>(0);
   const [sortField, setSortField] = useState("");
   const [userSteps, setUserSteps] = useState([]);
-
+  const [totalSteps, setTotalSteps] = useState([]);
+  const currentUser = useSelector((state: RootState) => state.user.logUser);
+  const totalCurrentActivities = useSelector(
+    (state: RootState) => state.activities.activities
+  );
+  const currentProgress = userSteps.filter(
+    (entrada) => entrada.UserId === currentUser.id
+  );
+  const pendingSteps = userSteps.filter(
+    (paso) => paso.UserId === currentUser.id && !paso.finished
+  );
   const sortOptions = [
     { label: "A - Z", value: "title" },
     { label: "Z - A", value: "!title" },
@@ -86,7 +99,49 @@ const Activities = () => {
     };
     fetchData();
   }, []);
-  console.log(userSteps);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/steps");
+        setTotalSteps(response.data);
+      } catch (error) {
+        console.error("Error al obtener datos de 'steps':", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // console.log(
+  //   "'currentProgress' del usuario actual:",
+  //   currentProgress,
+  //   "'totalCurrentActivities' las actividades del usuario:",
+  //   totalCurrentActivities,
+  //   "Todos los pasos de las actividades",
+  //   totalSteps,
+  //   "'totalSteps' del empleado actual:",
+  //   pendingSteps
+  // );
+  // Crear un arreglo para almacenar los activityId de los pasos finalizados
+  const finishedActivityIds = [];
+
+  // Filtrar los pasos finalizados
+  const finishedSteps = currentProgress.filter((step) => step.finished);
+
+  // Obtener los activityId de los pasos finalizados
+  finishedSteps.forEach((step) => {
+    const { StepId } = step;
+
+    // Encontrar el step correspondiente en totalSteps
+    const matchingStep = totalSteps.find((ts) => ts.id === StepId);
+
+    if (matchingStep) {
+      const { activityId } = matchingStep;
+      finishedActivityIds.push(activityId);
+    }
+  });
+
+  // Mostrar los activityId en la consola
+  console.log("ActivityIds de los pasos finalizados:", finishedActivityIds);
 
   const dataViewHeader = (
     <div className="flex flex-column md:flex-row md:justify-content-between gap-2 rounded-lg">
@@ -178,6 +233,29 @@ const Activities = () => {
               >
                 <div className="card m-3 border-1 surface-border hover:bg-slate-100">
                   <h3 className="m-0">Clase de Excel {index}</h3>
+                </div>
+              </div>
+            ))}
+        </div>
+        <div
+          className="card flex mx-[5%]"
+          id="pending-activities"
+          style={{ overflowX: "auto" }}
+        >
+          <h3 className="flex align-items-center gap-2">
+            <i className="pi pi-check-square text-4xl gap-2" />
+            Listos:
+          </h3>
+          {Array(3)
+            .fill(0)
+            .map((_, index) => (
+              <div
+                className="col-12 w-auto flex-wrap"
+                id={`activities-list-${index}`}
+                key={index}
+              >
+                <div className="card m-3 border-1 surface-border hover:bg-slate-100">
+                  <h3 className="m-0">Clases de Calculo {index}</h3>
                 </div>
               </div>
             ))}
