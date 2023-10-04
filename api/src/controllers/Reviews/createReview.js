@@ -1,4 +1,4 @@
-const { Review, User } = require('../../db');
+const { Review, User, Activity } = require('../../db');
 const { catchedAsync } = require('../../utils');
 const { ClientError } = require("../../utils/index.js");
 
@@ -13,12 +13,26 @@ const createReview = async (req, res) => {
   }
   try {
     const employeeUser = await User.findByPk(userId);
+    const activityExists = await Activity.findByPk(activityId)
+    if (!activityExists) {
+      throw new ClientError(
+        'incorrect request: activity does not exist',
+        404
+      )};
+
+      if (!employeeUser) {
+        throw new ClientError(
+          'incorrect request: employee does not exist',
+          404
+        )};
 
     if (employeeUser.tipo !== 'empleado') {
         throw new ClientError(
           'incorrect request: the data sent does not correspond to an employee',
           400
         );
+
+        
     } else {
         const previousReview = await Review.findAll({
             where: {
