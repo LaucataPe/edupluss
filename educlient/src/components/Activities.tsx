@@ -32,6 +32,7 @@ const Activities = () => {
   const totalCurrentActivities = useSelector(
     (state: RootState) => state.activities.activities
   );
+
   const currentProgress = userSteps.filter(
     (entrada) => entrada.UserId === currentUser.id
   );
@@ -121,13 +122,14 @@ const Activities = () => {
   //   "'totalSteps' del empleado actual:",
   //   pendingSteps
   // );
-  // Crear un arreglo para almacenar los activityId de los pasos finalizados
-  const finishedActivityIds = [];
+
+  // Crear un objeto para almacenar la información de los ActivityIds finalizados
+  const finishedActivityInfo = {};
 
   // Filtrar los pasos finalizados
   const finishedSteps = currentProgress.filter((step) => step.finished);
 
-  // Obtener los activityId de los pasos finalizados
+  // Contar la cantidad de pasos por activityId en totalSteps
   finishedSteps.forEach((step) => {
     const { StepId } = step;
 
@@ -135,13 +137,48 @@ const Activities = () => {
     const matchingStep = totalSteps.find((ts) => ts.id === StepId);
 
     if (matchingStep) {
-      const { activityId } = matchingStep;
-      finishedActivityIds.push(activityId);
+      const { activityId, title } = matchingStep;
+
+      // Verificar si el activityId ya está en el objeto finishedActivityInfo
+      if (finishedActivityInfo.hasOwnProperty(activityId)) {
+        finishedActivityInfo[activityId].count++;
+      } else {
+        // Obtener la cantidad total de pasos para esta actividad
+        const totalStepsForActivity = totalSteps.filter(
+          (ts) => ts.activityId === activityId
+        ).length;
+
+        finishedActivityInfo[activityId] = {
+          title: title,
+          count: totalStepsForActivity,
+        };
+      }
     }
   });
 
-  // Mostrar los activityId en la consola
-  console.log("ActivityIds de los pasos finalizados:", finishedActivityIds);
+  // Obtener todos los StepId del usuario actual con finished: false
+  const unfinishedStepIds = currentProgress
+    .filter((step) => !step.finished)
+    .map((step) => step.StepId);
+
+  // Crear un objeto para almacenar los activityId
+  const activityIds = {};
+
+  // Iterar sobre los StepId no finalizados y obtener sus activityId
+  unfinishedStepIds.forEach((stepId) => {
+    const matchingStep = totalSteps.find((step) => step.id === stepId);
+    if (matchingStep) {
+      activityIds[matchingStep.activityId] = true;
+    }
+  });
+
+  // Encontrar los activityId que no tienen ningún paso con finished: true
+  const activityIdsWithNoStepsFinished = Object.keys(activityIds).filter(
+    (activityId) => !(activityId in finishedActivityInfo)
+  );
+  console.log(currentProgress);
+  // // Mostrar los activityId que cumplen con la condición
+  console.log("Todos los pasos de los usuarios y sus StepIds", totalSteps);
 
   const dataViewHeader = (
     <div className="flex flex-column md:flex-row md:justify-content-between gap-2 rounded-lg">
@@ -210,7 +247,6 @@ const Activities = () => {
 
     return null;
   };
-
   return (
     <div className="grid list-demo">
       <div className="col-12">
@@ -223,43 +259,83 @@ const Activities = () => {
             <i className="pi pi-bookmark text-4xl gap-2" />
             Pendientes:
           </h3>
-          {Array(6)
-            .fill(0)
-            .map((_, index) => (
+          {activityIdsWithNoStepsFinished.map((activityId, index) => {
+            // Obtener los pasos para la actividad actual
+            const stepsForActivity = totalSteps.filter(
+              (step) => step.activityId === parseInt(activityId)
+            );
+
+            // Encontrar los pasos que están en "currentProgress" del usuario actual
+            const userStepsForActivity = currentProgress.filter((userStep) =>
+              stepsForActivity.some((step) => step.id === userStep.StepId)
+            );
+
+            // Encontrar el ID más grande entre los pasos del usuario actual
+            const maxStepId = Math.max(
+              ...userStepsForActivity.map((userStep) => userStep.StepId)
+            );
+
+            // Encontrar el título de la actividad correspondiente a "activityId"
+            const activityTitle =
+              totalCurrentActivities.find(
+                (activity) => activity.id === parseInt(activityId)
+              )?.title || `Actividad Desconocida`; // Si no se encuentra el título, muestra "Actividad Desconocida"
+
+            // Encontrar el nombre del paso correspondiente al ID más grande
+            const stepName =
+              stepsForActivity.find((step) => step.id === maxStepId)?.title ||
+              `Step ${1}`;
+
+            return (
               <div
                 className="col-12 w-auto flex-wrap"
                 id={`activities-list-${index}`}
                 key={index}
               >
                 <div className="card m-3 border-1 surface-border hover:bg-slate-100">
-                  <h3 className="m-0">Clase de Excel {index}</h3>
+                  <h3 className="m-0">{`${activityTitle}: ${stepName}`}</h3>
                 </div>
               </div>
-            ))}
+            );
+          })}
         </div>
+
         <div
           className="card flex mx-[5%]"
-          id="pending-activities"
+          id="finished-activities"
           style={{ overflowX: "auto" }}
         >
           <h3 className="flex align-items-center gap-2">
             <i className="pi pi-check-square text-4xl gap-2" />
-            Listos:
+            Finalizadas:
           </h3>
-          {Array(3)
-            .fill(0)
-            .map((_, index) => (
+          {Object.keys(finishedActivityInfo).map((activityId, index) => {
+            const currentActivity = totalCurrentActivities.find(
+              (activity) => activity.id === parseInt(activityId)
+            );
+
+            if (!currentActivity) {
+              // Manejar el caso en el que no se encuentra la actividad actual
+              return null;
+            }
+            return (
               <div
                 className="col-12 w-auto flex-wrap"
                 id={`activities-list-${index}`}
                 key={index}
               >
                 <div className="card m-3 border-1 surface-border hover:bg-slate-100">
-                  <h3 className="m-0">Clases de Calculo {index}</h3>
+                  <h3 className="m-0">
+                    {currentActivity.title}:{" "}
+                    {`${finishedActivityInfo[activityId].title}`}
+                  </h3>
+                  {/* para colocar ticks por cantidad de pasos, esta es la variable ${finishedActivityInfo[activityId].count} */}
                 </div>
               </div>
-            ))}
+            );
+          })}
         </div>
+
         <div className="card mx-[5%]">
           <h3>
             <i className="pi pi-book text-4xl mx-2" />
