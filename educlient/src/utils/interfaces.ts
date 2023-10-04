@@ -68,3 +68,8 @@ export interface UserStep {
   userId?: number;
   stepId?: number;
 }
+
+export interface ProgressData {
+  userId?: number;
+  progress?: string;
+}

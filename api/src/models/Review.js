@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 
   module.exports = (database) => {  
   database.define('Review', {
@@ -31,7 +31,8 @@ const { DataTypes } = require('sequelize');
       //   key: "id",
       // },
     },
-  },{
-    timestamps: false
-  });
+    {
+      timestamps: false,
+    }
+  );
 };

@@ -29,8 +29,22 @@ function Dashboard() {
   const [roleIdSum, setRoleIdSum] = useState({});
   const [generalProgress, setGeneralProgress] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(0);
+  const [visibleUsers, setVisibleUsers] = useState(5);
+  const [allCollapsed, setAllCollapsed] = useState(false);
+
+  const handleShowMore = () => {
+    setVisibleUsers(visibleUsers + 5);
+    setAllCollapsed(false);
+  };
+
+  const handleCollapseAll = () => {
+    setVisibleUsers(5);
+    setAllCollapsed(true);
+  };
 
   const itemsPerPage = 3;
+
+  console.log(useSelector((state: RootState) => state.activities.activities));
 
   currentUsers.forEach((user) => {
     const roleId = user.roleId;
@@ -45,7 +59,6 @@ function Dashboard() {
   });
 
   const totalPages = Math.ceil(Object.keys(usersByRole).length / itemsPerPage);
-  console.log(totalPages);
   useEffect(() => {
     dispatch(fetchActivities());
   }, [dispatch]);
@@ -197,9 +210,7 @@ function Dashboard() {
 
     setGeneralProgress(newProgress);
   }, [userIds, stepsCount, usersRoles, roleIdSum]);
-  // console.log(stepsCount);
-  // console.warn(generalProgress);
-  // console.warn(userStepsInfo);
+
   return (
     <div className="flex">
       <div className="w-[100%]">
@@ -258,45 +269,68 @@ function Dashboard() {
                 <div key={roleName} className="col-4 col-md-4">
                   <div className="border-2 shadow-2xl p-4 rounded-2xl">
                     <h4>Rol: {roleName}</h4>
-                    {users.map((user) => (
-                      <div
-                        key={user.id}
-                        className={`card mb-3 text-center ${
-                          user.progress === 0 ? "gray-card" : ""
-                        }`}
-                      >
-                        <strong>{user.username}</strong>
-                        <div className="col-10 col-xl-3 mx-auto">
-                          <ProgressBar
-                            value={
-                              generalProgress.find(
-                                //@ts-ignore
-                                (item) => item.userId === user.id //@ts-ignore
-                              )?.progress || 0
-                            }
-                          />
-                          <div className="col-6 col-xl-3 mx-auto">
-                            <Button
-                              rounded
-                              severity={
+                    {users
+                      .map((user) => (
+                        <div
+                          key={user.id}
+                          className={`card mb-3 text-center ${
+                            user.progress === 0 ? "gray-card" : ""
+                          }`}
+                        >
+                          <strong>{user.username}</strong>
+                          <div className="col-10 col-xl-3 mx-auto">
+                            <ProgressBar
+                              value={
                                 generalProgress.find(
-                                  //@ts-ignore
-                                  (item) => item.userId === user.id //@ts-ignore
-                                )?.progress <= 100 &&
-                                generalProgress.find(
-                                  //@ts-ignore
-                                  (item) => item.userId === user.id //@ts-ignore
-                                )?.progress > 0
-                                  ? "info"
-                                  : "secondary"
+                                  (item) => item.userId === user.id
+                                )?.progress || 0
                               }
-                              icon="pi pi-arrow-right"
-                              onClick={() => handleButtonClick(user.id)} // Abre el modal y pasa user.id
-                            ></Button>
+                            />
+                            <div className="col-6 col-xl-3 mx-auto">
+                              <Button
+                                rounded
+                                severity={
+                                  generalProgress.find(
+                                    //@ts-ignore
+                                    (item) => item.userId === user.id //@ts-ignore
+                                  )?.progress <= 100 &&
+                                  generalProgress.find(
+                                    //@ts-ignore
+                                    (item) => item.userId === user.id //@ts-ignore
+                                  )?.progress > 0
+                                    ? "primary"
+                                    : "secondary"
+                                }
+                                icon="pi pi-arrow-right"
+                                onClick={() => handleButtonClick(user.id)}
+                              ></Button>
+                            </div>
                           </div>
                         </div>
+                      ))
+                      .slice(0, visibleUsers)}
+                    {users.length > visibleUsers && (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>
+                          {visibleUsers > 5 && (
+                            <Button
+                              onClick={handleCollapseAll}
+                              severity="danger"
+                            >
+                              Ver menos
+                            </Button>
+                          )}
+                        </div>
+                        <Button onClick={handleShowMore} severity="info">
+                          Ver más
+                        </Button>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               ))}

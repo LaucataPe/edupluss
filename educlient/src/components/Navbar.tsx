@@ -1,49 +1,71 @@
-import React, {useRef} from 'react';
+import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 import { useNavigate, useLocation } from "react-router-dom";
 import { resetActivities } from "../redux/features/activitiesSlice";
-import { Avatar } from 'primereact/avatar';
+import { Avatar } from "primereact/avatar";
+import { Button } from "primereact/button";
 
-import { Menu } from 'primereact/menu';
-
+import { Menu } from "primereact/menu";
 
 function NavBar() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {pathname} = useLocation();
-    
-  const currentEmpresa = useSelector((state: RootState) => state.activities.selectEmpresa.name)
+  const { pathname } = useLocation();
+
+  const currentEmpresa = useSelector(
+    (state: RootState) => state.activities.selectEmpresa.name
+  );
   const menu = useRef<Menu>(null);
 
-    const toggleMenu: React.MouseEventHandler<HTMLButtonElement> | undefined = (event) => {
+  const toggleMenu: React.MouseEventHandler<HTMLButtonElement> | undefined = (
+    event
+  ) => {
     menu.current?.toggle(event);
-};
+  };
 
-    const logOut = () => {
-      dispatch(resetActivities())
-      window.localStorage.removeItem("token");
-		  navigate('/');
-    }
+  const logOut = () => {
+    dispatch(resetActivities());
+    window.localStorage.removeItem("token");
+    navigate("/");
+  };
 
-    const overlayMenuItems = [
-      {
-          label: 'Cerrar Sesión',
-          icon: 'pi pi-sign-out',
-          command: logOut
-      }
+  const overlayMenuItems = [
+    {
+      label: "Cerrar Sesión",
+      icon: "pi pi-sign-out",
+      command: logOut,
+    },
   ];
 
-    return (
-      <>
-      <nav className=" py-3 layout-topbar bg-blue-500 flex relative justify-center items-center">
-        <h2 className="text-white font-bold m-0">{currentEmpresa ? currentEmpresa : 'Selecciona la empresa'}</h2>
-        {pathname !== '/' && pathname !== '/login' ?
-        <Avatar icon='pi pi-user' size="large" shape="circle"  onClick={toggleMenu} className="absolute right-2"></Avatar>: '' }
+  return (
+    <>
+      <nav className=" py-3 layout-topbar bg-blue-500 flex relative justify-center items-center z-2">
+        {/* <Button
+          className="ml-1 py-5 px-4 rounded-lg h-[2rem] w-[5rem] z-10 shadow-xl"
+          severity="info"
+          style={{ position: "fixed" }}
+        >
+          <i className="pi pi-bars" style={{ fontSize: "2rem" }}></i>
+        </Button> */}
+        <h2 className="text-white font-bold m-0">
+          {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
+        </h2>
+        {pathname !== "/" && pathname !== "/login" ? (
+          <Avatar
+            icon="pi pi-user"
+            size="large"
+            shape="circle"
+            onClick={toggleMenu}
+            className="absolute right-2"
+          ></Avatar>
+        ) : (
+          ""
+        )}
         <Menu ref={menu} model={overlayMenuItems} popup />
       </nav>
-      </>
-    );
-  }
-  
-  export default NavBar;
+    </>
+  );
+}
+
+export default NavBar;
