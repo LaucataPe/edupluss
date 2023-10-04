@@ -8,6 +8,12 @@ const deleteReview = async (req, res) => {
   try {
     const adminUser = await User.findByPk(adminId);
 
+    if (!adminUser) {
+      throw new ClientError(
+        'incorrect request: admin ID does not exist',
+        404
+      )};
+
     if (adminUser.tipo !== 'admin') {
         throw new ClientError(
           'incorrect request: the data sent does not correspond to an admin',
