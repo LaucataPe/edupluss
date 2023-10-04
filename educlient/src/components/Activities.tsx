@@ -176,10 +176,11 @@ const Activities = () => {
   const activityIdsWithNoStepsFinished = Object.keys(activityIds).filter(
     (activityId) => !(activityId in finishedActivityInfo)
   );
-  console.log(currentProgress);
-  // // Mostrar los activityId que cumplen con la condición
-  console.log("Todos los pasos de los usuarios y sus StepIds", totalSteps);
+  // console.log(currentProgress);
+  // // // Mostrar los activityId que cumplen con la condición
+  // console.log("Todos los pasos de los usuarios y sus StepIds", totalSteps);
 
+  console.log(activityIdsWithNoStepsFinished, finishedActivityInfo);
   const dataViewHeader = (
     <div className="flex flex-column md:flex-row md:justify-content-between gap-2 rounded-lg">
       <Dropdown
@@ -206,12 +207,30 @@ const Activities = () => {
   );
   // Tengo que colocarles su UserSteps
   const dataviewListItem = (data: Activity) => {
+    const activityId = data.id;
+
+    // Comprobar si el activityId no se encuentra en activityIdsWithNoStepsFinished ni en finishedActivityInfo
+    const notStarted =
+      !activityIdsWithNoStepsFinished.includes(String(activityId)) &&
+      !finishedActivityInfo[activityId];
+
     return (
       <div className="col-12 border-none">
         <Link to={`/activity/${data.id}`}>
-          <div className="flex flex-column my-3 border rounded-lg shadow-sm p-4 hover:bg-slate-100">
+          <div
+            className={`flex flex-column my-3 border rounded-lg shadow-sm p-4 hover:bg-slate-100 ${
+              notStarted ? "text-red-500" : ""
+            }`}
+          >
             <div className="text-2xl font-bold">
-              <h3 className="m-0">{data.title}</h3>
+              <h3 className="m-0 flex align-items-center">
+                {data.title}
+                {notStarted ? (
+                  <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
+                ) : (
+                  <i className="pi pi-lock-open text-4xl ml-2"></i>
+                )}
+              </h3>
             </div>
           </div>
         </Link>
@@ -220,13 +239,27 @@ const Activities = () => {
   };
 
   const dataviewGridItem = (data: Activity) => {
+    const activityId = data.id;
+
+    // Comprobar si el activityId no se encuentra en activityIdsWithNoStepsFinished ni en finishedActivityInfo
+    const notStarted =
+      !activityIdsWithNoStepsFinished.includes(String(activityId)) &&
+      !finishedActivityInfo[activityId];
+
     return (
       <div className="col-12 lg:col-4">
         <Link to={`/activity/${data.id}`}>
           <div className="card m-3 border-1 surface-border hover:bg-slate-100">
             <div className="flex flex-column align-items-center text-center">
-              <div>
-                <h3 className="m-0">{data.title}</h3>
+              <div className="text-2xl font-bold">
+                <h3 className="m-0 flex-row align-items-center">
+                  {data.title}
+                  {notStarted ? (
+                    <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
+                  ) : (
+                    <i className="pi pi-lock-open text-4xl ml-2"></i>
+                  )}
+                </h3>
               </div>
             </div>
           </div>
