@@ -57,6 +57,10 @@ export interface Role {
 export interface Activity {
   id?: number;
   title: string;
+  hasTest: boolean;
+  numberSteps: number;
+  formURL: string;
+  excelURL: string;
   roleId: number;
   active?: boolean;
 }
