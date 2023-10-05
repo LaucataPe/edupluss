@@ -434,7 +434,7 @@ function AddStep() {
                 className="mx-2"
                 disabled={stepId ? !formOrigin : false}
               />
-              <a href="https://docs.google.com/forms/u/0/">
+              <a href="https://docs.google.com/forms/u/0/" target="_blank">
                 Necesitas una URL?
               </a>
               <div

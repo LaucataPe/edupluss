@@ -62,7 +62,7 @@ function Activity() {
   const activityName = activities.find((act) => act.id === Number(id));
   const activityId = activityName?.id;
   const stepsList = steps.map((step) => step.id);
-
+  console.log(activityId);
   const handleNextClick = async () => {
     if (activeIndex < stepsList.length - 1) {
       const actualIndex = stepsList[activeIndex];
@@ -87,7 +87,6 @@ function Activity() {
           console.warn("Error al hacer la petición POST:", error);
         }
       }
-
       setActiveIndex(activeIndex + 1);
     } else {
       console.log("No more steps to process.");

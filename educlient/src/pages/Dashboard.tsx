@@ -44,8 +44,6 @@ function Dashboard() {
 
   const itemsPerPage = 3;
 
-  console.log(useSelector((state: RootState) => state.activities.activities));
-
   currentUsers.forEach((user) => {
     const roleId = user.roleId;
     const roleName = roles.find((role) => role.id === roleId)?.name;
