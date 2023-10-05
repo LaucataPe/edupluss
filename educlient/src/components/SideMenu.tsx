@@ -34,7 +34,7 @@ const AppMenu = () => {
     {
       label: "Inicio",
       items: [
-        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dashboard" },
+        { label: "Progreso de usuarios", icon: "pi pi-fw pi-home", to: "/dashboard" },
         { label: "Usuarios", icon: "pi pi-users", to: `/crud` },
       ],
     },

@@ -17,6 +17,7 @@ function ProgressModal({
   const [newUserSteps] = useState(userSteps);
   const [steps, setSteps] = useState([]);
   const [checkboxValue, setCheckboxValue] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const onCheckboxChange = (e: CheckboxChangeEvent) => {
     let selectedValue = [...checkboxValue];
@@ -25,6 +26,26 @@ function ProgressModal({
 
     setCheckboxValue(selectedValue);
   };
+
+  const itemsPerPage = 7;
+
+  const handleBackButtonClick = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  // Define una función para manejar el clic en el botón de "adelante".
+  const handleNextButtonClick = () => {
+    const totalPages = Math.ceil(matchingStepTitles.length / itemsPerPage);
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Calcula el índice de inicio y final para los elementos en la página actual.
+  const startIndex = currentPage * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,8 +74,6 @@ function ProgressModal({
     ); //@ts-ignore
     return matchingStep?.title;
   });
-  console.log(matchingStepTitles);
-
   return (
     <>
       <header className="bg-1 p-2 max-w-md rounded-t-md lg:max-w-lg flex justify-between">
@@ -81,37 +100,61 @@ function ProgressModal({
         </div>
       </header>
       <div className="rounded-b-md max-w-md px-4 py-6 border-x-2 border-b-2 lg:max-w-lg">
-        {activities.map((activity: Activity, index: number) => {
-          const stepTitle = matchingStepTitles[index];
-          const progressValue = matchingStepTitles.includes(stepTitle) ? 1 : 0;
-          let showSinSteps = true; // Variable para controlar si mostrar "Sin Steps"
-
-          return (
-            <>
-              {stepTitle ? (
+        <div className="mb-2">Página {currentPage + 1}</div>
+        {matchingStepTitles.length === 0 ? (
+          <div>No se han realizado ningún paso</div>
+        ) : (
+          matchingStepTitles
+            .slice(startIndex, endIndex)
+            .map((stepTitle: any, index: number) => {
+              const progressValue = matchingStepTitles.includes(stepTitle)
+                ? 1
+                : 0;
+              return (
                 <div
-                  key={activity.id}
+                  key={index}
                   className={`py-2 px-6 flex items-center justify-center gap-4 `}
                 >
-                  <label htmlFor="checkOption1" className="col-12">
-                    {stepTitle ? stepTitle : ""}
-                  </label>
-                  <div className="field-checkbox text-center mb-0">
-                    <Checkbox
-                      inputId="checkOption1"
-                      name="option"
-                      checked={progressValue !== 0}
-                      onChange={onCheckboxChange}
-                    />
-                  </div>
+                  {stepTitle ? (
+                    <>
+                      <label htmlFor={`checkOption${index}`} className="col-12">
+                        {stepTitle}
+                      </label>
+                      <div className="field-checkbox text-center mb-0">
+                        <Checkbox
+                          inputId={`checkOption${index}`}
+                          name="option"
+                          checked={progressValue !== 0}
+                          onChange={onCheckboxChange}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div>Aún no realizó ningún paso</div>
+                  )}
                 </div>
-              ) : showSinSteps ? (
-                <div key={index}></div>
-              ) : null}
-              {stepTitle && showSinSteps && (showSinSteps = false)}
-            </>
-          );
-        })}
+              );
+            })
+        )}
+        {/* Agregar los botones de adelante y atrás si hay más de 7 elementos */}
+        {matchingStepTitles.length > itemsPerPage && (
+          <div className="flex justify-between mt-4">
+            {/* Botón de atrás */}
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+              onClick={handleBackButtonClick}
+            >
+              Atrás
+            </button>
+            {/* Botón de adelante */}
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+              onClick={handleNextButtonClick}
+            >
+              Adelante
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
