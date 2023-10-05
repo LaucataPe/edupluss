@@ -20,7 +20,9 @@ function Home() {
       <div className="flex">
         <div className="w-[100%]">
           <h2 className="text-3xl font-semibold text-center p-5">
-            Hola {logUser.username}
+            {" "}
+            <i className="pi pi-home text-4xl mx-2"></i>
+            Bienvenido, {logUser.username}!{" "}
           </h2>
           <Activities />
         </div>

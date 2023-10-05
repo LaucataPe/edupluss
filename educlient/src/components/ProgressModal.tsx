@@ -1,6 +1,7 @@
 import { Activity } from "../utils/interfaces";
 import React, { useState, useEffect } from "react";
 import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
+import { Tag } from "primereact/tag";
 
 import axios from "axios";
 function ProgressModal({
@@ -100,7 +101,9 @@ function ProgressModal({
         </div>
       </header>
       <div className="rounded-b-md max-w-md px-4 py-6 border-x-2 border-b-2 lg:max-w-lg">
-        <div className="mb-2">Página {currentPage + 1}</div>
+        <Tag severity="info" className="text-sm ml-40" rounded>
+          Página {currentPage + 1}
+        </Tag>
         {matchingStepTitles.length === 0 ? (
           <div>No se han realizado ningún paso</div>
         ) : (

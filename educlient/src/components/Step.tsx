@@ -102,9 +102,7 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
           delete excelArray[key];
         }
       }
-
       // console.log(excelArray);
-
       // Actualiza el estado con los datos del Excel
       setExcelData(excelArray);
     } catch (error) {

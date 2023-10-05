@@ -4,16 +4,12 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useSelector } from "react-redux";
 import { LayoutType, SortOrderType } from "../utils/types/types";
-import { getStepsActivity } from "../redux/features/stepsSlider";
 import { Link } from "react-router-dom";
 import { RootState } from "../redux/store";
 import { Activity } from "../utils/interfaces";
-import { useAppDispatch } from "../hooks/typedSelectors";
 import axios from "axios";
 
 const Activities = () => {
-  const dispatch = useAppDispatch();
-
   const activities = useSelector(
     (state: RootState) => state.activities.activities
   );
@@ -36,9 +32,7 @@ const Activities = () => {
   const currentProgress = userSteps.filter(
     (entrada) => entrada.UserId === currentUser.id
   );
-  const pendingSteps = userSteps.filter(
-    (paso) => paso.UserId === currentUser.id && !paso.finished
-  );
+
   const sortOptions = [
     { label: "A - Z", value: "title" },
     { label: "Z - A", value: "!title" },
@@ -180,7 +174,7 @@ const Activities = () => {
   // // // Mostrar los activityId que cumplen con la condición
   // console.log("Todos los pasos de los usuarios y sus StepIds", totalSteps);
 
-  console.log(activityIdsWithNoStepsFinished, finishedActivityInfo);
+  // console.log("Pasos que no están en progreso:", stepsToStart);
   const dataViewHeader = (
     <div className="flex flex-column md:flex-row md:justify-content-between gap-2 rounded-lg">
       <Dropdown
@@ -214,19 +208,25 @@ const Activities = () => {
       !activityIdsWithNoStepsFinished.includes(String(activityId)) &&
       !finishedActivityInfo[activityId];
 
+    const isFinished =
+      finishedActivityInfo[activityId] &&
+      finishedActivityInfo[activityId].count > 0; // Verifica si hay pasos finalizados
+
     return (
-      <div className="col-12 border-none">
+      <div className={`col-12 border-none`}>
         <Link to={`/activity/${data.id}`}>
           <div
-            className={`flex flex-column my-3 border rounded-lg shadow-sm p-4 hover:bg-slate-100 ${
-              notStarted ? "text-red-500" : ""
-            }`}
+            className={`flex flex-column my-3 border rounded-lg shadow-sm p-4 ${
+              isFinished ? "bg-green-200" : notStarted ? "bg-blue-200" : ""
+            } hover:bg-slate-00 ${notStarted ? "text-red-500" : ""}`}
           >
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold ">
               <h3 className="m-0 flex align-items-center">
                 {data.title}
                 {notStarted ? (
                   <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
+                ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
+                  <i className="pi pi-check-circle text-4xl ml-2"></i>
                 ) : (
                   <i className="pi pi-lock-open text-4xl ml-2"></i>
                 )}
@@ -246,16 +246,26 @@ const Activities = () => {
       !activityIdsWithNoStepsFinished.includes(String(activityId)) &&
       !finishedActivityInfo[activityId];
 
+    const isFinished =
+      finishedActivityInfo[activityId] &&
+      finishedActivityInfo[activityId].count > 0; // Verifica si hay pasos finalizados
+
     return (
       <div className="col-12 lg:col-4">
         <Link to={`/activity/${data.id}`}>
-          <div className="card m-3 border-1 surface-border hover:bg-slate-100">
+          <div
+            className={`card m-3 border-1 surface-border hover:bg-slate-100 ${
+              isFinished ? "bg-green-200" : notStarted ? "bg-blue-200" : ""
+            }`}
+          >
             <div className="flex flex-column align-items-center text-center">
               <div className="text-2xl font-bold">
                 <h3 className="m-0 flex-row align-items-center">
                   {data.title}
                   {notStarted ? (
                     <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
+                  ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
+                    <i className="pi pi-check-circle text-4xl ml-2"></i>
                   ) : (
                     <i className="pi pi-lock-open text-4xl ml-2"></i>
                   )}
@@ -284,37 +294,32 @@ const Activities = () => {
     <div className="grid list-demo">
       <div className="col-12">
         <div
-          className="card flex mx-[5%]"
+          className="card flex py-0 mx-[5%]"
           id="pending-activities"
           style={{ overflowX: "auto" }}
         >
           <h3 className="flex align-items-center gap-2">
             <i className="pi pi-bookmark text-4xl gap-2" />
-            Pendientes:
+            Últimas actividades:
           </h3>
           {activityIdsWithNoStepsFinished.map((activityId, index) => {
-            // Obtener los pasos para la actividad actual
             const stepsForActivity = totalSteps.filter(
               (step) => step.activityId === parseInt(activityId)
             );
 
-            // Encontrar los pasos que están en "currentProgress" del usuario actual
             const userStepsForActivity = currentProgress.filter((userStep) =>
               stepsForActivity.some((step) => step.id === userStep.StepId)
             );
 
-            // Encontrar el ID más grande entre los pasos del usuario actual
             const maxStepId = Math.max(
               ...userStepsForActivity.map((userStep) => userStep.StepId)
             );
 
-            // Encontrar el título de la actividad correspondiente a "activityId"
             const activityTitle =
               totalCurrentActivities.find(
                 (activity) => activity.id === parseInt(activityId)
               )?.title || `Actividad Desconocida`; // Si no se encuentra el título, muestra "Actividad Desconocida"
 
-            // Encontrar el nombre del paso correspondiente al ID más grande
             const stepName =
               stepsForActivity.find((step) => step.id === maxStepId)?.title ||
               `Step ${1}`;
@@ -325,16 +330,15 @@ const Activities = () => {
                 id={`activities-list-${index}`}
                 key={index}
               >
-                <div className="card m-3 border-1 surface-border hover:bg-slate-100">
+                <div className="card m-3 border-1 surface-border bg-yellow-100 hover:bg-slate-100">
                   <h3 className="m-0">{`${activityTitle}: ${stepName}`}</h3>
                 </div>
               </div>
             );
           })}
         </div>
-
         <div
-          className="card flex mx-[5%]"
+          className="card flex py-0 mx-[5%]"
           id="finished-activities"
           style={{ overflowX: "auto" }}
         >
@@ -348,7 +352,6 @@ const Activities = () => {
             );
 
             if (!currentActivity) {
-              // Manejar el caso en el que no se encuentra la actividad actual
               return null;
             }
             return (
@@ -357,12 +360,11 @@ const Activities = () => {
                 id={`activities-list-${index}`}
                 key={index}
               >
-                <div className="card m-3 border-1 surface-border hover:bg-slate-100">
+                <div className="card m-3 border-1 surface-border bg-green-100 hover:bg-slate-100">
                   <h3 className="m-0">
                     {currentActivity.title}:{" "}
                     {`${finishedActivityInfo[activityId].title}`}
                   </h3>
-                  {/* para colocar ticks por cantidad de pasos, esta es la variable ${finishedActivityInfo[activityId].count} */}
                 </div>
               </div>
             );
