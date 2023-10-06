@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const { router } = require('./routes/index');
 const cors = require('cors');
 const { PORT } = require('./config/varEnv.js');
+const verifyJWT = require("./Middlewares/verifyJWT")
 
 const server = express();
 server.set('port', PORT);
@@ -26,7 +27,7 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use('/', router);
+server.use('/',verifyJWT, router);
 
 // Error catching endware.
 server.use((err, req, res, next) => {
