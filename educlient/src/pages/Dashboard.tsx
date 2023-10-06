@@ -266,7 +266,7 @@ function Dashboard() {
               .map(([roleName, users]) => (
                 <div key={roleName} className="col-4 col-md-4">
                   <div className="border-2 shadow-2xl p-4 rounded-2xl">
-                    <h4>Rol: {roleName}</h4>
+                    <h4>{roleName}</h4>
                     {users
                       .map((user) => (
                         <div
