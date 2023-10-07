@@ -159,7 +159,7 @@ function Activity() {
               }))}
               activeIndex={activeIndex}
               onSelect={handleStepChange}
-              readOnly={false}
+              readOnly={true}
             />
             {steps && id && (
               <CurrentStep
