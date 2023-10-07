@@ -1,6 +1,7 @@
 //Express
 const express = require("express");
 const router = express.Router();
+const verifyRole = require("../Middlewares/verifyRole")
 
 //GET Controllers
 const { getEmpresaAreas } = require("../controllers/Company/getEmpresaArea");
@@ -32,7 +33,7 @@ const { getRolesByArea } = require("../controllers/Roles/getRolesByArea");
 const { getUserSteps } = require("../controllers/UserStep/getUserStep");
 const { checkSession } = require("../Middlewares/session");
 
-router.get("/empresas", getAllCompanies);
+router.get("/empresas",getAllCompanies);
 router.get("/areas/:companyId", getEmpresaAreas);
 
 router.get("/activities", getAllActivities);
