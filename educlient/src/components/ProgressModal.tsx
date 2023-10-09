@@ -167,7 +167,9 @@ function ProgressModal({
           Página {currentPage + 1}
         </Tag>
         {matchingStepTitles.length === 0 ? (
-          <div>No se han realizado ningún paso</div>
+          <div className="flex justify-between mt-4 px-2">
+            No se han realizado ningún paso
+          </div>
         ) : (
           renderedItems
         )}
