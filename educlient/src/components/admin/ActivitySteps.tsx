@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { RootState } from "../../redux/store";
 import { Link, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../hooks/typedSelectors";
@@ -12,6 +12,7 @@ import { LayoutType } from "../../utils/types/types";
 import { Step } from "../../utils/interfaces";
 import axios from "axios";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
 interface testInputs {
   formURL: string;
@@ -31,11 +32,18 @@ function ActivitySteps() {
   const [displayConfirmation, setDisplayConfirmation] = useState(false);
   const [stepId, setStepId] = useState(0);
 
-  const [testUrls, setTestUrls] = useState<testInputs>({
-    formURL: "",
-    excelURL: "",
-  });
+  const [testUrls, setTestUrls] = useState<testInputs | Object>({});
   const [showAddTestModal, setShowAddTestModal] = useState<boolean>(false);
+  const toast = useRef<Toast>(null);
+
+  const handleChangeTestUrls = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setTestUrls({
+      ...testUrls,
+      [name]: value,
+    });
+  };
 
   useEffect(() => {
     dispatch(getStepsActivity(Number(id)));
@@ -175,11 +183,48 @@ function ActivitySteps() {
 
   const handleAddTest = async () => {
     try {
-      //Request to add test
-      alert("test agregado");
-      setShowAddTestModal(false);
+      //Save auth token
+      const auth = window.localStorage.getItem("token");
+
+      //Format data to send
+      const urlsData = {
+        id: id,
+        hasTest: true,
+        ...testUrls,
+      };
+
+      const response = await axios.patch(
+        "http://localhost:3001/activity/update",
+        urlsData,
+        {
+          headers: {
+            Authorization: `Bearer ${auth}`,
+          },
+        }
+      );
+
+      if (response) {
+        toast.current?.show({
+          severity: "success",
+          summary: "Agregado!",
+          detail: "Test actualizado",
+          life: 2000,
+        });
+        setTimeout(() => {
+          setShowAddTestModal(false);
+        }, 2000);
+      }
     } catch (error) {
       console.log(error);
+      toast.current?.show({
+        severity: "error",
+        summary: "Algo salio mal",
+        detail: "Intentalo mas tarde",
+        life: 2000,
+      });
+      setTimeout(() => {
+        setShowAddTestModal(false);
+      }, 2000);
     }
   };
 
@@ -205,6 +250,8 @@ function ActivitySteps() {
 
   return (
     <>
+      <Toast ref={toast} />
+
       <Link to={`/activities/${role.id}`}>
         <Button
           icon="pi pi-angle-double-left"
@@ -274,22 +321,20 @@ function ActivitySteps() {
             <label>Formulario</label>
             <InputText
               type="text"
-              value={testUrls.formURL}
+              name="formURL"
+              // value={testUrls.formURL}
               placeholder="URL"
-              onChange={(e) =>
-                setTestUrls({ ...testUrls, formURL: e.target.value })
-              }
+              onChange={handleChangeTestUrls}
             />
           </div>
           <div className="field flex flex-col">
             <label>Excel</label>
             <InputText
               type="text"
-              value={testUrls.excelURL}
+              name="excelURL"
+              // value={testUrls.excelURL}
               placeholder="URL"
-              onChange={(e) =>
-                setTestUrls({ ...testUrls, excelURL: e.target.value })
-              }
+              onChange={handleChangeTestUrls}
             />
           </div>
         </div>
