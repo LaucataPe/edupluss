@@ -76,6 +76,10 @@ Company.hasMany(User, {
   foreignKey: "companyId",
 });
 
+User.belongsTo(Company, { 
+  foreignKey: 'companyId' 
+});
+
 Area.hasMany(Role, {
   foreignKey: "areaId",
 });
