@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import { Step } from "../utils/interfaces";
 import { Button } from "primereact/button";
 import { useSelector } from "react-redux";
-
 import axios from "axios";
 import * as XLSX from "xlsx";
-
 type props = {
   step: Step;
   activityId: string;
@@ -163,20 +161,8 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
       ) : (
         <h1>Esta actividad no tiene pasos</h1>
       )}
-      <div className=" flex items-center justify-center pt-8">
-        <iframe
-          src="https://docs.google.com/forms/d/e/1FAIpQLSeh4fPajSOhP3kxmb20KFJzQ06sVtH7we27pXJAzB1k2LTJ1Q/viewform?usp=sf_link"
-          width="640"
-          height="600"
-          frameBorder="0"
-          marginHeight={0}
-          marginWidth={0}
-        >
-          Cargando…
-        </iframe>
-      </div>
     </>
   );
 }
-//otro formulario: https://docs.google.com/forms/d/e/1FAIpQLSfZlqtLmw0XM1JGmvo60f1Nmm7bojPSJIa83ayuq6pWzn1WVQ/viewform?usp=sf_link
+
 export default CurrentStep;

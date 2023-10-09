@@ -9,7 +9,11 @@ const { DataTypes } = require("sequelize");
     },
     gradeValue: {
       type: DataTypes.INTEGER,
-      defaultValue: 0
+      allowNull: true
+    },
+    maximunGradeValue: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     },
     // activityId: {
     //   type: DataTypes.INTEGER,
