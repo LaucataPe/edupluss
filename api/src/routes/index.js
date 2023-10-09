@@ -57,7 +57,7 @@ router.get('/reviews/activity', getReviewsByActivity);
 router.get('/reviews/user', getReviewsByUser);
 
 //Session
-router.get("/auth/token", checkSession, getByToken);
+router.get("/auth/token", getByToken);
 
 //POST Controllers
 const { createUser } = require('../controllers/Users/postUser');
