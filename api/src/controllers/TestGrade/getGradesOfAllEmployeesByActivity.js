@@ -14,16 +14,25 @@ const getGradesOfAllEmployeesByActivity = async (req, res) => {
           400
         );
     } else {
-        const testGradesByActivity = await TestGrade.findAll({
+        let totalGradeValue = 0;
+        let totalMaximunGradeValue = 0;
+
+        const testGrades = await TestGrade.findAll({
             where: {
                 activityId: activityId,
             },
             attributes: ['id', "gradeValue", "maximunGradeValue" ]
         });
-        if (testGradesByActivity.length === 0) {
+        if (testGrades.length === 0) {
             throw new Error("Los empleados aún no han realizado la evaluación de esta actividad.");
         } else {
-            res.status(200).json(testGradesByActivity);
+          for (const testGrade of testGrades) {
+            totalGradeValue += testGrade.gradeValue;
+            totalMaximunGradeValue += testGrade.maximunGradeValue;
+          }
+            const gradePercentage = parseFloat(((totalGradeValue / totalMaximunGradeValue) * 100).toFixed(2));
+
+            res.status(200).json(gradePercentage);
         }
     }
   } catch (error) {
