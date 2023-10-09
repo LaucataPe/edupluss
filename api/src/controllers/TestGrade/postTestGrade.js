@@ -3,7 +3,7 @@ const { catchedAsync } = require('../../utils');
 const { ClientError } = require("../../utils/index.js");
 
 const postTestGrade = async (req, res) => {
-  let { gradeValue, maximunGradeValue, activityId, userId } = req.body;
+  let { testWatched, activityId, userId } = req.body;
   
   try {
     const employeeUser = await User.findByPk(userId);
@@ -14,17 +14,17 @@ const postTestGrade = async (req, res) => {
           400
         );
     } else {
-        const previousGradeValue = await TestGrade.findAll({
+        const previousTest = await TestGrade.findOne({
             where: {
                 userId: userId,
                 activityId: activityId,
             },
         });
-        if (previousGradeValue.length > 0) {
-            throw new Error("El empleado realizó esta prueba anteriormente.");
+        if (previousTest) {
+            throw new Error("El empleado visualizó/realizó esta prueba anteriormente.");
         } else {
-            const newGradeValue = await TestGrade.create({ gradeValue, maximunGradeValue, activityId, userId });
-            res.status(200).json(newGradeValue);
+            const newTest = await TestGrade.create({ testWatched, activityId, userId });
+            res.status(200).json(newTest);
         }
     }
   } catch (error) {
