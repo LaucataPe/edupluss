@@ -66,7 +66,7 @@ router.get('/tests/activity', getGradesOfAllEmployeesByActivity);
 
 
 //Session
-router.get("/auth/token", checkSession, getByToken);
+router.get("/auth/token", getByToken);
 
 //POST Controllers
 const { createUser } = require('../controllers/Users/postUser');
