@@ -23,6 +23,10 @@ const { getCompanyRoles } = require("../controllers/Roles/getCompanyRoles");
 
 const { getReviewsByUser } = require('../controllers/Reviews/getReviewsByUser');
 
+const { getTestGrade } = require("../controllers/TestGrade/getTestGrade");
+const { getAllTestGrades } = require("../controllers/TestGrade/getAllTestGrades");
+const { getGradesOfAllEmployeesByActivity } = require("../controllers/TestGrade/getGradesOfAllEmployeesByActivity");
+
 //USER GET
 const { getAllUsers } = require("../controllers/Users/getAllUsers");
 const { getUserByCompany } = require("../controllers/Users/getUsersByCompany");
@@ -55,6 +59,11 @@ router.get("/userStep", getUserSteps);
 
 router.get('/reviews/activity', getReviewsByActivity);
 router.get('/reviews/user', getReviewsByUser);
+
+router.get('/test', getTestGrade);
+router.get('/tests', getAllTestGrades);
+router.get('/tests/activity', getGradesOfAllEmployeesByActivity);
+
 
 //Session
 router.get("/auth/token", checkSession, getByToken);
@@ -92,6 +101,7 @@ const { updateActivity } = require("../controllers/Activities/updateActivity");
 const { updateUser } = require("../controllers/Users/updateUser");
 const { updateRole } = require("../controllers/Roles/updateRole");
 const { updateStep } = require("../controllers/Steps/updateStep");
+const { updateTestGrade } = require("../controllers/TestGrade/updateTestGrade");
 
 //PUT
 router.put("/activity/state", ActivityState);
@@ -100,7 +110,8 @@ router.put("/user/update", updateUser);
 router.put("/role/update", updateRole);
 router.put("/area/update", updateArea);
 router.put("/step/update", updateStep);
-router.put("/activity/update", updateActivity);
+router.put("/test/update", updateTestGrade);
+router.patch("/activity/update", updateActivity);
 
 //DELETE Controllers
 const { deleteAreaCascade } = require("../controllers/Areas/deleteArea");

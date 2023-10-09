@@ -7,18 +7,27 @@ import axios from "axios";
 import * as XLSX from "xlsx";
 import { Button } from "primereact/button";
 import { excelRow } from "../utils/interfaces";
+import { Dialog } from "primereact/dialog";
 
 
 const Checkpoint = () => {
   const { id } = useParams();
-  const activity = useSelector(
-    (state: RootState) => state.activities.activities
-  );
+  const activity = useSelector((state: RootState) => state.activities.activities);
   const currentActivity = activity.find((a) => a.id == id);
   const logUser = useSelector((state: RootState) => state.user.logUser);
   const [url] = useState<string | undefined>(currentActivity?.excelURL);
-
+  const [displayConfirmation, setDisplayConfirmation] = useState(false);
+  const [showTestModal, setShowTestModal] = useState<boolean>(false);
+  //console.log(showTestModal);
+  
   const isUnmounted = useRef(false);
+
+  window.addEventListener('beforeunload', (event) => {
+    const confirmationMessage = '¿Estás seguro de que deseas salir de esta página? Te recomendamos cerrar la ventana en la ventana de Home';
+    event.returnValue = confirmationMessage;
+    isUnmounted.current = true;
+    handleExcelImport();
+  });
 
   useEffect(() => {
     return () => {
@@ -26,10 +35,48 @@ const Checkpoint = () => {
     };
   }, []);
 
+  const confirmationDialogFooter = (
+    <>
+      <Button
+        type="button"
+        label="Cancelar"
+        icon="pi pi-times"
+        onClick={() => setShowTestModal(false)}
+        text
+      />
+      <Link to="/home">
+        <Button
+          type="button"
+          label="Continuar"
+          icon="pi pi-check"
+          text
+          autoFocus
+        />
+      </Link>
+    </>
+  );
+
   const handleExcelImport = async () => {
     try {
       if (isUnmounted.current === false) {
+        console.log("Entro al return: Deberia hacer post Watched");
+        
         isUnmounted.current = true;
+        //Actualiza la propiedad testWatched
+        let obj = {
+          activityId: id,
+          userId: logUser.id,
+          testWatched: true
+        }
+        try {
+          const response = await axios.post(
+            "http://localhost:3001/test",
+            obj
+          );
+          console.log(response.data);
+        } catch (error: any) {
+          console.log(error);
+        }
         return;
       } else {
         // Realiza una solicitud GET para obtener el archivo Excel
@@ -72,24 +119,49 @@ const Checkpoint = () => {
             [gradeValue, maximunGradeValue] = arrayValues;
           }
 
-          let obj = {
-            gradeValue: gradeValue,
-            maximunGradeValue: maximunGradeValue,
-            activityId: id,
-            userId: logUser.id,
-          };
+          //Verificar que el correo del empleado coincida con el guardado en el ingresado en el Test
+          let objData;
+          if(lastNonEmptyRow.D === logUser.email){
+            objData = {
+              gradeValue: gradeValue,
+              maximunGradeValue: maximunGradeValue,
+              activityId: id,
+              userId: logUser.id,
+            };
+          } else {
+            objData = {
+              gradeValue: 0,
+              maximunGradeValue: 0,
+              activityId: id,
+              userId: logUser.id,
+            };
+          }
 
           try {
-            const response = await axios.post(
-              "http://localhost:3001/test",
-              obj
+            const response = await axios.put(
+              "http://localhost:3001/test/update",
+              objData
             );
             console.log(response.data);
           } catch (error: any) {
             console.log(error);
           }
         } else {
-          console.log("No se encontraron filas de datos en el archivo Excel.");
+          let objData = {
+            gradeValue: 0,
+            maximunGradeValue: 0,
+            activityId: id,
+            userId: logUser.id,
+          };
+          try {
+            const response = await axios.put(
+              "http://localhost:3001/test/update",
+              objData
+            );
+            console.log(response.data);
+          } catch (error: any) {
+            console.log(error);
+          }
         }
 
         for (let key in excelArray) {
@@ -116,10 +188,30 @@ const Checkpoint = () => {
           Checkpoint de {currentActivity?.title}
         </h3>
         <Link to="/home">
-          <Button label="Finalizar" />
+          <Button label="Finalizar" onClick={() => setShowTestModal(true)}/>
         </Link>
       </div>
-
+      {
+        showTestModal ?
+        <Dialog
+          header="Confirme su siguiente paso"
+          visible={displayConfirmation}
+          onHide={() => setShowTestModal(false)}
+          style={{ width: "350px" }}
+          modal
+          footer={confirmationDialogFooter}
+        >
+          <div className="flex align-items-center justify-content-center">
+            <i
+              className="pi pi-exclamation-triangle mr-3"
+              style={{ fontSize: "2rem" }}
+            />
+            <span>¿Estás seguro de salir? Tenga en cuenta que no podra regresar a esta ventana.</span>
+          </div>
+        </Dialog>
+        :
+        null
+      }
       <div className=" w-full h-screen">
         <iframe src={currentActivity?.formURL} className="w-full h-full">
           Cargando…
