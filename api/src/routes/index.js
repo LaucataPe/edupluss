@@ -24,8 +24,9 @@ const { getCompanyRoles } = require("../controllers/Roles/getCompanyRoles");
 const { getReviewsByUser } = require('../controllers/Reviews/getReviewsByUser');
 
 const { getTestGrade } = require("../controllers/TestGrade/getTestGrade");
-const { getAllTestGrades } = require("../controllers/TestGrade/getAllTestGrades");
+const { getAllTestGradesByUser } = require("../controllers/TestGrade/getAllTestGradesByUser");
 const { getGradesOfAllEmployeesByActivity } = require("../controllers/TestGrade/getGradesOfAllEmployeesByActivity");
+const { getGradePercentageByCompany } = require("../controllers/TestGrade/getGradePercentageByCompany");
 
 //USER GET
 const { getAllUsers } = require("../controllers/Users/getAllUsers");
@@ -61,8 +62,9 @@ router.get('/reviews/activity', getReviewsByActivity);
 router.get('/reviews/user', getReviewsByUser);
 
 router.get('/test', getTestGrade);
-router.get('/tests', getAllTestGrades);
+router.get('/tests', getAllTestGradesByUser);
 router.get('/tests/activity', getGradesOfAllEmployeesByActivity);
+router.get('/tests/company/:id', getGradePercentageByCompany);
 
 
 //Session
