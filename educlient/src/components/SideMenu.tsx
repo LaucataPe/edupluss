@@ -75,6 +75,8 @@ const AppMenu = () => {
   let timer: any;
 
   const handleMouseLeave = () => {
+    //@ts-ignore
+
     const timer = setTimeout(() => {
       setButtonOpacity(0.1);
     }, 100); // 2000 milisegundos (2 segundos)
