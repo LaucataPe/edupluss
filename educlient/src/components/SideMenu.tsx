@@ -34,7 +34,8 @@ const AppMenu = () => {
     {
       label: "Inicio",
       items: [
-        { label: "Progreso de usuarios", icon: "pi pi-fw pi-home", to: "/dashboard" },
+        { label: "Dashboard", icon: "pi pi-chart-pie", to: "/dashboard" },
+        { label: "Progreso de usuarios", icon: "pi pi-list", to: "/dashboard" },
         { label: "Usuarios", icon: "pi pi-users", to: `/crud` },
       ],
     },
@@ -74,6 +75,8 @@ const AppMenu = () => {
   let timer: any;
 
   const handleMouseLeave = () => {
+    //@ts-ignore
+
     const timer = setTimeout(() => {
       setButtonOpacity(0.1);
     }, 100); // 2000 milisegundos (2 segundos)

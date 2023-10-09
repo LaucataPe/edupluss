@@ -1,8 +1,9 @@
 import { Activity } from "../utils/interfaces";
 import React, { useState, useEffect } from "react";
 import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
-
+import { Tag } from "primereact/tag";
 import axios from "axios";
+
 function ProgressModal({
   activities,
   closeModal,
@@ -27,24 +28,20 @@ function ProgressModal({
     setCheckboxValue(selectedValue);
   };
 
-  const itemsPerPage = 7;
+  const itemsPerPage = 5;
 
   const handleBackButtonClick = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
   };
-  // Define una función para manejar el clic en el botón de "adelante".
+
   const handleNextButtonClick = () => {
     const totalPages = Math.ceil(matchingStepTitles.length / itemsPerPage);
     if (currentPage < totalPages - 1) {
       setCurrentPage(currentPage + 1);
     }
   };
-
-  // Calcula el índice de inicio y final para los elementos en la página actual.
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,14 +55,11 @@ function ProgressModal({
     };
     fetchData();
   }, []);
-  // console.log("Estos son los steps:", steps);
-  // console.log("Este es el newUserSteps:", newUserSteps);
+
   const userIdToFind = selectedUser;
   const matchingStepIds = newUserSteps
     .filter((item: any) => item.UserId === userIdToFind)
     .map((item: any) => item.StepId);
-
-  // console.log("matchingStepIds del usuario", matchingStepIds);
 
   const matchingStepTitles = matchingStepIds.map((stepId: any) => {
     const matchingStep = Object.values(steps).find(
@@ -74,6 +68,75 @@ function ProgressModal({
     ); //@ts-ignore
     return matchingStep?.title;
   });
+
+  const matchingStepActivities = matchingStepTitles.map((stepTitle: any) => {
+    //@ts-ignore
+    const step = steps.find((step) => step.title === stepTitle);
+    if (step) {
+      const activity = activities.find(
+        //@ts-ignore
+
+        (activity) => activity.id === step.activityId
+      );
+      return activity ? activity.title : null;
+    }
+    return null;
+  });
+
+  // Calcula el índice de inicio y final para los elementos en la página actual.
+  const startIndex = currentPage * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  // Crear pares de títulos de pasos y nombres de actividades
+  const stepTitleActivityPairs = matchingStepTitles.map(
+    (stepTitle: any, index: number) => ({
+      stepTitle,
+      activityName: matchingStepActivities[index],
+    })
+  );
+
+  // Renderizado de elementos
+  const renderedItems = stepTitleActivityPairs
+    .slice(startIndex, endIndex) //@ts-ignore
+
+    .map(({ stepTitle, activityName }, index: number) => {
+      const progressValue = matchingStepTitles.includes(stepTitle) ? 1 : 0;
+
+      return (
+        <div
+          key={index}
+          className={` px-4 flex items-center justify-center gap-1 `}
+        >
+          {stepTitle ? (
+            <>
+              <label
+                htmlFor={`checkOption${index}`}
+                className="col-6 border-2 shadow-sm p-2 my-2 rounded-2xl "
+              >
+                <strong className="text-xl">{activityName}</strong>
+              </label>
+              <label
+                htmlFor={`checkOption${index}`}
+                className="col-6 text-center "
+              >
+                {stepTitle}
+              </label>
+              <div className="field-checkbox text-center mb-0">
+                <Checkbox
+                  inputId={`checkOption${index}`}
+                  name="option"
+                  checked={progressValue !== 0}
+                  onChange={onCheckboxChange}
+                />
+              </div>
+            </>
+          ) : (
+            <div>Aún no realizó ningún paso</div>
+          )}
+        </div>
+      );
+    });
+
   return (
     <>
       <header className="bg-1 p-2 max-w-md rounded-t-md lg:max-w-lg flex justify-between">
@@ -100,53 +163,24 @@ function ProgressModal({
         </div>
       </header>
       <div className="rounded-b-md max-w-md px-4 py-6 border-x-2 border-b-2 lg:max-w-lg">
-        <div className="mb-2">Página {currentPage + 1}</div>
+        <Tag severity="info" className="text-sm ml-2" rounded>
+          Página {currentPage + 1}
+        </Tag>
         {matchingStepTitles.length === 0 ? (
-          <div>No se han realizado ningún paso</div>
+          <div className="flex justify-between mt-4 px-2">
+            No se han realizado ningún paso
+          </div>
         ) : (
-          matchingStepTitles
-            .slice(startIndex, endIndex)
-            .map((stepTitle: any, index: number) => {
-              const progressValue = matchingStepTitles.includes(stepTitle)
-                ? 1
-                : 0;
-              return (
-                <div
-                  key={index}
-                  className={`py-2 px-6 flex items-center justify-center gap-4 `}
-                >
-                  {stepTitle ? (
-                    <>
-                      <label htmlFor={`checkOption${index}`} className="col-12">
-                        {stepTitle}
-                      </label>
-                      <div className="field-checkbox text-center mb-0">
-                        <Checkbox
-                          inputId={`checkOption${index}`}
-                          name="option"
-                          checked={progressValue !== 0}
-                          onChange={onCheckboxChange}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <div>Aún no realizó ningún paso</div>
-                  )}
-                </div>
-              );
-            })
+          renderedItems
         )}
-        {/* Agregar los botones de adelante y atrás si hay más de 7 elementos */}
         {matchingStepTitles.length > itemsPerPage && (
           <div className="flex justify-between mt-4">
-            {/* Botón de atrás */}
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
               onClick={handleBackButtonClick}
             >
               Atrás
             </button>
-            {/* Botón de adelante */}
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
               onClick={handleNextButtonClick}
