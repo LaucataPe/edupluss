@@ -20,8 +20,8 @@ const Activities = () => {
   const [filteredValue, setFilteredValue] = useState<Activity[]>([]);
   const [layout, setLayout] = useState<LayoutType>("list");
   const [sortKey, setSortKey] = useState(null);
-  const [sortOrder, setSortOrder] = useState<SortOrderType>(0);
-  const [sortField, setSortField] = useState("");
+  const [sortOrder] = useState<SortOrderType>(0);
+  const [sortField] = useState("");
   const [userSteps, setUserSteps] = useState([]);
   const [totalSteps, setTotalSteps] = useState([]);
   const currentUser = useSelector((state: RootState) => state.user.logUser);
@@ -38,6 +38,7 @@ const Activities = () => {
     { label: "Finished", value: "finished" },
     { label: "Started", value: "started" },
     { label: "Not started", value: "notStarted" },
+    { label: "All", value: "all" },
   ];
 
   useEffect(() => {
@@ -53,29 +54,55 @@ const Activities = () => {
     );
     setFilteredValue(filtered);
   };
-
   const onSortChange = (event: DropdownChangeEvent) => {
     const value = event.value;
 
-    if (value === "finished") {
-      setSortOrder(-1);
-      setSortField(value);
-      setSortKey(value);
-    } else if (value === "started") {
-      setSortOrder(1);
-      setSortField(value);
-      setSortKey(value);
-    } else if (value === "notstarted") {
-      setSortOrder(1);
-      setSortField(value);
-      setSortKey(value);
+    let sortedData = [...dataViewValue]; // Copiamos los datos originales
+
+    const filters = {
+      //@ts-ignore
+
+      finished: (data) => {
+        const activityId = data.id;
+        return (
+          //@ts-ignore
+
+          finishedActivityInfo[activityId] && //@ts-ignore
+          finishedActivityInfo[activityId].count > 0
+        );
+      }, //@ts-ignore
+
+      started: (data) => {
+        const activityId = data.id;
+        const notInFinishedInfo =
+          !finishedActivityInfo.hasOwnProperty(activityId);
+        const hasSteps = totalSteps.some(
+          //@ts-ignore
+
+          (step) => step.activityId === activityId
+        );
+        return notInFinishedInfo && hasSteps;
+      }, //@ts-ignore
+
+      notStarted: (data) => {
+        const activityId = data.id;
+        const notStarted =
+          !activityIdsWithNoStepsFinished.includes(String(activityId)) && //@ts-ignore
+          !finishedActivityInfo[activityId];
+        return notStarted;
+      }, //@ts-ignore
+
+      all: (data) => true,
+    };
+
+    if (value in filters) {
+      //@ts-ignore
+
+      sortedData = sortedData.filter(filters[value]);
     }
 
-    console.log(value);
-
-    const sortedData = [
-      ...(filteredValue.length > 0 ? filteredValue : dataViewValue),
-    ].sort((a, b) => {
+    // Ordenamos los datos
+    sortedData.sort((a, b) => {
       const notStartedA =
         !activityIdsWithNoStepsFinished.includes(String(a.id)) &&
         //@ts-ignore
@@ -83,7 +110,6 @@ const Activities = () => {
       const notStartedB =
         !activityIdsWithNoStepsFinished.includes(String(b.id)) && //@ts-ignore
         !finishedActivityInfo[b.id];
-
       const isFinishedA = //@ts-ignore
         finishedActivityInfo[a.id] && finishedActivityInfo[a.id].count > 0;
       const isFinishedB = //@ts-ignore
@@ -97,7 +123,7 @@ const Activities = () => {
       }
       return 0;
     });
-
+    setSortKey(value);
     setFilteredValue(sortedData);
   };
 
@@ -321,40 +347,43 @@ const Activities = () => {
             <i className="pi pi-bookmark text-4xl gap-2" />
             Últimas actividades:
           </h3>
-          {activityIdsWithNoStepsFinished.map((activityId, index) => {
-            const stepsForActivity = totalSteps.filter(
-              //@ts-ignore
-              (step) => step.activityId === parseInt(activityId)
-            );
-            const userStepsForActivity = currentProgress.filter(
-              (
-                userStep //@ts-ignore
-              ) => stepsForActivity.some((step) => step.id === userStep.StepId)
-            );
-            const maxStepId = Math.max(
-              //@ts-ignore
-              ...userStepsForActivity.map((userStep) => userStep.StepId)
-            );
-            const activityTitle =
-              totalCurrentActivities.find(
-                (activity) => activity.id === parseInt(activityId)
-              )?.title || `Actividad Desconocida`; // Si no se encuentra el título, muestra "Actividad Desconocida"
+          {activityIdsWithNoStepsFinished
+            .slice(-3) // Obtén los últimos 3 elementos del objeto
+            .map((activityId, index) => {
+              const stepsForActivity = totalSteps.filter(
+                //@ts-ignore
+                (step) => step.activityId === parseInt(activityId)
+              );
+              const userStepsForActivity = currentProgress.filter(
+                (
+                  userStep 
+                ) =>//@ts-ignore
+                  stepsForActivity.some((step) => step.id === userStep.StepId)
+              );
+              const maxStepId = Math.max(
+                //@ts-ignore
+                ...userStepsForActivity.map((userStep) => userStep.StepId)
+              );
+              const activityTitle =
+                totalCurrentActivities.find(
+                  (activity) => activity.id === parseInt(activityId)
+                )?.title || `Actividad Desconocida`; // Si no se encuentra el título, muestra "Actividad Desconocida"
 
-            const stepName = //@ts-ignore
-              stepsForActivity.find((step) => step.id === maxStepId)?.title ||
-              `Step ${1}`;
-            return (
-              <div
-                className="col-12 w-auto flex-wrap"
-                id={`activities-list-${index}`}
-                key={index}
-              >
-                <div className="card m-3 border-1 surface-border bg-yellow-100 hover:bg-slate-100">
-                  <h3 className="m-0">{`${activityTitle}: ${stepName}`}</h3>
+              const stepName = //@ts-ignore
+                stepsForActivity.find((step) => step.id === maxStepId)?.title ||
+                `Paso ${1}`;
+              return (
+                <div
+                  className="col-12 w-auto flex-wrap"
+                  id={`activities-list-${index}`}
+                  key={index}
+                >
+                  <div className="card m-3 border-1 surface-border bg-yellow-100 hover:bg-slate-100">
+                    <h3 className="m-0">{`${activityTitle}: ${stepName}`}</h3>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
         <div className="card mx-[5%]">
           <h3>
