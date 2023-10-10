@@ -1,70 +1,99 @@
-
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Ripple } from 'primereact/ripple';
-import { classNames } from 'primereact/utils';
-import { CSSTransition } from 'react-transition-group';
+import { useNavigate, useLocation } from "react-router-dom";
+import { Ripple } from "primereact/ripple";
+import { classNames } from "primereact/utils";
+import { CSSTransition } from "react-transition-group";
 import { useAppDispatch } from "../hooks/typedSelectors";
-import { AppMenuItem, AppMenuItemProps } from '../utils/types/types';
+import { AppMenuItem, AppMenuItemProps } from "../utils/types/types";
 //import { getActivitiesByArea } from '../redux/features/activitiesSlice';
-import { setCurrentArea } from '../redux/features/areaSlice';
-import { getRolesByArea } from '../redux/features/roleSlice';
+import { setCurrentArea } from "../redux/features/areaSlice";
+import { getRolesByArea } from "../redux/features/roleSlice";
 const AppMenuitem = (props: AppMenuItemProps) => {
-    const {pathname} = useLocation()
-    const navigate = useNavigate()
-    //const { activeMenu, setActiveMenu } = useContext(MenuContext);
-    const item = props.item;
-    const key = props.parentKey ? props.parentKey + '-' + props.index : String(props.index);
-    
-   // const active = activeMenu === key || activeMenu.startsWith(key + '-');
-   const dispatch = useAppDispatch()
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  //const { activeMenu, setActiveMenu } = useContext(MenuContext);
+  const item = props.item;
+  const key = props.parentKey
+    ? props.parentKey + "-" + props.index
+    : String(props.index);
 
-    const itemClick = (item: AppMenuItem | null) => {
-        if(item && item.area && item.area.id){
-            dispatch(getRolesByArea(item.area.id))
-            dispatch(setCurrentArea(item.area))
-            if(pathname !== '/admin'){
-                navigate('/admin')
-            }
-        }else{
-            if(item?.to)
-            navigate(item.to)
-        }
-    };
+  // const active = activeMenu === key || activeMenu.startsWith(key + '-');
+  const dispatch = useAppDispatch();
 
-    const subMenu = item!.items && item!.visible !== false && (
-        <CSSTransition timeout={{ enter: 1000, exit: 450 }} classNames="layout-submenu" in={props.root ? true : false} key={item!.label}>
-            <ul>
-                {item!.items.map((child, i) => {
-                    return <AppMenuitem item={child} index={i} className={child.badgeClass} parentKey={key} key={child.label} />;
-                })}
-            </ul>
-        </CSSTransition>
-    );
+  const itemClick = (item: AppMenuItem | null) => {
+    if (item && item.area && item.area.id) {
+      dispatch(getRolesByArea(item.area.id));
+      dispatch(setCurrentArea(item.area));
+      if (pathname !== "/admin") {
+        navigate("/admin");
+      }
+    } else {
+      if (item?.to) navigate(item.to);
+    }
+  };
 
-    return (
-        <li className={classNames({ 'layout-root-menuitem': props.root})}>
-                {props.root && item!.visible !== false && <div className="layout-menuitem-root-text">{item!.label}</div>}
-                {(!item!.to || item!.items) && item!.visible !== false ? (
-                    <a href={item!.url} onClick={() => itemClick(item ?? null)} className={classNames(item!.class, 'p-ripple')} target={item!.target} tabIndex={0}>
-                        <i className={classNames('layout-menuitem-icon', item!.icon)}></i>
-                        <span className="layout-menuitem-text">{item!.label}</span>
-                        {item!.items && <i className="pi pi-fw pi-angle-down layout-submenu-toggler"></i>}
-                        <Ripple />
-                    </a>
-                ) : null}
+  const subMenu = item!.items && item!.visible !== false && (
+    <CSSTransition
+      timeout={{ enter: 1000, exit: 450 }}
+      classNames="layout-submenu"
+      in={props.root ? true : false}
+      key={item!.label}
+    >
+      <ul>
+        {item!.items.map((child, i) => {
+          return (
+            <AppMenuitem
+              item={child}
+              index={i}
+              className={child.badgeClass}
+              parentKey={key}
+              key={child.label}
+            />
+          );
+        })}
+      </ul>
+    </CSSTransition>
+  );
 
-            {item!.to && !item!.items && item!.visible !== false ? (
-                <a onClick={() => itemClick(item ?? null)} className={classNames(item!.class, 'p-ripple')} tabIndex={0}>
-                    <i className={classNames('layout-menuitem-icon  ', item!.icon)}></i>
-                    <span className="layout-menuitem-text">{item!.label}</span>
-                    {item!.items && <i className="pi pi-fw pi-angle-down layout-submenu-toggler"></i>}
-                    <Ripple />
-                </a>
-            ) : null}
+  return (
+    <li className={classNames({ "layout-root-menuitem": props.root })}>
+      {props.root && item!.visible !== false && (
+        <div className="layout-menuitem-root-text">{item!.label}</div>
+      )}
+      {(!item!.to || item!.items) && item!.visible !== false ? (
+        <a
+          href={item!.url}
+          onClick={() => itemClick(item ?? null)}
+          className={classNames(item!.class, "p-ripple")}
+          target={item!.target}
+          tabIndex={0}
+        >
+          <i className={classNames("layout-menuitem-icon", item!.icon)}></i>
+          <span className="layout-menuitem-text">{item!.label}</span>
+          {item!.items && (
+            <i className="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
+          )}
+          <Ripple />
+        </a>
+      ) : null}
 
-            {subMenu}
-        </li>
-    );
+      {item!.to && !item!.items && item!.visible !== false ? (
+        <a
+          onClick={() => itemClick(item ?? null)}
+          className={classNames(item!.class, "p-ripple")}
+          tabIndex={0}
+        >
+          <i className={classNames("layout-menuitem-icon  ", item!.icon)}></i>
+          <span className="layout-menuitem-text">{item!.label}</span>
+          {item!.items && (
+            <i className="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
+          )}
+          <Ripple />
+        </a>
+      ) : null}
+
+      {subMenu}
+    </li>
+  );
 };
 
 export default AppMenuitem;

@@ -35,6 +35,7 @@ import { setEmpresa } from "./redux/features/activitiesSlice";
 import { RootState } from "./redux/store";
 import { fetchCompanyAreas } from "./redux/features/areaSlice";
 import Dashboard from "./pages/Dashboard";
+import Checkpoint from "./components/Checkpoint";
 
 
 
@@ -113,6 +114,7 @@ function App() {
 					<Route path="/addStep/:id" element={<AddStep />} />
 					<Route path="/editStep/:id/:stepId" element={<AddStep />} />
 					<Route path="/crud" element={<Crud />} />
+					<Route path="/checkpoint/:id" element={<Checkpoint/>} />
 		</Routes>
 		</div>			
 	</div>

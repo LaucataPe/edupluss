@@ -1,6 +1,7 @@
 const { Company } = require('../../db');
 const { catchedAsync } = require('../../utils');
 const getAllCompanies = async (req, res) => {
+ 
   try {
     const companies = await Company.findAll();
     return res.status(200).json(companies);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Dialog } from "primereact/dialog";
 import { Steps } from "primereact/steps";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import CurrentStep from "../components/Step";
@@ -12,10 +13,13 @@ import axios from "axios";
 
 function Activity() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [dialog, setDialog] = useState<boolean>(false);
+  const [contiune, setContiune] = useState<boolean>(false);
 
   useEffect(() => {
     const stepSaved = window.localStorage.getItem(`Activity ${id}`);
@@ -49,8 +53,7 @@ function Activity() {
       currentIndex === -1 ? currentIndex : currentIndex >= 0 ? currentStep : 0
     );
   }, [steps]);
-    
-  console.log(activeIndex);
+
   const handleStepChange = (e: { index: number }) => {
     setActiveIndex(e.index);
   };
@@ -59,7 +62,7 @@ function Activity() {
   const activityName = activities.find((act) => act.id === Number(id));
   const activityId = activityName?.id;
   const stepsList = steps.map((step) => step.id);
-
+  console.log("soy activityId",activityId);
   const handleNextClick = async () => {
     if (activeIndex < stepsList.length - 1) {
       const actualIndex = stepsList[activeIndex];
@@ -84,7 +87,6 @@ function Activity() {
           console.warn("Error al hacer la petición POST:", error);
         }
       }
-
       setActiveIndex(activeIndex + 1);
     } else {
       console.log("No more steps to process.");
@@ -112,7 +114,27 @@ function Activity() {
         console.warn("Error al hacer la petición POST:", error);
       }
     }
+
+    const hasTest = activities.find((a) => a.id == id);
+    hasTest?.hasTest ? navigate(`/checkpoint/${id}`) : navigate("/home");
   };
+
+  const showDialog = () => {
+    setDialog(true);
+  };
+
+  const hideDialog = () => {
+    setDialog(false);
+    setContiune(false);
+  };
+
+  const checkHasTest = () => {
+    // let idNumber = Number(id)
+    const hasTest = activities.find((a) => a.id == id);
+
+    hasTest?.hasTest ? setContiune(true) : handleFinishClick();
+  };
+
   return (
     <>
       <Link to={`/home`}>
@@ -137,7 +159,7 @@ function Activity() {
               }))}
               activeIndex={activeIndex}
               onSelect={handleStepChange}
-              readOnly={false}
+              readOnly={true}
             />
             {steps && id && (
               <CurrentStep
@@ -168,22 +190,60 @@ function Activity() {
               />
             ) : (
               <>
-                <RateActivity />
-                <Link to="/home">
-                  <Button
-                    label="Finalizar"
-                    icon="pi pi-home"
-                    severity="info"
-                    outlined
-                    onClick={handleFinishClick}
-                    className="absolute w-auto bottom-4 right-4"
-                  />
-                </Link>
+                {/* <Link to="/home"> */}
+                <Button
+                  label="Finalizar"
+                  icon="pi pi-home"
+                  severity="info"
+                  outlined
+                  onClick={showDialog}
+                  className="absolute w-auto bottom-4 right-4"
+                />
+                {/* </Link> */}
               </>
             )}
           </div>
         </div>
       </div>
+      <Dialog
+        visible={dialog}
+        style={{ width: "650px" }}
+        header="Confirmar"
+        modal
+        onHide={hideDialog}
+      >
+        <div className="flex flex-col items-center justify-center">
+          <i
+            className="pi pi-exclamation-triangle mr-3"
+            style={{ fontSize: "2rem" }}
+          />
+          <div onClick={checkHasTest}>
+            <RateActivity activityId={activityId} currentUser={currentUser}/>
+          </div>
+          {contiune && (
+            <>
+              <p>
+                Si continuas seras redireccionado al formulario de la actividad
+              </p>
+              <span>¿Estás seguro de que continuar al formulario?</span>
+              <div className="flex justify-end w-full">
+                <Button
+                  label="No"
+                  icon="pi pi-times"
+                  text
+                  onClick={hideDialog}
+                />
+                <Button
+                  label="Sí"
+                  icon="pi pi-check"
+                  text
+                  onClick={handleFinishClick}
+                />
+              </div>
+            </>
+          )}
+        </div>
+      </Dialog>
     </>
   );
 }

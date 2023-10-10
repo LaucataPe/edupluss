@@ -1,6 +1,7 @@
 //Express
 const express = require("express");
 const router = express.Router();
+const verifyRole = require("../Middlewares/verifyRole")
 
 //GET Controllers
 const { getEmpresaAreas } = require("../controllers/Company/getEmpresaArea");
@@ -22,6 +23,11 @@ const { getCompanyRoles } = require("../controllers/Roles/getCompanyRoles");
 
 const { getReviewsByUser } = require('../controllers/Reviews/getReviewsByUser');
 
+const { getTestGrade } = require("../controllers/TestGrade/getTestGrade");
+const { getAllTestGradesByUser } = require("../controllers/TestGrade/getAllTestGradesByUser");
+const { getGradesOfAllEmployeesByActivity } = require("../controllers/TestGrade/getGradesOfAllEmployeesByActivity");
+const { getGradePercentageByCompany } = require("../controllers/TestGrade/getGradePercentageByCompany");
+
 //USER GET
 const { getAllUsers } = require("../controllers/Users/getAllUsers");
 const { getUserByCompany } = require("../controllers/Users/getUsersByCompany");
@@ -32,7 +38,7 @@ const { getRolesByArea } = require("../controllers/Roles/getRolesByArea");
 const { getUserSteps } = require("../controllers/UserStep/getUserStep");
 const { checkSession } = require("../Middlewares/session");
 
-router.get("/empresas", getAllCompanies);
+router.get("/empresas",getAllCompanies);
 router.get("/areas/:companyId", getEmpresaAreas);
 
 router.get("/activities", getAllActivities);
@@ -55,8 +61,14 @@ router.get("/userStep", getUserSteps);
 router.get('/reviews/activity', getReviewsByActivity);
 router.get('/reviews/user', getReviewsByUser);
 
+router.get('/test', getTestGrade);
+router.get('/tests', getAllTestGradesByUser);
+router.get('/tests/activity', getGradesOfAllEmployeesByActivity);
+router.get('/tests/company/:id', getGradePercentageByCompany);
+
+
 //Session
-router.get("/auth/token", checkSession, getByToken);
+router.get("/auth/token", getByToken);
 
 //POST Controllers
 const { createUser } = require('../controllers/Users/postUser');
@@ -91,6 +103,7 @@ const { updateActivity } = require("../controllers/Activities/updateActivity");
 const { updateUser } = require("../controllers/Users/updateUser");
 const { updateRole } = require("../controllers/Roles/updateRole");
 const { updateStep } = require("../controllers/Steps/updateStep");
+const { updateTestGrade } = require("../controllers/TestGrade/updateTestGrade");
 
 //PUT
 router.put("/activity/state", ActivityState);
@@ -99,7 +112,8 @@ router.put("/user/update", updateUser);
 router.put("/role/update", updateRole);
 router.put("/area/update", updateArea);
 router.put("/step/update", updateStep);
-router.put("/activity/update", updateActivity);
+router.put("/test/update", updateTestGrade);
+router.patch("/activity/update", updateActivity);
 
 //DELETE Controllers
 const { deleteAreaCascade } = require("../controllers/Areas/deleteArea");

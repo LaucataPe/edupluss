@@ -434,7 +434,7 @@ function AddStep() {
                 className="mx-2"
                 disabled={stepId ? !formOrigin : false}
               />
-              <a href="https://docs.google.com/forms/u/0/">
+              <a href="https://docs.google.com/forms/u/0/" target="_blank">
                 Necesitas una URL?
               </a>
               <div
@@ -453,10 +453,20 @@ function AddStep() {
                 />
               </>
             )}
+            <Button
+              label={stepId ? "Editar" : "Crear Paso"}
+              severity="info"
+              outlined
+              type="submit"
+              onClick={(e) => {
+                !stepId ? handleSubmit(e) : handleEdit(e);
+              }}
+              disabled={Object.keys(errors).length > 0 ? true : false}
+              loading={isLoading}
+            />
           </div>
         </div>
       </form>
-
       <p className="font-semibold text-red-600">
         {errors.send ? errors.send : ""}
       </p>

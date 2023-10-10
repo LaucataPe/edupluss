@@ -57,6 +57,10 @@ export interface Role {
 export interface Activity {
   id?: number;
   title: string;
+  hasTest: boolean;
+  numberSteps: number;
+  formURL: string;
+  excelURL: string;
   roleId: number;
   active?: boolean;
 }
@@ -67,4 +71,22 @@ export interface UserStep {
   activityId?: number;
   userId?: number;
   stepId?: number;
+}
+
+export interface ProgressData {
+  userId?: number;
+  progress?: string;
+}
+
+export interface excelRow {
+  A: number;
+  B: string | number;
+  C: string;
+  D: string;
+  E: string;
+  F: string;
+  G: string;
+  H: string;
+  __EMPTY: number;
+  __rowNum__: number;
 }

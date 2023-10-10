@@ -7,6 +7,11 @@ const getReviewsByActivity = async (req, res) => {
   
   try {
     const adminUser = await User.findByPk(userId);
+    if (!adminUser) {
+      throw new ClientError(
+        'incorrect request: admin ID does not exist',
+        404
+      )};
 
     if (adminUser.tipo !== 'admin') {
         throw new ClientError(

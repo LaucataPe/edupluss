@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { v4 } from 'uuid';
+import { v4 } from "uuid";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -13,35 +13,36 @@ const firebaseConfig = {
   projectId: "edupluss-6368c",
   storageBucket: "edupluss-6368c.appspot.com",
   messagingSenderId: "150430365383",
-  appId: "1:150430365383:web:42f906d6b913dda94bf0e2"
+  appId: "1:150430365383:web:42f906d6b913dda94bf0e2",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const storage = getStorage(app)
+export const storage = getStorage(app);
 
-function generateRandomId(){
+function generateRandomId() {
   const id = v4();
-  return id.slice(3,5);
+  return id.slice(3, 5);
 }
 const session = window.localStorage.getItem("token");
 const metadata = {
   customMetadata: {
-    session: `${session}`
-  }}
+    session: `${session}`,
+  },
+};
 
 export async function uploadFile(file: File | undefined): Promise<string> {
   if (!file) {
-    throw new Error('No se proporcionó ningún archivo.');
+    throw new Error("No se proporcionó ningún archivo.");
   }
 
-  const extension = file.name.split('.').pop();
+  const extension = file.name.split(".").pop();
   if (!extension) {
-    throw new Error('No se pudo obtener la extensión del archivo.');
+    throw new Error("No se pudo obtener la extensión del archivo.");
   }
 
   const randomId = generateRandomId(); // Genera un identificador de 6 caracteres
-  const filename = `${file.name.split('.').shift()}-${randomId}.${extension}`;
+  const filename = `${file.name.split(".").shift()}-${randomId}.${extension}`;
   const storageRef = ref(storage, `descargables/${filename}`);
 
   try {
@@ -49,8 +50,6 @@ export async function uploadFile(file: File | undefined): Promise<string> {
     const url = await getDownloadURL(storageRef);
     return url;
   } catch (error: any) {
-    throw new Error('Error al subir el archivo: ' + error.message);
+    throw new Error("Error al subir el archivo: " + error.message);
   }
 }
-
-

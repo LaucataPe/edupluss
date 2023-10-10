@@ -1,0 +1,224 @@
+import React from "react";
+import { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import { RootState } from "../redux/store";
+import axios from "axios";
+import * as XLSX from "xlsx";
+import { Button } from "primereact/button";
+import { excelRow } from "../utils/interfaces";
+import { Dialog } from "primereact/dialog";
+
+
+const Checkpoint = () => {
+  const { id } = useParams();
+  const activity = useSelector((state: RootState) => state.activities.activities);
+  const currentActivity = activity.find((a) => a.id == id);
+  const logUser = useSelector((state: RootState) => state.user.logUser);
+  const [url] = useState<string | undefined>(currentActivity?.excelURL);
+  const [displayConfirmation, setDisplayConfirmation] = useState(false);
+  const [showTestModal, setShowTestModal] = useState<boolean>(false);
+  //console.log(showTestModal);
+  
+  const isUnmounted = useRef(false);
+
+  window.addEventListener('beforeunload', (event) => {
+    const confirmationMessage = '¿Estás seguro de que deseas salir de esta página? Te recomendamos cerrar la ventana en la ventana de Home';
+    event.returnValue = confirmationMessage;
+    isUnmounted.current = true;
+    handleExcelImport();
+  });
+
+  useEffect(() => {
+    return () => {
+      handleExcelImport();
+    };
+  }, []);
+
+  const confirmationDialogFooter = (
+    <>
+      <Button
+        type="button"
+        label="Cancelar"
+        icon="pi pi-times"
+        onClick={() => setShowTestModal(false)}
+        text
+      />
+      <Link to="/home">
+        <Button
+          type="button"
+          label="Continuar"
+          icon="pi pi-check"
+          text
+          autoFocus
+        />
+      </Link>
+    </>
+  );
+
+  const handleExcelImport = async () => {
+    try {
+      if (isUnmounted.current === false) {
+        console.log("Entro al return: Deberia hacer post Watched");
+        
+        isUnmounted.current = true;
+        //Actualiza la propiedad testWatched
+        let obj = {
+          activityId: id,
+          userId: logUser.id,
+          testWatched: true
+        }
+        try {
+          const response = await axios.post(
+            "http://localhost:3001/test",
+            obj
+          );
+          console.log(response.data);
+        } catch (error: any) {
+          console.log(error);
+        }
+        return;
+      } else {
+        // Realiza una solicitud GET para obtener el archivo Excel
+        let response;
+        if(url){
+          response = await axios.get(url, { responseType: "arraybuffer" });
+        }
+
+        // Lee el archivo Excel y conviértelo en un objeto de datos
+        const excelArrayBuffer = response?.data;
+        const workbook = XLSX.read(new Uint8Array(excelArrayBuffer), {
+          type: "array",
+        });
+        const sheetName = workbook.SheetNames[0]; // Suponiendo que solo hay una hoja en el archivo Excel
+
+        // Convierte la hoja de Excel en un array de objetos JSON
+        const excelArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+        // Encuentra la última fila no vacía en excelArray
+        let lastNonEmptyRow = null;
+        for (let i = excelArray.length - 1; i >= 0; i--) {
+          const row = excelArray[i] as excelRow;
+          if (Object.keys(row).length > 3) {
+            lastNonEmptyRow = row;
+            break;
+          }
+        }
+
+        if (lastNonEmptyRow) {
+          let gradeValue;
+          let maximunGradeValue;
+
+          console.log(lastNonEmptyRow.B)
+
+          if (typeof lastNonEmptyRow.B === "number") {
+            gradeValue = 0;
+            maximunGradeValue = 0;
+          } else {
+            const arrayValues = lastNonEmptyRow.B.split(" / ");
+            [gradeValue, maximunGradeValue] = arrayValues;
+          }
+
+          //Verificar que el correo del empleado coincida con el guardado en el ingresado en el Test
+          let objData;
+          if(lastNonEmptyRow.D === logUser.email){
+            objData = {
+              gradeValue: gradeValue,
+              maximunGradeValue: maximunGradeValue,
+              activityId: id,
+              userId: logUser.id,
+            };
+          } else {
+            objData = {
+              gradeValue: 0,
+              maximunGradeValue: 0,
+              activityId: id,
+              userId: logUser.id,
+            };
+          }
+
+          try {
+            const response = await axios.put(
+              "http://localhost:3001/test/update",
+              objData
+            );
+            console.log(response.data);
+          } catch (error: any) {
+            console.log(error);
+          }
+        } else {
+          let objData = {
+            gradeValue: 0,
+            maximunGradeValue: 0,
+            activityId: id,
+            userId: logUser.id,
+          };
+          try {
+            const response = await axios.put(
+              "http://localhost:3001/test/update",
+              objData
+            );
+            console.log(response.data);
+          } catch (error: any) {
+            console.log(error);
+          }
+        }
+
+        for (let key in excelArray) {
+          const row = excelArray[key] as excelRow;
+          if (
+            Object.keys(row).length < 2 &&
+            row.hasOwnProperty("__EMPTY") &&
+            row.hasOwnProperty("__rowNum__")
+          ) {
+            delete excelArray[key];
+          }
+        }
+        console.log(excelArray);
+      }
+    } catch (error) {
+      console.error("Error al importar datos desde Excel:", error);
+    }
+  };
+
+  return (
+    <section className="flex flex-col justify-center  items-center py-3">
+      <div className="w-full flex justify-between items-center my-2 px-2">
+        <h3 className=" text-lg md:text-2xl mb-0">
+          Checkpoint de {currentActivity?.title}
+        </h3>
+        <Link to="/home">
+          <Button label="Finalizar" onClick={() => setShowTestModal(true)}/>
+        </Link>
+      </div>
+      {
+        showTestModal ?
+        <Dialog
+          header="Confirme su siguiente paso"
+          visible={displayConfirmation}
+          onHide={() => setShowTestModal(false)}
+          style={{ width: "350px" }}
+          modal
+          footer={confirmationDialogFooter}
+        >
+          <div className="flex align-items-center justify-content-center">
+            <i
+              className="pi pi-exclamation-triangle mr-3"
+              style={{ fontSize: "2rem" }}
+            />
+            <span>¿Estás seguro de salir? Tenga en cuenta que no podra regresar a esta ventana.</span>
+          </div>
+        </Dialog>
+        :
+        null
+      }
+      <div className=" w-full h-screen">
+        <iframe src={currentActivity?.formURL} className="w-full h-full">
+          Cargando…
+        </iframe>
+      </div>
+    </section>
+  );
+};
+
+export default Checkpoint;

@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 
   module.exports = (database) => {  
   database.define('TestGrade', {
@@ -9,7 +9,7 @@ const { DataTypes } = require('sequelize');
     },
     gradeValue: {
       type: DataTypes.INTEGER,
-      defaultValue: 0
+      allowNull: true
     },
    /*  activityId: {
       type: DataTypes.INTEGER,
