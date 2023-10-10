@@ -1,5 +1,5 @@
 ngrok.exe
-
+.env
 # Logs
 logs
 *.log
