@@ -15,22 +15,22 @@ const { DataTypes } = require('sequelize');
       type: DataTypes.ENUM('0', '1', '2', '3', '4', '5'),
       allowNull: false,
     },
-    activityId: {
+   /*  activityId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: "Activity",
         key: "id",
       },
-    },
-    userId: {
+    }, */
+   /*  userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: "User",
         key: "id",
       },
-    },
+    }, */
   },{
     timestamps: false
   });
