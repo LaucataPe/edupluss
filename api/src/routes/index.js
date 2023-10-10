@@ -82,7 +82,7 @@ const { postUserStepValidation } = require('../Middlewares');
 const { postUserStep } = require('../controllers/UserStep');
 const { createReview } = require('../controllers/Reviews/createReview');
 const { postTestGrade } = require("../controllers/TestGrade/postTestGrade");
-
+const {realizarPago} = require("../controllers/payU/payU")
 //POST
 router.post('/empresa', createCompany);
 router.post('/user', createUser);
@@ -94,7 +94,7 @@ router.post('/step', createStep);
 router.post('/userStep', postUserStepValidation, postUserStep);
 router.post('/review', createReview);
 router.post('/test', postTestGrade);
-
+router.post('/pagos', realizarPago)
 //PUT Controllers
 const { ActivityState } = require("../controllers/Activities/ActivityState");
 const { AreaState } = require("../controllers/Areas/AreaState");

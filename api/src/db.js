@@ -59,7 +59,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
 
-const { Company, Step, Activity, User, Area, Role, UserStep, TestGrade, Review } =
+const { Company, Step, Activity, User, Area, Role, UserStep, TestGrade, Review, Subscription } =
   sequelize.models;
 console.log(sequelize.models);
 
@@ -133,15 +133,28 @@ User.hasMany(Review, {
 });
 
 
-// User.hasMany(UserActivityStep, {
-//   foreignKey: 'userId'
-// });
+ /* User.hasMany(UserActivityStep, {
+   foreignKey: 'userId'
+ }); */
 
 User.beforeUpdate((user) => {
   if (user.tipo !== "empleado" && user.roleId) {
     throw new Error("Solo los usuarios de tipo: empleado pueden tener un rol");
   }
 });
+
+
+Subscription.belongsTo(Company, {
+  foreignKey: 'companyId',
+  onDelete: 'CASCADE', // Esto eliminará la suscripción si se elimina la empresa
+});
+
+
+Company.hasMany(Subscription, {
+  foreignKey: 'companyId',
+});
+
+
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
