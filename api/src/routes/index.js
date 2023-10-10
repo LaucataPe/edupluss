@@ -83,6 +83,7 @@ router.post('/step', createStep);
 router.post('/userStep', postUserStepValidation, postUserStep);
 router.post('/review', createReview);
 router.post('/test', postTestGrade);
+//router.post("/createSuperAdmin",verifyRole("superadmin"),createSuperAdmin) //ruta de prueba por definir
 
 //PUT Controllers
 const { ActivityState } = require("../controllers/Activities/ActivityState");

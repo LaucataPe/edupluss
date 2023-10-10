@@ -36,6 +36,8 @@ import { RootState } from "./redux/store";
 import { fetchCompanyAreas } from "./redux/features/areaSlice";
 import Dashboard from "./pages/Dashboard";
 import Checkpoint from "./components/Checkpoint";
+import { AxiosInterceptor } from "./utils/interceptors/axiosInterceptor";
+import {useState} from 'react'
 
 
 
@@ -47,6 +49,8 @@ function App() {
 	const logUser = useSelector((state: RootState) => state.user.logUser)
 	const currentEmpresa = useSelector((state: RootState) => state.user.logUser.companyId)
 
+	const [tokenValid,setTokenValid] = useState<Boolean>()
+
 	const session = window.localStorage.getItem("token");
 
 	const headers = {
@@ -54,12 +58,18 @@ function App() {
 	};
 
 	useEffect(() => {
-		if(pathname !== '/' && !session){
-			navigate('/login')
+		// if(pathname !== '/' && !session){
+		// 	navigate('/login')
+		// }
+		if(pathname !== '/' && pathname !== '/login' && !session){
+			navigate('/')
 		}
-		if(pathname === '/login' && session){
-			navigate('/home')
-		}
+		// if(pathname === '/login' && session){
+		// 	navigate('/home')
+		// }
+		if(pathname === '/login' && tokenValid){
+	 	navigate('/home')
+		 }
 		if(pathname === '/home' && logUser.tipo === 'admin'){
 			navigate('/crud')
 		}
@@ -73,8 +83,10 @@ function App() {
 					if(response){
 						dispatch(setLogUser(response.data.data.user))
             			dispatch(setEmpresa(response.data.findCompany))
+						setTokenValid(true)
 					}
 				})
+				
 				.catch((error) => {
 					//? mejorar este error
 					console.log(error);
@@ -87,6 +99,8 @@ function App() {
 		  dispatch(fetchCompanyAreas(currentEmpresa));
 		}
 	  }, [currentEmpresa]);
+
+  AxiosInterceptor()
 
   return (
     <>
