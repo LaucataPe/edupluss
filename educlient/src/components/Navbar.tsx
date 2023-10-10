@@ -26,7 +26,7 @@ function NavBar() {
   const logOut = () => {
     dispatch(resetActivities());
     window.localStorage.removeItem("token");
-    navigate("/");
+    window.location.replace("/");
   };
 
   const overlayMenuItems = [

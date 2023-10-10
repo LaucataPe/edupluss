@@ -49,7 +49,7 @@ function App() {
 	const logUser = useSelector((state: RootState) => state.user.logUser)
 	const currentEmpresa = useSelector((state: RootState) => state.user.logUser.companyId)
 
-	const [tokenValid,setTokenValid] = useState<Boolean>()
+	const [tokenValid,setTokenValid] = useState<Boolean>(false)
 
 	const session = window.localStorage.getItem("token");
 
@@ -61,7 +61,8 @@ function App() {
 		// if(pathname !== '/' && !session){
 		// 	navigate('/login')
 		// }
-		if(pathname !== '/' && pathname !== '/login' && !session){
+		
+		if(pathname !== '/' && pathname !== '/login' && !tokenValid ){
 			navigate('/')
 		}
 		// if(pathname === '/login' && session){
