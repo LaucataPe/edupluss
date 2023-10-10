@@ -363,9 +363,9 @@ const Crud = () => {
   );
 
   return (
-    <div className="grid crud-demo my-1">
-      <div className="col-12">
-        <div className="card">
+    <div className="flex crud-demo my-1">
+      <div className="col-12 align-items-center">
+        <div className="card justify-content-center">
           <Toast ref={toast} />
           <Toolbar className="mb-4" left={leftToolbarTemplate}></Toolbar>
 

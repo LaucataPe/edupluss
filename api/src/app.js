@@ -27,7 +27,7 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use('/',verifyJWT, router);
+server.use('/', router); "verifyJWT";
 
 // Error catching endware.
 server.use((err, req, res, next) => {
