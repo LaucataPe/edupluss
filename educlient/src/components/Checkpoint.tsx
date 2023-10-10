@@ -16,14 +16,14 @@ const Checkpoint = () => {
   const currentActivity = activity.find((a) => a.id == id);
   const logUser = useSelector((state: RootState) => state.user.logUser);
   const [url] = useState<string | undefined>(currentActivity?.excelURL);
-  const [displayConfirmation, setDisplayConfirmation] = useState(false);
-  const [showTestModal, setShowTestModal] = useState<boolean>(false);
-  //console.log(showTestModal);
-  
+
+  const [visible, setVisible] = useState(false);
+  const [infoVisible, setInfoVisible] = useState<boolean>(false);
+
   const isUnmounted = useRef(false);
 
   window.addEventListener('beforeunload', (event) => {
-    const confirmationMessage = '¿Estás seguro de que deseas salir de esta página? Te recomendamos cerrar la ventana en la ventana de Home';
+    const confirmationMessage = '¿Estás seguro de que deseas salir de esta página? Te recomendamos cerrar la pagina en la ventana de Home';
     event.returnValue = confirmationMessage;
     isUnmounted.current = true;
     handleExcelImport();
@@ -40,13 +40,15 @@ const Checkpoint = () => {
       <Button
         type="button"
         label="Cancelar"
+        severity="danger"
         icon="pi pi-times"
-        onClick={() => setShowTestModal(false)}
+        onClick={() => setVisible(false)}
         text
-      />
+        />
       <Link to="/home">
         <Button
           type="button"
+          severity="success"
           label="Continuar"
           icon="pi pi-check"
           text
@@ -55,6 +57,7 @@ const Checkpoint = () => {
       </Link>
     </>
   );
+
 
   const handleExcelImport = async () => {
     try {
@@ -184,20 +187,17 @@ const Checkpoint = () => {
   return (
     <section className="flex flex-col justify-center  items-center py-3">
       <div className="w-full flex justify-between items-center my-2 px-2">
-        <h3 className=" text-lg md:text-2xl mb-0">
+        <Button label="Recomendaciones" icon="pi pi-exclamation-triangle" onClick={() => setInfoVisible(true)} severity="danger" />
+        <h3 className=" text-lg md:text-2xl m-0">
           Checkpoint de {currentActivity?.title}
         </h3>
-        <Link to="/home">
-          <Button label="Finalizar" onClick={() => setShowTestModal(true)}/>
-        </Link>
-      </div>
-      {
-        showTestModal ?
+        <Button label="Finalizar" icon="pi pi-external-link" onClick={() => setVisible(true)} />
+
         <Dialog
           header="Confirme su siguiente paso"
-          visible={displayConfirmation}
-          onHide={() => setShowTestModal(false)}
-          style={{ width: "350px" }}
+          visible={visible}
+          onHide={() => setVisible(false)}
+          style={{ width: "450px" }}
           modal
           footer={confirmationDialogFooter}
         >
@@ -209,10 +209,29 @@ const Checkpoint = () => {
             <span>¿Estás seguro de salir? Tenga en cuenta que no podra regresar a esta ventana.</span>
           </div>
         </Dialog>
-        :
-        null
-      }
-      <div className=" w-full h-screen">
+
+        <Dialog
+          header="Recomendaciones al empleado"
+          visible={infoVisible}
+          onHide={() => setInfoVisible(false)}
+          className="w-[38vw]"
+          modal
+        >
+          <div className="flex align-items-center justify-content-center">
+            <i
+              className="pi pi-exclamation-triangle mr-3 color-orange-500"
+              style={{ fontSize: "2rem" }}
+            />
+            <ul className="m-0 gap-4 text-lg text-slate-950">
+              <li className=" py-1">Ingrese el correo electrónico con el que está registrado/a en Edupluss.</li>
+              <li  className=" py-1">No actualice la página mientras esté realizando la prueba.</li>
+              <li className=" py-1">No cierre la página mientras esté realizando la prueba.</li>
+              <li className=" py-1">Una vez haya termiando la prueba, puede regresar al Home mediante el boton "Finalizar"</li>
+            </ul>
+          </div>
+        </Dialog>
+      </div>
+      <div className="flex w-full  py-3 items-center justify-center h-[80vh]">
         <iframe src={currentActivity?.formURL} className="w-full h-full">
           Cargando…
         </iframe>

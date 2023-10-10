@@ -19,7 +19,10 @@ function Activity() {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [dialog, setDialog] = useState<boolean>(false);
+  const [infoVisible, setInfoVisible] = useState<boolean>(false);
   const [contiune, setContiune] = useState<boolean>(false);
+
+ 
 
   useEffect(() => {
     const stepSaved = window.localStorage.getItem(`Activity ${id}`);
@@ -118,6 +121,30 @@ function Activity() {
     const hasTest = activities.find((a) => a.id == id);
     hasTest?.hasTest ? navigate(`/checkpoint/${id}`) : navigate("/home");
   };
+
+  const confirmationDialogFooter = (
+    <>
+      <Button
+        type="button"
+        label="Cancelar"
+        severity="danger"
+        icon="pi pi-times"
+        onClick={() => setInfoVisible(false)}
+        text
+        />
+      <Link to="/home">
+        <Button
+          type="button"
+          severity="success"
+          label="Empezar"
+          onClick={handleFinishClick}
+          icon="pi pi-check"
+          text
+          autoFocus
+        />
+      </Link>
+    </>
+  );
 
   const showDialog = () => {
     setDialog(true);
@@ -237,13 +264,32 @@ function Activity() {
                   label="Sí"
                   icon="pi pi-check"
                   text
-                  onClick={handleFinishClick}
+                  onClick={() => setInfoVisible(true)}
                 />
               </div>
             </>
           )}
         </div>
       </Dialog>
+
+      <Dialog
+          header="Recomendaciones al empleado"
+          visible={infoVisible}
+          onHide={() => setInfoVisible(false)}
+          className="w-[38vw]"
+          modal
+          footer={confirmationDialogFooter}
+        >
+          <div className="flex align-items-center justify-content-center">
+            <ul className="m-0 gap-4 text-lg text-slate-950">
+              <li className=" py-1">Antes de iniciar la prueba tome en cuenta lo siguiente:</li>
+              <li className=" py-1">Ingrese el correo electrónico con el que está registrado/a en Edupluss.</li>
+              <li  className=" py-1">No actualice la página mientras esté realizando la prueba.</li>
+              <li className=" py-1">No cierre la página mientras esté realizando la prueba.</li>
+              <li className=" py-1">Una vez haya termiando la prueba, puede regresar al Home mediante el boton "Finalizar"</li>
+            </ul>
+          </div>
+        </Dialog>
     </>
   );
 }
