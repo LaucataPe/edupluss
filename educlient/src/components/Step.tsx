@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import { Step } from "../utils/interfaces";
 import { Button } from "primereact/button";
 import { useSelector } from "react-redux";
-
 import axios from "axios";
 import * as XLSX from "xlsx";
-
 type props = {
   step: Step;
   activityId: string;
@@ -36,9 +34,11 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
     if (step.file) {
       window.open(step.file, "_blank");
     }
-  };
+  }; //@ts-ignore
+
   const logUser = useSelector((state: RootState) => state.user.logUser.id);
   // console.log(logUser);
+  //@ts-ignore
   const [excelData, setExcelData] = useState([]);
   const idUser: string = "2";
   const idActivity: string = "1";
@@ -66,6 +66,8 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
       // Encuentra la última fila no vacía en excelArray
       let lastNonEmptyRow = null;
       for (let i = excelArray.length - 1; i >= 0; i--) {
+        //@ts-ignore
+
         if (Object.keys(excelArray[i]).length > 3) {
           lastNonEmptyRow = excelArray[i];
           break;
@@ -79,6 +81,8 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
         //lastNonEmptyRow.idActivity = idActivity;
 
         let obj = {
+          //@ts-ignore
+
           gradeValue: lastNonEmptyRow.B,
           activityId: idActivity,
           userId: idUser,
@@ -95,17 +99,19 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
 
       for (let key in excelArray) {
         if (
-          Object.keys(excelArray[key]).length < 2 &&
-          excelArray[key].hasOwnProperty("__EMPTY") &&
+          //@ts-ignore
+
+          Object.keys(excelArray[key]).length < 2 && //@ts-ignore
+          excelArray[key].hasOwnProperty("__EMPTY") && //@ts-ignore
           excelArray[key].hasOwnProperty("__rowNum__")
         ) {
           delete excelArray[key];
         }
       }
-
       // console.log(excelArray);
-
       // Actualiza el estado con los datos del Excel
+      //@ts-ignore
+
       setExcelData(excelArray);
     } catch (error) {
       console.error("Error al importar datos desde Excel:", error);
@@ -155,20 +161,8 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
       ) : (
         <h1>Esta actividad no tiene pasos</h1>
       )}
-      <div className=" flex items-center justify-center pt-8">
-        <iframe
-          src="https://docs.google.com/forms/d/e/1FAIpQLSeh4fPajSOhP3kxmb20KFJzQ06sVtH7we27pXJAzB1k2LTJ1Q/viewform?usp=sf_link"
-          width="640"
-          height="600"
-          frameBorder="0"
-          marginHeight={0}
-          marginWidth={0}
-        >
-          Cargando…
-        </iframe>
-      </div>
     </>
   );
 }
-//otro formulario: https://docs.google.com/forms/d/e/1FAIpQLSfZlqtLmw0XM1JGmvo60f1Nmm7bojPSJIa83ayuq6pWzn1WVQ/viewform?usp=sf_link
+
 export default CurrentStep;

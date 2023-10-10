@@ -30,16 +30,13 @@ function Dashboard() {
   const [generalProgress, setGeneralProgress] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(0);
   const [visibleUsers, setVisibleUsers] = useState(5);
-  const [allCollapsed, setAllCollapsed] = useState(false);
 
   const handleShowMore = () => {
     setVisibleUsers(visibleUsers + 5);
-    setAllCollapsed(false);
   };
 
   const handleCollapseAll = () => {
     setVisibleUsers(5);
-    setAllCollapsed(true);
   };
 
   const itemsPerPage = 3;
@@ -266,7 +263,7 @@ function Dashboard() {
               .map(([roleName, users]) => (
                 <div key={roleName} className="col-4 col-md-4">
                   <div className="border-2 shadow-2xl p-4 rounded-2xl">
-                    <h4>Rol: {roleName}</h4>
+                    <h4>{roleName}</h4>
                     {users
                       .map((user) => (
                         <div
@@ -280,13 +277,14 @@ function Dashboard() {
                             <ProgressBar
                               value={
                                 generalProgress.find(
-                                  (item) => item.userId === user.id
+                                  //@ts-ignore
+                                  (item) => item.userId === user.id //@ts-ignore
                                 )?.progress || 0
                               }
                             />
                             <div className="col-6 col-xl-3 mx-auto">
                               <Button
-                                rounded
+                                rounded //@ts-ignore
                                 severity={
                                   generalProgress.find(
                                     //@ts-ignore

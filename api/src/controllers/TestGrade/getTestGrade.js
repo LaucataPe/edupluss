@@ -2,8 +2,8 @@ const { User, TestGrade } = require('../../db');
 const { catchedAsync } = require('../../utils');
 const { ClientError } = require("../../utils/index.js");
 
-const postTestGrade = async (req, res) => {
-  let { testWatched, activityId, userId } = req.body;
+const getTestGrade = async (req, res) => {
+  let { activityId, userId } = req.body;
   
   try {
     const employeeUser = await User.findByPk(userId);
@@ -14,17 +14,17 @@ const postTestGrade = async (req, res) => {
           400
         );
     } else {
-        const previousTest = await TestGrade.findOne({
+        const test = await TestGrade.findOne({
             where: {
                 userId: userId,
                 activityId: activityId,
             },
         });
-        if (previousTest) {
-            throw new Error("El empleado visualizó/realizó esta prueba anteriormente.");
+        console.log(test);
+        if (!test) {
+            throw new Error("El empleado aún no ha visto/realizado esta prueba.");
         } else {
-            const newTest = await TestGrade.create({ testWatched, activityId, userId });
-            res.status(200).json(newTest);
+            res.status(200).json(test);
         }
     }
   } catch (error) {
@@ -32,4 +32,4 @@ const postTestGrade = async (req, res) => {
   }
 };
 
-module.exports = { postTestGrade: catchedAsync(postTestGrade) };
+module.exports = { getTestGrade: catchedAsync(getTestGrade) };

@@ -15,18 +15,20 @@ const { DataTypes } = require("sequelize");
       type: DataTypes.ENUM('0', '1', '2', '3', '4', '5'),
       allowNull: false,
     },
+    reviewRated: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     activityId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-     
     },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-     
     }},
-    {
-      timestamps: false,
-    }
+  {
+    timestamps: false
+  }
   );
 };

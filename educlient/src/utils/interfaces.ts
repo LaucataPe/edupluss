@@ -77,3 +77,16 @@ export interface ProgressData {
   userId?: number;
   progress?: string;
 }
+
+export interface excelRow {
+  A: number;
+  B: string | number;
+  C: string;
+  D: string;
+  E: string;
+  F: string;
+  G: string;
+  H: string;
+  __EMPTY: number;
+  __rowNum__: number;
+}
