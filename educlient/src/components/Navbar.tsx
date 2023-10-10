@@ -9,7 +9,6 @@ import { Menu } from "primereact/menu";
 
 function NavBar() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const currentEmpresa = useSelector(

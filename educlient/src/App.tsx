@@ -62,7 +62,7 @@ function App() {
 		// 	navigate('/login')
 		// }
 		
-		if(pathname !== '/' && pathname !== '/login' && !tokenValid ){
+		if(pathname !== '/' && pathname !== '/login' && !session ){
 			navigate('/')
 		}
 		// if(pathname === '/login' && session){
