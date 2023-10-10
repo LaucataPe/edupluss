@@ -11,6 +11,14 @@ const { DataTypes } = require("sequelize");
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    maximunGradeValue: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    testWatched: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
    /*  activityId: {
       type: DataTypes.INTEGER,
       allowNull: false,
