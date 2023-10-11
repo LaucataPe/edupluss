@@ -5,6 +5,8 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  PointElement,
+  LineElement,
   BarElement,
   Title,
   Tooltip,
@@ -16,6 +18,8 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend
@@ -276,6 +280,50 @@ function Dashboard() {
   };
   // #### Grafico 3 Empleados activos y su progreso ####
 
+  function generateRandomData(numPoints) {
+    const data = [];
+
+    for (let i = 0; i < numPoints; i++) {
+      data.push({
+        x: Math.floor(Math.random() * 85),
+        y: Math.floor(Math.random() * 100),
+      });
+    }
+
+    return data;
+  }
+
+  const scatterOptions = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
+  const scatterData = {
+    datasets: [
+      {
+        label: "Usuario",
+        data: generateRandomData(15),
+        backgroundColor: "rgba(255, 99, 132, 1)",
+        pointRadius: 20,
+      },
+      {
+        label: "Actividades",
+        data: generateRandomData(15),
+        backgroundColor: "#0bc8e1",
+        pointRadius: 15,
+      },
+      {
+        label: "Progreso",
+        data: generateRandomData(15),
+        backgroundColor: "#10481a",
+        pointRadius: 5,
+      },
+    ],
+  };
+
   return (
     <div className="flex">
       <div className="w-[100%]">
@@ -312,6 +360,12 @@ function Dashboard() {
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <div key={chartKey} style={{ width: "100%", height: "300px" }}>
                 <Bar options={options} data={data2} />
+              </div>
+            </div>
+            Empleados activos y su progreso:{" "}
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <div key={chartKey} style={{ width: "100%", height: "500px" }}>
+                <Scatter options={scatterOptions} data={scatterData} />
               </div>
             </div>
             <div>Acá</div>
