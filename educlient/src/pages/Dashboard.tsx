@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Bar, Scatter } from "react-chartjs-2"; // Añade Scatter aquí si aún no lo has importado
 
 ChartJS.register(
   CategoryScale,
@@ -140,7 +140,7 @@ function Dashboard() {
   console.log(
     `Usuarios graduados: ${graduatedCount}, Usuarios faltantes: ${remainingCount}`
   );
-
+  // #### Grafico 1 Progreso de usuarios ####
   const generatePositiveRandomData = () => {
     return labels.map(() => Math.max(Math.floor(Math.random() * 200) - 100, 1));
   };
@@ -253,11 +253,46 @@ function Dashboard() {
       refreshChart();
     }
   }, [windowDimensions]);
+  // #### Grafico 2 Empleados por areas ####
+  const randomData3 = generatePositiveRandomData();
+  const randomData4 = generatePositiveRandomData();
+
+  const data2 = {
+    labels,
+    datasets: [
+      {
+        label: "Usuario 3",
+        data: sortDataDescending(randomData3),
+        borderColor: "rgb(75, 192, 192)",
+        backgroundColor: "rgba(75, 192, 192, 0.5)",
+      },
+      {
+        label: "Usuario 4",
+        data: sortDataDescending(randomData4),
+        borderColor: "rgb(255, 205, 86)",
+        backgroundColor: "rgba(255, 205, 86, 0.5)",
+      },
+    ],
+  };
+  // #### Grafico 3 Empleados activos y su progreso ####
 
   return (
     <div className="flex">
       <div className="w-[100%]">
         <div className="p-5">
+          <h3 className="text-xl font-semibold">
+            Graduados:{" "}
+            {graduatedCount ? graduatedCount : "Esperando graduados..."} y
+            faltan: {remainingCount ? remainingCount : "Esperando graduados..."}{" "}
+            entonces
+          </h3>
+          <strong>
+            {" "}
+            Porcentaje de graduados:{" "}
+            {graduatedCount && remainingCount
+              ? ((graduatedCount / remainingCount) * 100).toFixed(2) + "%"
+              : "No se puede calcular el porcentaje en este momento."}
+          </strong>
           <h3 className="text-xl font-semibold">
             Numero de usuarios activos:{" "}
             {totalActiveUsers ? totalActiveUsers : "Esperando usuarios..."}
@@ -271,6 +306,12 @@ function Dashboard() {
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <div key={chartKey} style={{ width: "100%", height: "300px" }}>
                 <Bar options={options} data={data} />
+              </div>
+            </div>
+            Empleados por areas:{" "}
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <div key={chartKey} style={{ width: "100%", height: "300px" }}>
+                <Bar options={options} data={data2} />
               </div>
             </div>
             <div>Acá</div>
