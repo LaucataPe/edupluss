@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
-import { ProgressBar } from "primereact/progressbar";
 import { Button } from "primereact/button";
-import { getCompanyRoles } from "../redux/features/roleSlice";
-import { useAppDispatch } from "../hooks/typedSelectors";
-import { getUsersByCompany } from "../redux/features/userSlice";
-import { fetchActivities } from "../redux/features/activitiesSlice";
-import ProgressModal from "../components/ProgressModal";
 import axios from "axios";
 import {
   Chart as ChartJS,
@@ -30,31 +22,129 @@ ChartJS.register(
 );
 
 function Dashboard() {
-  const dispatch = useAppDispatch();
-  const currentUsers = useSelector((state: RootState) => state.user.users);
-  const currentEmpresa = useSelector(
-    (state: RootState) => state.user.logUser.companyId
-  );
-  const roles = useSelector((state: RootState) => state.roles.roles);
-  const [showProgressModal, setShowProgressModal] = useState(false);
-  const usersByRole: { [roleName: string]: any[] } = {};
-
-  const activities = useSelector(
-    (state: RootState) => state.activities.activities
-  );
-
-  const [chartKey, setChartKey] = useState(0); // Estado para controlar el gráfico
+  const [chartKey, setChartKey] = useState(0);
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const [totalUsers, setTotalUsers] = useState(null);
+  const [totalActiveUsers, setTotalActiveUsers] = useState(null);
+  const [totalActivities, setTotalActivities] = useState(null);
+  const [totalStepsByRoleId, setTotalStepsByRoleId] = useState({});
+  const [userSteps, setUserSteps] = useState([]);
+  const [userIdCount, setUserIdCount] = useState({});
+  const [graduatedUsers, setGraduatedUsers] = useState([]);
 
-  // Función para generar valores aleatorios positivos mayores que 0
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/users");
+        const users = response.data;
+
+        // Filtra los usuarios con active = true
+        const activeUsers = users.filter((user) => user.active === true);
+
+        // Establece el total de usuarios activos en el estado
+        setTotalUsers(activeUsers);
+        setTotalActiveUsers(activeUsers.length);
+      } catch (error) {
+        console.error("Error al obtener datos de usuarios:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Realiza una solicitud GET para obtener la lista de actividades
+        const response = await axios.get("http://localhost:3001/activities");
+        const activities = response.data;
+
+        // Calcula la cantidad total de actividades
+        const total = activities.length;
+
+        // Establece la cantidad total de actividades en el estado
+        setTotalActivities(total);
+
+        const totalSteps: any = {};
+
+        activities.forEach((activity: any) => {
+          const { roleId, numberSteps } = activity;
+          if (roleId in totalSteps) {
+            totalSteps[roleId] += numberSteps;
+          } else {
+            totalSteps[roleId] = numberSteps;
+          }
+        });
+
+        // Establece el objeto totalStepsByRoleId en el estado
+        setTotalStepsByRoleId(totalSteps);
+      } catch (error) {
+        console.error("Error al obtener datos de actividades:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/userStep");
+        const userSteps = response.data;
+
+        const count = {};
+
+        userSteps.forEach((userStep: any) => {
+          const userId = userStep.UserId;
+
+          if (userId in count) {
+            count[userId] += 1;
+          } else {
+            count[userId] = 1;
+          }
+        });
+
+        setUserIdCount(count);
+      } catch (error) {
+        console.error("Error al obtener datos de UserSteps:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (totalUsers && totalStepsByRoleId && userIdCount) {
+      // Comparación para determinar si un usuario ha "graduado"
+      const graduatedUsers = totalUsers.map((user) => ({
+        userId: user.id,
+        graduated:
+          user.active && // Solo usuarios activos pueden graduarse
+          (user.id in userIdCount ? userIdCount[user.id] : 0) >=
+            (user.roleId in totalStepsByRoleId
+              ? totalStepsByRoleId[user.roleId]
+              : 0),
+      }));
+      setGraduatedUsers(graduatedUsers);
+    }
+  }, [totalUsers, totalStepsByRoleId, userIdCount]);
+
+  // console.log("Cantidad total de usuarios:", totalUsers);
+  // console.warn("Suma Steps en Activity por roleId:", totalStepsByRoleId);
+  console.warn("Total de Usuarios graduados:", graduatedUsers);
+  const graduatedCount = graduatedUsers.filter((user) => user.graduated).length;
+  const remainingCount = graduatedUsers.length - graduatedCount;
+
+  console.log(
+    `Usuarios graduados: ${graduatedCount}, Usuarios faltantes: ${remainingCount}`
+  );
+
   const generatePositiveRandomData = () => {
     return labels.map(() => Math.max(Math.floor(Math.random() * 200) - 100, 1));
   };
 
-  // Generar valores aleatorios iniciales
   const labels = [
     "Actividad 1",
     "Actividad 2",
@@ -67,7 +157,6 @@ function Dashboard() {
   const randomData1 = generatePositiveRandomData();
   const randomData2 = generatePositiveRandomData();
 
-  // Función para ordenar los datos de manera descendente
   const sortDataDescending = (data) => {
     return data.slice().sort((a, b) => b - a);
   };
@@ -77,13 +166,13 @@ function Dashboard() {
     datasets: [
       {
         label: "Usuario 1",
-        data: sortDataDescending(randomData1), // Ordenar los datos de Dataset 1
+        data: sortDataDescending(randomData1),
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
       {
         label: "Usuario 2",
-        data: sortDataDescending(randomData2), // Ordenar los datos de Dataset 2
+        data: sortDataDescending(randomData2),
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
@@ -110,54 +199,44 @@ function Dashboard() {
     },
   };
 
-  // Función para volver a renderizar el gráfico
   const refreshChart = () => {
     setChartKey(chartKey + 1);
   };
 
   useEffect(() => {
-    // Función para manejar el evento de cambio de tamaño de la ventana
     const handleResize = () => {
-      // Después de un retraso de 2 segundos, vuelve a renderizar el gráfico
       clearTimeout(window.resizeTimeout);
       window.resizeTimeout = setTimeout(() => {
         refreshChart();
       }, 500);
 
-      // Actualizar las dimensiones de la ventana
       setWindowDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
       });
     };
 
-    // Función para manejar el evento de cambio de orientación del dispositivo o zoom
     const handleOrientationChange = () => {
-      // Después de un retraso de 2 segundos, vuelve a renderizar el gráfico
       clearTimeout(window.resizeTimeout);
       window.resizeTimeout = setTimeout(() => {
         refreshChart();
       }, 500);
 
-      // Actualizar las dimensiones de la ventana
       setWindowDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
       });
     };
 
-    // Agregar escuchadores de eventos para el cambio de tamaño y cambio de orientación
     window.addEventListener("resize", handleResize);
     window.addEventListener("orientationchange", handleOrientationChange);
 
-    // Retirar los escuchadores de eventos cuando el componente se desmonte
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("orientationchange", handleOrientationChange);
     };
-  }, []); // La matriz vacía [] asegura que este efecto solo se ejecute una vez al montar el componente
+  }, []);
 
-  // Compara las dimensiones antes y después del cambio de tamaño para detectar un cambio de zoom
   const hasZoomed = (prevDimensions, currentDimensions) => {
     const widthChange = prevDimensions.width !== currentDimensions.width;
     const heightChange = prevDimensions.height !== currentDimensions.height;
@@ -165,7 +244,6 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    // Compara las dimensiones antes y después del cambio de tamaño para detectar un cambio de zoom
     if (
       hasZoomed(windowDimensions, {
         width: window.innerWidth,
@@ -181,22 +259,28 @@ function Dashboard() {
       <div className="w-[100%]">
         <div className="p-5">
           <h3 className="text-xl font-semibold">
+            Numero de usuarios activos:{" "}
+            {totalActiveUsers ? totalActiveUsers : "Esperando usuarios..."}
+          </h3>
+          <h3 className="text-xl font-semibold">
+            Numero de actividades activas:{" "}
+            {totalActivities ? totalActivities : "Esperando usuarios..."}
+          </h3>
+          <h3 className="text-xl font-semibold">
             Progreso general de Actividades:{" "}
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              {/* Envuelve el componente Bar en un contenedor con un tamaño relativo */}
               <div key={chartKey} style={{ width: "100%", height: "300px" }}>
                 <Bar options={options} data={data} />
               </div>
             </div>
             <div>Acá</div>
           </h3>
-          {/* Botón para volver a renderizar el gráfico */}
           <Button label="Escalar y Reiniciar" onClick={refreshChart} />
-          {showProgressModal && (
+          {/* {false && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
               <div className="bg-white p-0 rounded-md shadow-md"></div>
             </div>
-          )}
+          )} */}
           <div className="flex"></div>
         </div>
       </div>
