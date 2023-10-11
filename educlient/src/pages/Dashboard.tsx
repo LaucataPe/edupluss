@@ -328,7 +328,7 @@ function Dashboard() {
     <div className="flex">
       <div className="w-[100%]">
         <div className="p-5">
-          <h3 className="text-xl font-semibold">
+          <h3 className="text-xl font-semibold ">
             Graduados:{" "}
             {graduatedCount ? graduatedCount : "Esperando graduados..."} y
             faltan: {remainingCount ? remainingCount : "Esperando graduados..."}{" "}
@@ -349,22 +349,22 @@ function Dashboard() {
             Numero de actividades activas:{" "}
             {totalActivities ? totalActivities : "Esperando usuarios..."}
           </h3>
-          <h3 className="text-xl font-semibold">
+          <h3 className="text-xl font-semibold" style={{ textAlign: "center" }}>
             Progreso general de Actividades:{" "}
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <div key={chartKey} style={{ width: "100%", height: "300px" }}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <div key={chartKey} style={{ width: "60%", height: "300px" }}>
                 <Bar options={options} data={data} />
               </div>
             </div>
             Empleados por areas:{" "}
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <div key={chartKey} style={{ width: "100%", height: "300px" }}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <div key={chartKey} style={{ width: "60%", height: "300px" }}>
                 <Bar options={options} data={data2} />
               </div>
             </div>
             Empleados activos y su progreso:{" "}
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <div key={chartKey} style={{ width: "100%", height: "500px" }}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <div key={chartKey} style={{ width: "60%", height: "500px" }}>
                 <Scatter options={scatterOptions} data={scatterData} />
               </div>
             </div>
