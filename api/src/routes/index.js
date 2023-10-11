@@ -94,12 +94,12 @@ router.post('/step', createStep);
 router.post('/userStep', postUserStepValidation, postUserStep);
 router.post('/review', createReview);
 router.post('/test', postTestGrade);
-<<<<<<< HEAD
+router.post('/pagos', realizarPago)
 //router.post("/createSuperAdmin",verifyRole("superadmin"),createSuperAdmin) //ruta de prueba por definir
 
-=======
-router.post('/pagos', realizarPago)
->>>>>>> f6fad7f7d22f4a3132072fab5308efb5254e7c00
+
+
+
 //PUT Controllers
 const { ActivityState } = require("../controllers/Activities/ActivityState");
 const { AreaState } = require("../controllers/Areas/AreaState");
@@ -109,6 +109,7 @@ const { updateUser } = require("../controllers/Users/updateUser");
 const { updateRole } = require("../controllers/Roles/updateRole");
 const { updateStep } = require("../controllers/Steps/updateStep");
 const { updateTestGrade } = require("../controllers/TestGrade/updateTestGrade");
+const{setOrderActivities} = require("../controllers/Activities/setOrderActivities")
 
 //PUT
 router.put("/activity/state", ActivityState);
@@ -119,6 +120,7 @@ router.put("/area/update", updateArea);
 router.put("/step/update", updateStep);
 router.put("/test/update", updateTestGrade);
 router.patch("/activity/update", updateActivity);
+router.put("/activities/:roleId",verifyRole("admin"),setOrderActivities)
 
 //DELETE Controllers
 const { deleteAreaCascade } = require("../controllers/Areas/deleteArea");

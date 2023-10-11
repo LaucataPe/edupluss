@@ -1,11 +1,12 @@
 const { Activity, Role } = require('../../db');
 const { catchedAsync } = require('../../utils');
 const createActivity = async (req, res) => {
-  const { title, roleId } = req.body;
+  const { title, roleId,orderId } = req.body;
   try {
     const role = await Role.findByPk(roleId);
     if (role) {
       const newActivity = await Activity.create({
+        orderId,
         title,
         roleId,
         active: true,
