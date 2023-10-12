@@ -21,8 +21,12 @@ function Activity() {
   const [dialog, setDialog] = useState<boolean>(false);
   const [infoVisible, setInfoVisible] = useState<boolean>(false);
   const [contiune, setContiune] = useState<boolean>(false);
+  
 
- 
+  const logUser = useSelector((state: RootState) => state.user.logUser);
+  
+  const [userReview, setUserReview] = useState<boolean>(false);
+  console.log(userReview);
 
   useEffect(() => {
     const stepSaved = window.localStorage.getItem(`Activity ${id}`);
@@ -46,6 +50,11 @@ function Activity() {
     const activityName = activities.find((act) => act.id === Number(id));
     return activityName?.title;
   };
+
+  let durationTest: undefined | string;
+  const activity = activities.find((act) => act.id === Number(id));
+  durationTest = activity?.durationTest;
+  
 
   useEffect(() => {
     const currentPath = window.location.pathname;
@@ -150,6 +159,23 @@ function Activity() {
     setDialog(true);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios(`http://localhost:3001/review?userId=${logUser.id}&activityId=${id}`);
+
+        if (response.data) {
+          setUserReview(response.data);
+        } else {
+          console.error("La review no ha sido creada todavía");
+        }
+      } catch (error) {
+        console.error("Error al obtener datos del Review:", error);
+      }
+    };
+    fetchData();
+}, [showDialog]);
+
   const hideDialog = () => {
     setDialog(false);
     setContiune(false);
@@ -235,7 +261,7 @@ function Activity() {
       <Dialog
         visible={dialog}
         style={{ width: "650px" }}
-        header="Confirmar"
+        header="Confirme su siguiente paso"
         modal
         onHide={hideDialog}
       >
@@ -244,16 +270,20 @@ function Activity() {
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          <div onClick={checkHasTest}>
-            <RateActivity activityId={activityId} currentUser={currentUser}/>
-          </div>
-          {contiune && (
-            <>
+          {
+            userReview === false && (
+            <div onClick={checkHasTest}>
+              <RateActivity activityId={activityId} currentUser={currentUser}/>
+            </div>
+            )
+          }
+          {userReview || contiune ?
+            <div className=" pt-4 text-center text-lg text-slate-950">
               <p>
-                Si continuas seras redireccionado al formulario de la actividad
+                Si continuas serás redireccionado/a al test de la actividad.
               </p>
-              <span>¿Estás seguro de que continuar al formulario?</span>
-              <div className="flex justify-end w-full">
+              <span>¿Estás seguro/a de que continuar?</span>
+              <div className="flex justify-end w-full pt-4">
                 <Button
                   label="No"
                   icon="pi pi-times"
@@ -267,8 +297,10 @@ function Activity() {
                   onClick={() => setInfoVisible(true)}
                 />
               </div>
-            </>
-          )}
+            </div>
+            :
+            null
+          }
         </div>
       </Dialog>
 
@@ -283,9 +315,19 @@ function Activity() {
           <div className="flex align-items-center justify-content-center">
             <ul className="m-0 gap-4 text-lg text-slate-950">
               <li className=" py-1">Antes de iniciar la prueba tome en cuenta lo siguiente:</li>
-              <li className=" py-1">Ingrese el correo electrónico con el que está registrado/a en Edupluss.</li>
-              <li  className=" py-1">No actualice la página mientras esté realizando la prueba.</li>
-              <li className=" py-1">No cierre la página mientras esté realizando la prueba.</li>
+              <li className=" py-1">Ingrese el correo electrónico con el que está registrado/a en Edupluss:
+                <b>{logUser ? ` ${logUser.email}` : " Si no lo recuerda, consulte con su encargado."}</b>
+              </li>
+              <li  className=" py-1">No actualice ni cierre la página mientras esté realizando la prueba.</li>
+              {
+                durationTest ?
+                <ul className="m-0 gap-4 text-lg text-slate-950">
+                  <li className=" py-1">El test contará con la siguiente duración: {durationTest}</li>
+                  <li className=" py-1">Intente enviar el cuestionario antes del tiempo especificado.</li>
+                </ul>
+                :
+                null
+              }
               <li className=" py-1">Una vez haya termiando la prueba, puede regresar al Home mediante el boton "Finalizar"</li>
             </ul>
           </div>

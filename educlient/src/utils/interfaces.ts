@@ -58,6 +58,7 @@ export interface Activity {
   id?: number;
   title: string;
   hasTest: boolean;
+  durationTest?: string;
   numberSteps: number;
   formURL: string;
   excelURL: string;
