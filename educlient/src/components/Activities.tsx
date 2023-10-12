@@ -19,7 +19,7 @@ const Activities = () => {
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [filteredValue, setFilteredValue] = useState<Activity[]>([]);
   const [layout, setLayout] = useState<LayoutType>("list");
-  const [sortKey, setSortKey] = useState(null);
+  const [sortKey, setSortKey] = useState("all");
   const [sortOrder] = useState<SortOrderType>(0);
   const [sortField] = useState("");
   const [userSteps, setUserSteps] = useState([]);
@@ -35,30 +35,20 @@ const Activities = () => {
   );
 
   const sortOptions = [
+    { label: "All", value: "all" },
     { label: "Finished", value: "finished" },
     { label: "Started", value: "started" },
     { label: "Not started", value: "notStarted" },
-    { label: "All", value: "all" },
   ];
 
   useEffect(() => {
     setDataViewValue(activeActivities);
     setGlobalFilterValue("");
   }, [activities]);
-
-  const onFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLowerCase();
-    setGlobalFilterValue(value);
-    const filtered = dataViewValue.filter((act) =>
-      act.title.toLowerCase().includes(value)
-    );
-    setFilteredValue(filtered);
-  };
   const onSortChange = (event: DropdownChangeEvent) => {
     const value = event.value;
 
     let sortedData = [...dataViewValue]; // Copiamos los datos originales
-
     const filters = {
       //@ts-ignore
 
@@ -123,10 +113,10 @@ const Activities = () => {
       }
       return 0;
     });
+
     setSortKey(value);
     setFilteredValue(sortedData);
   };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -222,11 +212,7 @@ const Activities = () => {
       />
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
-        <InputText
-          value={globalFilterValue}
-          onChange={(e) => onFilter(e)}
-          placeholder="Buscar"
-        />
+        <InputText value={globalFilterValue} placeholder="Buscar" />
       </span>
       <DataViewLayoutOptions
         layout={layout}
@@ -236,8 +222,9 @@ const Activities = () => {
     </div>
   );
   // Tengo que colocarles su UserSteps
-  const dataviewListItem = (data: Activity) => {
-    const activityId = data.id;
+
+  const dataviewListItem = (filteredValue: Activity) => {
+    const activityId = filteredValue.id;
 
     // Comprobar si el activityId no se encuentra en activityIdsWithNoStepsFinished ni en finishedActivityInfo
     const notStarted =
@@ -251,7 +238,7 @@ const Activities = () => {
 
     return (
       <div className={`col-12 border-none`}>
-        <Link to={`/activity/${data.id}`}>
+        <Link to={`/activity/${filteredValue.id}`}>
           <div
             className={`flex flex-column my-3 border rounded-lg shadow-sm p-4 ${
               isFinished ? "bg-green-200" : notStarted ? "bg-blue-200" : ""
@@ -259,7 +246,7 @@ const Activities = () => {
           >
             <div className="text-2xl font-bold ">
               <h3 className="m-0 flex align-items-center">
-                {data.title}
+                {filteredValue.title}
                 {notStarted ? (
                   <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
                 ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
@@ -274,7 +261,6 @@ const Activities = () => {
       </div>
     );
   };
-
   const dataviewGridItem = (data: Activity) => {
     const activityId = data.id;
 
@@ -397,7 +383,13 @@ const Activities = () => {
             Tus actividades:
           </h3>
           <DataView
-            value={filteredValue.length > 0 ? filteredValue : dataViewValue}
+            value={
+              filteredValue.length > 0
+                ? filteredValue
+                : sortKey === "all"
+                ? dataViewValue
+                : []
+            }
             layout={layout}
             paginator
             rows={9}
