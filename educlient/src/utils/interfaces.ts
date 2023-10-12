@@ -79,6 +79,13 @@ export interface ProgressData {
   progress?: string;
 }
 
+export interface TestGrade {
+  gradeValue? : number,
+  maximunGradeValue? : number,
+  testWatched? : boolean
+}
+
+
 export interface excelRow {
   A: number;
   B: string | number;
