@@ -210,12 +210,7 @@ const Activities = () => {
   const activityIdsWithNoStepsFinished = Object.keys(activityIds).filter(
     (activityId) => !(activityId in finishedActivityInfo)
   );
-  // console.log(
-  //   "Started",
-  //   activityIdsWithNoStepsFinished,
-  //   "Finished",
-  //   finishedActivityInfo
-  // );
+
   const dataViewHeader = (
     <div className="flex flex-column md:flex-row md:justify-content-between gap-2 rounded-lg">
       <Dropdown
@@ -372,15 +367,26 @@ const Activities = () => {
               const stepName = //@ts-ignore
                 stepsForActivity.find((step) => step.id === maxStepId)?.title ||
                 `Paso ${1}`;
+
+              const stepNameToFind = stepName; // Nombre del paso que deseas encontrar
+              const stepWithActivityId = stepsForActivity.find(
+                (step) => step.title === stepNameToFind
+              );
+              const activityIdForStepName = stepWithActivityId
+                ? stepWithActivityId.activityId
+                : null;
+
               return (
                 <div
                   className="col-12 w-auto flex-wrap"
                   id={`activities-list-${index}`}
                   key={index}
                 >
-                  <div className="card m-3 border-1 surface-border bg-yellow-100 hover:bg-slate-100">
-                    <h3 className="m-0">{`${activityTitle}: ${stepName}`}</h3>
-                  </div>
+                  <Link to={`/activity/${activityIdForStepName}`}>
+                    <div className="card m-3 border-1 surface-border bg-yellow-100 hover:bg-slate-100">
+                      <h3 className="m-0">{`${activityTitle}: ${stepName}`}</h3>
+                    </div>
+                  </Link>
                 </div>
               );
             })}
