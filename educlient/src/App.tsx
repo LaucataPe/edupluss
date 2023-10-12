@@ -21,14 +21,13 @@ import AppMenu from "./components/SideMenu";
 
 import { useSelector } from "react-redux";
 
+import "./index.css";
+import "../public/tailwind-light/theme.css";
 
-import './index.css'
-import '../public/tailwind-light/theme.css'
-
-import 'primereact/resources/primereact.css';
-import 'primeflex/primeflex.css';
-import 'primeicons/primeicons.css';
-import './styles/layout/layout.scss';
+import "primereact/resources/primereact.css";
+import "primeflex/primeflex.css";
+import "primeicons/primeicons.css";
+import "./styles/layout/layout.scss";
 import { useAppDispatch } from "./hooks/typedSelectors";
 import { setLogUser } from "./redux/features/userSlice";
 import { setEmpresa } from "./redux/features/activitiesSlice";
@@ -38,56 +37,56 @@ import Progress from "./pages/Progress";
 import Dashboard from "./pages/Dashboard";
 import Checkpoint from "./components/Checkpoint";
 
-
-
 function App() {
-	const dispatch = useAppDispatch()
-	const navigate = useNavigate();
-	const {pathname} = useLocation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
-	const logUser = useSelector((state: RootState) => state.user.logUser)
-	const currentEmpresa = useSelector((state: RootState) => state.user.logUser.companyId)
+  const logUser = useSelector((state: RootState) => state.user.logUser);
+  const currentEmpresa = useSelector(
+    (state: RootState) => state.user.logUser.companyId
+  );
 
-	const session = window.localStorage.getItem("token");
+  const session = window.localStorage.getItem("token");
 
-	const headers = {
-		Authorization: `Bearer ${session}`,
-	};
+  const headers = {
+    Authorization: `Bearer ${session}`,
+  };
 
-	useEffect(() => {
-		if(pathname !== '/' && !session){
-			navigate('/login')
-		}
-		if(pathname === '/login' && session){
-			navigate('/home')
-		}
-		if(pathname === '/home' && logUser.tipo === 'admin'){
-			navigate('/crud')
-		}
-	},[pathname])
+  useEffect(() => {
+    if (pathname !== "/" && !session) {
+      navigate("/login");
+    }
+    if (pathname === "/login" && session) {
+      navigate("/home");
+    }
+    if (pathname === "/home" && logUser.tipo === "admin") {
+      navigate("/crud");
+    }
+  }, [pathname]);
 
-	useEffect(() => {
-		if (session) {
-			axios
-				.get(`http://localhost:3001/auth/token`, { headers })
-				.then((response) => {
-					if(response){
-						dispatch(setLogUser(response.data.data.user))
-            			dispatch(setEmpresa(response.data.findCompany))
-					}
-				})
-				.catch((error) => {
-					//? mejorar este error
-					console.log(error);
-				});
-		}
-	}, [dispatch, session]);
+  useEffect(() => {
+    if (session) {
+      axios
+        .get(`http://localhost:3001/auth/token`, { headers })
+        .then((response) => {
+          if (response) {
+            dispatch(setLogUser(response.data.data.user));
+            dispatch(setEmpresa(response.data.findCompany));
+          }
+        })
+        .catch((error) => {
+          //? mejorar este error
+          console.log(error);
+        });
+    }
+  }, [dispatch, session]);
 
-	useEffect(() => {
-		if(currentEmpresa){
-		  dispatch(fetchCompanyAreas(currentEmpresa));
-		}
-	  }, [currentEmpresa]);
+  useEffect(() => {
+    if (currentEmpresa) {
+      dispatch(fetchCompanyAreas(currentEmpresa));
+    }
+  }, [currentEmpresa]);
 
   return (
     <>
@@ -96,7 +95,7 @@ function App() {
         {pathname !== "/" &&
           pathname !== "/login" &&
           logUser.tipo === "admin" && <AppMenu />}
-        <div className="col">
+        <div className="col overflow-hidden">
           <Routes>
             {/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
             <Route path="/" element={<Landing />} />
@@ -130,4 +129,3 @@ function App() {
 }
 
 export default App;
-
