@@ -1,8 +1,27 @@
+//@ts-nocheck
 import { Activity } from "../utils/interfaces";
 import React, { useState, useEffect } from "react";
-import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
-import { Tag } from "primereact/tag";
+import { CheckboxChangeEvent } from "primereact/checkbox";
 import axios from "axios";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  DoughnutController,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  DoughnutController,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function ProgressModal({
   activities,
@@ -94,48 +113,73 @@ function ProgressModal({
       activityName: matchingStepActivities[index],
     })
   );
+  const ActivityProgress = [];
 
+  // Crear un objeto para realizar el seguimiento del recuento de stepTitles
+  const activityCounts = {};
+  // Iterar sobre stepTitleActivityPairs
+  stepTitleActivityPairs.forEach((pair) => {
+    const { stepTitle, activityName } = pair;
+
+    // Verificar si ya hemos registrado esta actividad
+    if (!activityCounts[activityName]) {
+      activityCounts[activityName] = 0;
+    }
+
+    // Incrementar el recuento de stepTitles para esta actividad
+    activityCounts[activityName]++;
+
+    // Verificar si ya hemos registrado esta actividad en ActivityProgress
+    const existingActivity = ActivityProgress.find(
+      (activity) => activity.activityName === activityName
+    );
+
+    // Si no existe, agregarla a ActivityProgress
+    if (!existingActivity) {
+      ActivityProgress.push({ activityName, totalStepTitles: 0 });
+    }
+  });
+
+  // Actualizar el valor total de stepTitles en ActivityProgress
+  ActivityProgress.forEach((activity) => {
+    activity.totalStepTitles = activityCounts[activity.activityName];
+  });
+
+  
   // Renderizado de elementos
-  const renderedItems = stepTitleActivityPairs
-    .slice(startIndex, endIndex) //@ts-ignore
+  const renderedItems = ActivityProgress.map((activity, index) => {
+    const { activityName, totalStepTitles } = activity;
 
-    .map(({ stepTitle, activityName }, index: number) => {
-      const progressValue = matchingStepTitles.includes(stepTitle) ? 1 : 0;
+    // Busca la actividad correspondiente en el array activities
+    const matchingActivity = activities.find(
+      (activity) => activity.title === activityName
+    );
 
-      return (
-        <div
-          key={index}
-          className={` px-4 flex items-center justify-center gap-1 `}
+    // Obtiene el numero de pasos si se encuentra
+    const currentMaxSteps = matchingActivity ? matchingActivity.numberSteps : 0;
+
+    const activityProgress = Math.floor(
+      (totalStepTitles * 100) / currentMaxSteps
+    );
+
+    return (
+      <div
+        key={index}
+        className={`px-4 flex items-center justify-center gap-1`}
+      >
+        <label
+          htmlFor={`checkOption${index}`}
+          className="col-12 border-2 shadow-sm p-2 my-2 rounded-2xl"
         >
-          {stepTitle ? (
-            <>
-              <label
-                htmlFor={`checkOption${index}`}
-                className="col-6 border-2 shadow-sm p-2 my-2 rounded-2xl "
-              >
-                <strong className="text-xl">{activityName}</strong>
-              </label>
-              <label
-                htmlFor={`checkOption${index}`}
-                className="col-6 text-center "
-              >
-                {stepTitle}
-              </label>
-              <div className="field-checkbox text-center mb-0">
-                <Checkbox
-                  inputId={`checkOption${index}`}
-                  name="option"
-                  checked={progressValue !== 0}
-                  onChange={onCheckboxChange}
-                />
-              </div>
-            </>
-          ) : (
-            <div>Aún no realizó ningún paso</div>
-          )}
-        </div>
-      );
-    });
+          <strong className="text-xl">{activityName}</strong>
+          <span className="ml-2">
+            {/* Progreso: {totalStepTitles} / {currentMaxSteps} */}
+            Progreso: {activityProgress}%
+          </span>
+        </label>
+      </div>
+    );
+  });
 
   return (
     <>
@@ -163,9 +207,6 @@ function ProgressModal({
         </div>
       </header>
       <div className="rounded-b-md max-w-md px-4 py-6 border-x-2 border-b-2 lg:max-w-lg">
-        <Tag severity="info" className="text-sm ml-2" rounded>
-          Página {currentPage + 1}
-        </Tag>
         {matchingStepTitles.length === 0 ? (
           <div className="flex justify-between mt-4 px-2">
             No se han realizado ningún paso
@@ -174,7 +215,7 @@ function ProgressModal({
           renderedItems
         )}
         {matchingStepTitles.length > itemsPerPage && (
-          <div className="flex justify-between mt-4">
+          <div className="flex justify-between mt-2 mb-1">
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
               onClick={handleBackButtonClick}
@@ -189,6 +230,7 @@ function ProgressModal({
             </button>
           </div>
         )}
+        <span className="ml-1">Página {currentPage + 1}</span>
       </div>
     </>
   );
