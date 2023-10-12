@@ -123,7 +123,6 @@ const Checkpoint = () => {
     </>
   );
 
-
   const handleExcelImport = async () => {
     try {
       if (isUnmounted.current === false) {
@@ -174,75 +173,93 @@ const Checkpoint = () => {
         }
 
         if (lastNonEmptyRow) {
+          const headerRow : excelRow = excelArray[0] as excelRow;
+          const puntuacionColumn = Object.keys(headerRow).find((key) =>
+              headerRow[key] === "Puntuación"
+          );
+          const emailColumn = Object.keys(headerRow).find((key) =>
+            headerRow[key] === "Correo electrónico"
+          );
           let gradeValue;
           let maximunGradeValue;
+          let punctuation;
+          let email;
 
-          console.log(lastNonEmptyRow.B)
+          if (puntuacionColumn && emailColumn) {
+            
+            punctuation = lastNonEmptyRow[puntuacionColumn];
+            email = lastNonEmptyRow[emailColumn];
+       
+            console.log("Puntuación:", punctuation);
+            console.log("Correo Electrónico:", email);
 
-          if (typeof lastNonEmptyRow.B === "number") {
-            gradeValue = 0;
-            maximunGradeValue = 0;
+            if (typeof punctuation === "number") {
+              gradeValue = 0;
+              maximunGradeValue = 0;
+            } else {
+              const arrayValues = punctuation.split(" / ");
+              [gradeValue, maximunGradeValue] = arrayValues;
+            }
+
+            //Verificar que el correo del empleado coincida con el guardado en el ingresado en el Test
+            let objData;
+            if(email === logUser.email){
+              objData = {
+                gradeValue: gradeValue,
+                maximunGradeValue: maximunGradeValue,
+                activityId: id,
+                userId: logUser.id,
+              };
+            } else {
+              objData = {
+                gradeValue: 0,
+                maximunGradeValue: 0,
+                activityId: id,
+                userId: logUser.id,
+              };
+            }
+
+            try {
+              const response = await axios.put(
+                "http://localhost:3001/test/update",
+                objData
+              );
+              console.log(response.data);
+            } catch (error: any) {
+              console.log(error);
+            }
+            } else {
+              let objData = {
+                gradeValue: 0,
+                maximunGradeValue: 0,
+                activityId: id,
+                userId: logUser.id,
+              };
+              try {
+                const response = await axios.put(
+                  "http://localhost:3001/test/update",
+                  objData
+                );
+                console.log(response.data);
+              } catch (error: any) {
+                console.log(error);
+              }
+            }
+            for (let key in excelArray) {
+              const row = excelArray[key] as excelRow;
+              if (
+                Object.keys(row).length < 2 &&
+                row.hasOwnProperty("__EMPTY") &&
+                row.hasOwnProperty("__rowNum__")
+              ) {
+                delete excelArray[key];
+              }
+            }
+            console.log(excelArray);
+            
           } else {
-            const arrayValues = lastNonEmptyRow.B.split(" / ");
-            [gradeValue, maximunGradeValue] = arrayValues;
-          }
-
-          //Verificar que el correo del empleado coincida con el guardado en el ingresado en el Test
-          let objData;
-          if(lastNonEmptyRow.D === logUser.email){
-            objData = {
-              gradeValue: gradeValue,
-              maximunGradeValue: maximunGradeValue,
-              activityId: id,
-              userId: logUser.id,
-            };
-          } else {
-            objData = {
-              gradeValue: 0,
-              maximunGradeValue: 0,
-              activityId: id,
-              userId: logUser.id,
-            };
-          }
-
-          try {
-            const response = await axios.put(
-              "http://localhost:3001/test/update",
-              objData
-            );
-            console.log(response.data);
-          } catch (error: any) {
-            console.log(error);
-          }
-        } else {
-          let objData = {
-            gradeValue: 0,
-            maximunGradeValue: 0,
-            activityId: id,
-            userId: logUser.id,
-          };
-          try {
-            const response = await axios.put(
-              "http://localhost:3001/test/update",
-              objData
-            );
-            console.log(response.data);
-          } catch (error: any) {
-            console.log(error);
-          }
-        }
-
-        for (let key in excelArray) {
-          const row = excelArray[key] as excelRow;
-          if (
-            Object.keys(row).length < 2 &&
-            row.hasOwnProperty("__EMPTY") &&
-            row.hasOwnProperty("__rowNum__")
-          ) {
-            delete excelArray[key];
-          }
-        }
-        console.log(excelArray);
+            console.log("No se encontraron las columnas 'Puntuación' y 'Correo Electrónico'.");
+          } 
       }
     } catch (error) {
       console.error("Error al importar datos desde Excel:", error);

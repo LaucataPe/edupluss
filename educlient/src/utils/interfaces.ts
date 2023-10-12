@@ -97,4 +97,5 @@ export interface excelRow {
   H: string;
   __EMPTY: number;
   __rowNum__: number;
+  [key: string]: string | number;
 }
