@@ -51,43 +51,42 @@ const Activities = () => {
     let sortedData = [...dataViewValue]; // Copiamos los datos originales
     const filters = {
       //@ts-ignore
-
       finished: (data: any) => {
         const activityId = data.id;
         return (
           //@ts-ignore
-
           finishedActivityInfo[activityId] && //@ts-ignore
           finishedActivityInfo[activityId].count > 0
         );
-      }, //@ts-ignore
-
+      },
+      //@ts-ignore
       started: (data) => {
         const activityId = data.id;
         const notInFinishedInfo =
           !finishedActivityInfo.hasOwnProperty(activityId);
         const hasSteps = totalSteps.some(
-          //@ts-ignore
-
-          (step) => step.activityId === activityId
+          (step: any) => step.activityId === activityId
         );
-        return notInFinishedInfo && hasSteps;
-      }, //@ts-ignore
+        const isNotStarted =
+          !activityIdsWithNoStepsFinished.includes(String(activityId)) && //@ts-ignore
+          !finishedActivityInfo[activityId];
 
-      notStarted: (data) => {
+        return notInFinishedInfo && hasSteps && !isNotStarted;
+      },
+      notStarted: (data: any) => {
         const activityId = data.id;
         const notStarted =
           !activityIdsWithNoStepsFinished.includes(String(activityId)) && //@ts-ignore
-          !finishedActivityInfo[activityId];
+          (!finishedActivityInfo[activityId] || //@ts-ignore
+            finishedActivityInfo[activityId].count === 0);
         return notStarted;
-      }, //@ts-ignore
-
+      },
+      //@ts-ignore
       all: (data) => true,
     };
 
     if (value in filters) {
       //@ts-ignore
-
       sortedData = sortedData.filter(filters[value]);
     }
 
@@ -105,18 +104,36 @@ const Activities = () => {
       const isFinishedB = //@ts-ignore
         finishedActivityInfo[b.id] && finishedActivityInfo[b.id].count > 0;
 
-      if (notStartedA && !isFinishedA) {
-        return -1 * sortOrder;
+      if (value === "all") {
+        return 0;
       }
-      if (notStartedB && !isFinishedB) {
-        return 1 * sortOrder;
+
+      if (value === "started") {
+        if (notStartedA && !isFinishedA) {
+          return -1 * sortOrder;
+        }
+        if (notStartedB && !isFinishedB) {
+          return 1 * sortOrder;
+        }
       }
+
+      if (value === "finished") {
+        if (isFinishedA) {
+          return -1 * sortOrder;
+        }
+        if (isFinishedB) {
+          return 1 * sortOrder;
+        }
+      }
+
       return 0;
     });
 
     setSortKey(value);
     setFilteredValue(sortedData);
+    console.log(sortedData);
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -207,7 +224,7 @@ const Activities = () => {
         <div
           style={{
             width: "15px",
-            height: "15px",
+            height: "15px", //@ts-ignore
             backgroundColor: sortOptions.find(
               (option) => option.value === sortKey
             ).color,
