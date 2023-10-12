@@ -21,6 +21,7 @@ const { getReviewsByActivity } = require('../controllers/Reviews/getReviewsByAct
 const { getCompanyRoles } = require("../controllers/Roles/getCompanyRoles");
 
 
+const { getReview } = require('../controllers/Reviews/getReview');
 const { getReviewsByUser } = require('../controllers/Reviews/getReviewsByUser');
 
 const { getTestGrade } = require("../controllers/TestGrade/getTestGrade");
@@ -58,6 +59,7 @@ router.get("/user/areas/:id", getUserAreas);
 
 router.get("/userStep", getUserSteps);
 
+router.get('/review', getReview);
 router.get('/reviews/activity', getReviewsByActivity);
 router.get('/reviews/user', getReviewsByUser);
 

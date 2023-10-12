@@ -9,8 +9,6 @@ import axios from "axios";
    activityId:number | undefined ,
  }
 function RateActivity(Props:Props) {
-  
-  
   // const { id } = useParams();
   const [ratingValue, setRatingValue] = useState<number | null>(null);
 
@@ -20,6 +18,7 @@ function RateActivity(Props:Props) {
     const rateDates = {
       text:"test1", 
       rating: rateValue,
+      reviewRated: true,
       activityId:Props.activityId, 
       userId:Props.currentUser}
       
@@ -43,13 +42,13 @@ function RateActivity(Props:Props) {
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-col justify-center items-center m-8 p-8 bg-gray-100 rounded-lg shadow-xl">
-        <h5 className="mb-1 text-3xl">Ayudanos a mejorar</h5>
-        <p className="text-lg">Califica esta actividad</p>
-        <Rating
-          value={ratingValue as number}
-          onChange={(e) =>{setRatingValue(e.value ?? 0);handlerSendRate(e.value)} }
-          style={{ transform: "scale(2)" }}
-        />
+          <h5 className="mb-1 text-3xl">Ayudanos a mejorar</h5>
+          <p className="text-lg">Califica esta actividad</p>
+          <Rating
+            value={ratingValue as number}
+            onChange={(e) =>{setRatingValue(e.value ?? 0);handlerSendRate(e.value)} }
+            style={{ transform: "scale(2)" }}
+          />
       </div>
     </div>
   );
