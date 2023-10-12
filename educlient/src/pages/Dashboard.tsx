@@ -171,13 +171,6 @@ function Dashboard() {
       setLabels(usernames);
     }
   }, [totalUsers, userIdCount, totalStepsByRoleId]);
-  const generatePositiveRandomData = () => {
-    return labels.map(() => Math.max(Math.floor(Math.random() * 200) - 100, 1));
-  };
-
-  const sortDataDescending = (data: any) => {
-    return data.slice().sort((a, b) => b - a);
-  };
   const data = {
     labels: usersWithProgress.map((user) => user.username),
     datasets: [
@@ -194,7 +187,7 @@ function Dashboard() {
     indexAxis: "y" as const,
     elements: {
       bar: {
-        borderWidth: 2,
+        borderRadius: 4,
       },
     },
     responsive: true,
@@ -221,7 +214,7 @@ function Dashboard() {
     scales: {
       x: {
         max: 150,
-        display: false,
+        display: true,
       },
       y: {
         max: 100,
@@ -311,7 +304,7 @@ function Dashboard() {
     indexAxis: "x" as const,
     elements: {
       bar: {
-        borderWidth: 2,
+        borderRadius: 4,
       },
     },
     responsive: true,
@@ -430,10 +423,10 @@ function Dashboard() {
           <h3 className="text-xl font-semibold" style={{ textAlign: "center" }}>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <div style={{ width: "40%", height: "400px" }}>
-                <Bar options={options} data={data} />
+                <Bar options={options2} data={data2} />
               </div>
               <div style={{ width: "40%", height: "400px" }}>
-                <Bar options={options2} data={data2} />
+                <Bar options={options} data={data} />
               </div>
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}></div>
