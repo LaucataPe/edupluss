@@ -34,6 +34,10 @@ module.exports = (database) => {
     active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+    },
+    orderId:{
+      type: DataTypes.INTEGER,
+      allowNull:false
     }
   },{
     timestamps: false

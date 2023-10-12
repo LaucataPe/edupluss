@@ -1,12 +1,16 @@
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const AxiosInterceptor = () => {
- 
+  const navigate = useNavigate();
+  const location = useLocation()
 
   axios.interceptors.request.use((request:any) => {
-    console.log("interceptor working")
     const token = localStorage.getItem("token")
-    if(!token) return request;
+    if(!token) {
+        console.log("token not detected")
+        return request;
+    }
     const newHeaders = {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -16,6 +20,20 @@ export const AxiosInterceptor = () => {
     
     
   });
+
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      console.log("soy error",error.response.data.error)
+      if(error.response.data.error === "token is invalid" && location.pathname !== "/" && location.pathname !== "/login"){
+        navigate("/")
+        //window.location.replace("/");
+      }
+      return Promise.reject(error);
+    }
+  );
 
   
 };
