@@ -339,7 +339,7 @@ const Activities = () => {
     <div className="grid list-demo">
       <div className="col-12">
         <div
-          className="card flex py-0 mx-[5%]"
+          className="card flex mx-[5%]"
           id="pending-activities"
           style={{ overflowX: "auto" }}
         >
@@ -356,8 +356,8 @@ const Activities = () => {
               );
               const userStepsForActivity = currentProgress.filter(
                 (
-                  userStep 
-                ) =>//@ts-ignore
+                  userStep //@ts-ignore
+                ) =>
                   stepsForActivity.some((step) => step.id === userStep.StepId)
               );
               const maxStepId = Math.max(
