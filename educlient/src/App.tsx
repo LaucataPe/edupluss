@@ -18,7 +18,6 @@ import AddArea from "./components/admin/AddArea";
 import Crud from "./components/admin/Crud";
 import AddRole from "./components/admin/AddRole";
 import AppMenu from "./components/SideMenu";
-
 import { useSelector } from "react-redux";
 
 import "./index.css";
@@ -36,6 +35,8 @@ import { fetchCompanyAreas } from "./redux/features/areaSlice";
 import Progress from "./pages/Progress";
 import Dashboard from "./pages/Dashboard";
 import Checkpoint from "./components/Checkpoint";
+import { AxiosInterceptor } from "./utils/interceptors/axiosInterceptor";
+import { useState } from "react";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -47,6 +48,8 @@ function App() {
     (state: RootState) => state.user.logUser.companyId
   );
 
+  const [tokenValid, setTokenValid] = useState<Boolean>(false);
+
   const session = window.localStorage.getItem("token");
 
   const headers = {
@@ -54,10 +57,17 @@ function App() {
   };
 
   useEffect(() => {
-    if (pathname !== "/" && !session) {
-      navigate("/login");
+    // if(pathname !== '/' && !session){
+    // 	navigate('/login')
+    // }
+
+    if (pathname !== "/" && pathname !== "/login" && !session) {
+      navigate("/");
     }
-    if (pathname === "/login" && session) {
+    // if(pathname === '/login' && session){
+    // 	navigate('/home')
+    // }
+    if (pathname === "/login" && tokenValid) {
       navigate("/home");
     }
     if (pathname === "/home" && logUser.tipo === "admin") {
@@ -73,8 +83,10 @@ function App() {
           if (response) {
             dispatch(setLogUser(response.data.data.user));
             dispatch(setEmpresa(response.data.findCompany));
+            setTokenValid(true);
           }
         })
+
         .catch((error) => {
           //? mejorar este error
           console.log(error);
@@ -87,6 +99,8 @@ function App() {
       dispatch(fetchCompanyAreas(currentEmpresa));
     }
   }, [currentEmpresa]);
+
+  AxiosInterceptor();
 
   return (
     <>
@@ -104,11 +118,13 @@ function App() {
             <Route path="/activity/:id" element={<Activity />} />
 
             <Route path="/dashboard" element={<Dashboard />} />
+
             <Route path="/progress" element={<Progress />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/activities/:roleId" element={<AdminActivities />} />
             <Route path="/actvitySteps/:id" element={<ActivitySteps />} />
-            <Route path="/addActivity/:roleId" element={<AddActivity />} />
+            <Route path="/addActivity/:roleId/:orderId" element={<AddActivity />} />
+
             <Route
               path="/editActivity/:roleId/:actId"
               element={<AddActivity />}

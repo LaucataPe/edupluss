@@ -7,10 +7,12 @@ import { getStepsActivity } from "../../redux/features/stepsSlider";
 import { Button } from "primereact/button";
 import { DataView, DataViewLayoutOptions } from "primereact/dataview";
 import { Dialog } from "primereact/dialog";
-
+import { Calendar } from 'primereact/calendar';
+import { Nullable } from "primereact/ts-helpers";
 import { LayoutType } from "../../utils/types/types";
 import { Step } from "../../utils/interfaces";
 import axios from "axios";
+import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 
@@ -18,6 +20,7 @@ interface testInputs {
   formURL: string;
   excelURL: string;
 }
+
 
 function ActivitySteps() {
   const dispatch = useAppDispatch();
@@ -31,9 +34,14 @@ function ActivitySteps() {
   const [layout, setLayout] = useState<LayoutType>("list");
   const [displayConfirmation, setDisplayConfirmation] = useState(false);
   const [stepId, setStepId] = useState(0);
-
+  const [checked, setChecked] = useState<boolean>(false);
   const [testUrls, setTestUrls] = useState<testInputs | Object>({});
   const [showAddTestModal, setShowAddTestModal] = useState<boolean>(false);
+  const initialTime = new Date();
+  initialTime.setHours(0);
+  initialTime.setMinutes(0);
+  const [time, setTime] = useState<Nullable<string | Date | Date[]>>(initialTime);
+  
   const toast = useRef<Toast>(null);
 
   const handleChangeTestUrls = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,12 +195,38 @@ function ActivitySteps() {
       const auth = window.localStorage.getItem("token");
 
       //Format data to send
-      const urlsData = {
-        id: id,
-        hasTest: true,
-        ...testUrls,
-      };
+      let urlsData;
+      if(time) {
+        let duration;
 
+        if (time instanceof Date) {
+          // Get hours, minutes y seconds
+          const hours = time.getHours().toString().padStart(2, '0');
+          const minutes = time.getMinutes().toString().padStart(2, '0');
+          //const seconds = time.getSeconds().toString().padStart(2, '0');
+          const seconds = "00"
+          duration = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        if (duration === "00:00:00"){
+          duration = null;
+        }
+
+        urlsData = {
+          id: id,
+          hasTest: true,
+          durationTest: duration,
+          ...testUrls,
+        };
+        
+      }else {
+        urlsData = {
+          id: id,
+          hasTest: true,
+          ...testUrls,
+        };
+      }
+      
       const response = await axios.patch(
         "http://localhost:3001/activity/update",
         urlsData,
@@ -337,6 +371,20 @@ function ActivitySteps() {
               onChange={handleChangeTestUrls}
             />
           </div>
+          <div className="field flex gap-2">
+            <InputSwitch checked={checked} onChange={(e: InputSwitchChangeEvent) => setChecked(e.value ?? false)} />
+            <label>Agregar tiempo al Test</label>
+          </div>
+            {
+              checked ?
+              <div className="flex-auto">
+                <label htmlFor="calendar-timeonly" className=" block mb-2">
+                    Duración - Horas : Minutos
+                </label>
+                <Calendar id="calendar-timeonly" value={time} onChange={(e) => setTime(e.value)} timeOnly />
+            </div>
+            : null
+            }
         </div>
       </Dialog>
     </>
