@@ -24,7 +24,11 @@ const {
 } = require("../controllers/Reviews/getReviewsByActivity");
 const { getCompanyRoles } = require("../controllers/Roles/getCompanyRoles");
 
-const { getReviewsByUser } = require("../controllers/Reviews/getReviewsByUser");
+
+
+const { getReview } = require('../controllers/Reviews/getReview');
+const { getReviewsByUser } = require('../controllers/Reviews/getReviewsByUser');
+
 
 const { getTestGrade } = require("../controllers/TestGrade/getTestGrade");
 const {
@@ -69,8 +73,16 @@ router.get("/user/areas/:id", getUserAreas);
 
 router.get("/userStep", getUserSteps);
 
-router.get("/reviews/activity", getReviewsByActivity);
-router.get("/reviews/user", getReviewsByUser);
+
+router.get('/review', getReview);
+router.get('/reviews/activity', getReviewsByActivity);
+router.get('/reviews/user', getReviewsByUser);
+
+router.get('/test', getTestGrade);
+router.get('/tests', getAllTestGradesByUser);
+router.get('/tests/activity', getGradesOfAllEmployeesByActivity);
+router.get('/tests/company/:id', getGradePercentageByCompany);
+
 
 router.get("/test", getTestGrade);
 router.get("/tests", getAllTestGradesByUser);

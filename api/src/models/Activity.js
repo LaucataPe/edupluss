@@ -14,6 +14,10 @@ module.exports = (database) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    durationTest: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     numberSteps: {
       type: DataTypes.INTEGER,
       allowNull: false,

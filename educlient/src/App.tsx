@@ -32,6 +32,7 @@ import { setLogUser } from "./redux/features/userSlice";
 import { setEmpresa } from "./redux/features/activitiesSlice";
 import { RootState } from "./redux/store";
 import { fetchCompanyAreas } from "./redux/features/areaSlice";
+import Progress from "./pages/Progress";
 import Dashboard from "./pages/Dashboard";
 import Checkpoint from "./components/Checkpoint";
 import { AxiosInterceptor } from "./utils/interceptors/axiosInterceptor";
@@ -117,13 +118,13 @@ function App() {
             <Route path="/activity/:id" element={<Activity />} />
 
             <Route path="/dashboard" element={<Dashboard />} />
+
+            <Route path="/progress" element={<Progress />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/activities/:roleId" element={<AdminActivities />} />
             <Route path="/actvitySteps/:id" element={<ActivitySteps />} />
-            <Route
-              path="/addActivity/:roleId/:orderId"
-              element={<AddActivity />}
-            />
+            <Route path="/addActivity/:roleId/:orderId" element={<AddActivity />} />
+
             <Route
               path="/editActivity/:roleId/:actId"
               element={<AddActivity />}

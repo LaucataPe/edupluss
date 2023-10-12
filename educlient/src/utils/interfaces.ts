@@ -58,6 +58,7 @@ export interface Activity {
   id?: number;
   title: string;
   hasTest: boolean;
+  durationTest?: string;
   numberSteps: number;
   formURL: string;
   excelURL: string;
@@ -78,6 +79,13 @@ export interface ProgressData {
   userId?: number;
   progress?: string;
 }
+
+export interface TestGrade {
+  gradeValue? : number,
+  maximunGradeValue? : number,
+  testWatched? : boolean
+}
+
 
 export interface excelRow {
   A: number;
