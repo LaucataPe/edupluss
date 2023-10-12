@@ -22,6 +22,7 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
           )
         : null;
     }
+    console.log(activityId, activeIndex, step)
   }, [activeIndex]);
 
   const getYouTubeEmbedLink = (videoLink: string) => {
