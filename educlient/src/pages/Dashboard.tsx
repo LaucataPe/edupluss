@@ -403,8 +403,8 @@ function Dashboard() {
         <div className="p-5">
           <div className="grid justify-center">
             <div className="col-12 lg:col-6 xl:col-3">
-              <div className="card mb-0">
-                <div className="flex justify-content-around mb-0">
+              <div className="card mb-0  p-3">
+                <div className="flex justify-content-around mb-0 ">
                   <div
                     className="flex align-items-center justify-content-center bg-orange-100 border-round "
                     style={{ width: "3.5rem", height: "3.5rem" }}
@@ -439,7 +439,7 @@ function Dashboard() {
               </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-              <div className="card mb-0">
+              <div className="card mb-0  p-3">
                 <div className="flex justify-content-between mb-0">
                   <div
                     className="flex align-items-center justify-content-center bg-cyan-100 border-round "
@@ -475,7 +475,7 @@ function Dashboard() {
               </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-              <div className="card mb-0">
+              <div className="card mb-0  p-3">
                 <div className="flex justify-content-around mb-0">
                   <div
                     className="flex align-items-center justify-content-center bg-blue-100 border-round "
@@ -511,7 +511,7 @@ function Dashboard() {
               </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-              <div className="card mb-0">
+              <div className="card mb-0  p-3">
                 <div className="flex justify-content-around mb-0">
                   <div
                     className="flex align-items-center justify-content-center bg-blue-100 border-round"
@@ -550,7 +550,7 @@ function Dashboard() {
           </div>
           <div className="grid justify-center">
             <div className="col-18 lg:col-6 xl:col-7 my-2">
-              <div className="card mb-0">
+              <div className="card mb-0 p-1">
                 <Link to="/admin">
                   <div style={{ width: "100%", height: "400px" }}>
                     <Bar options={options2} data={data2} />
