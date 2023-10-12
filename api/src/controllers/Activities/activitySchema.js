@@ -10,6 +10,9 @@ const activitySchema = z.object({
     hasTest: z.boolean({
         invalid_type_error: "hasTest debe ser un valor booleano."
     }),
+    durationTest: z.string({
+        invalid_type_error: "La duración del test debe ser una cadena de carácteres."
+    }).nullable(),
     formURL: z.string({
         invalid_type_error: "La URL del formulario debe ser una cadena de carácteres."
     }),
