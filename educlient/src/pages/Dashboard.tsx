@@ -12,7 +12,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bar, Scatter } from "react-chartjs-2"; // Añade Scatter aquí si aún no lo has importado
+import { Bar } from "react-chartjs-2"; // Añade Scatter aquí si aún no lo has importado
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { useSelector } from "react-redux";
 
 ChartJS.register(
   CategoryScale,
@@ -22,10 +24,11 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ChartDataLabels
 );
-
 function Dashboard() {
+  const logUser = useSelector((state: RootState) => state.user.logUser);
   const [chartKey, setChartKey] = useState(0);
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
@@ -38,8 +41,11 @@ function Dashboard() {
   const [userSteps, setUserSteps] = useState([]);
   const [userIdCount, setUserIdCount] = useState({});
   const [graduatedUsers, setGraduatedUsers] = useState([]);
-  const [label, setLabel] = useState("Cargando...");
-
+  const [labels, setLabels] = useState([]);
+  const [usersWithProgress, setUsersWithProgress] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [employeesByArea, setEmployeesByArea] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -66,7 +72,6 @@ function Dashboard() {
         // Realiza una solicitud GET para obtener la lista de actividades
         const response = await axios.get("http://localhost:3001/activities");
         const activities = response.data;
-
         // Calcula la cantidad total de actividades
         const total = activities.length;
 
@@ -137,21 +142,6 @@ function Dashboard() {
   }, [totalUsers, totalStepsByRoleId, userIdCount]);
   const graduatedCount = graduatedUsers.filter((user) => user.graduated).length;
   const remainingCount = graduatedUsers.length - graduatedCount;
-  console.log(
-    "totalStepsByRoleId (Maximo de pasos que necesitan tener para finalizar una actividad segun el rol):",
-    totalStepsByRoleId,
-    "totalUsers (Info de usuarios con su roleId adentro):",
-    "userSteps (Progreso total de todos los userId):",
-    userSteps,
-    "userIdCount (Progreso individual por userId): ",
-    userIdCount
-  );
-  // console.warn("Suma Steps en Activity por roleId:", totalStepsByRoleId);
-  // console.warn("Total de Usuarios graduados:", graduatedUsers);
-
-  // console.log(
-  //   `Usuarios graduados: ${graduatedCount}, Usuarios faltantes: ${remainingCount}`
-  // );
 
   // #### Grafico 1 Progreso de usuarios ####
 
@@ -160,70 +150,40 @@ function Dashboard() {
       const usersWithCompanyId1 = totalUsers.filter(
         (user) => user.companyId === 1
       );
-      const usernames = usersWithCompanyId1.map((user) => user.username);
 
-      if (usernames.length > 0) {
-        setLabel(usernames);
-      } else {
-        setLabel("No se encontraron usuarios");
-      }
+      // Almacenar las etiquetas en el estado
+      const usernames = usersWithCompanyId1.map((user) => user.username);
+      const usersWithProgress = usersWithCompanyId1.map((user) => {
+        const userId = user.id;
+        const completedSteps = userIdCount[userId] || 0;
+        const totalSteps = totalStepsByRoleId[user.roleId] || 0;
+
+        // Calcular el progreso en porcentaje
+        const progress =
+          totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
+
+        return {
+          username: user.username,
+          progreso: Math.round(progress), // Redondear el progreso a un número entero
+        };
+      });
+      setUsersWithProgress(usersWithProgress);
+      setLabels(usernames);
     }
-  }, [totalUsers]);
+  }, [totalUsers, userIdCount, totalStepsByRoleId]);
   const generatePositiveRandomData = () => {
     return labels.map(() => Math.max(Math.floor(Math.random() * 200) - 100, 1));
   };
-  useEffect(() => {
-    if (totalUsers && totalStepsByRoleId && userIdCount) {
-      const first5UserIds = [1, 2, 3, 4, 5];
 
-      // Inicializar un objeto para almacenar el progreso de los primeros 5 usuarios
-      const progressData = {};
-
-      // Calcular el progreso para los primeros 5 usuarios
-      first5UserIds.forEach((userId) => {
-        const roleId = totalUsers.find((user) => user.id === userId)?.roleId;
-        const totalSteps = totalStepsByRoleId[roleId] || 0;
-        const individualProgress = userIdCount[userId] || 0;
-
-        // Calcular el progreso individual * 100 / total de pasos requeridos según el rol
-        const progress = (individualProgress * 100) / totalSteps;
-
-        // Utiliza userId como clave en lugar de un índice fijo
-        progressData[`Usuario ${userId}`] = progress;
-      });
-
-      // Actualizar los datos en el objeto data
-      data.datasets[0].data = first5UserIds.map(
-        (userId) => progressData[`Usuario ${userId}`]
-      );
-
-      console.warn(data.datasets[0].data);
-    }
-  }, [totalUsers, totalStepsByRoleId, userIdCount]);
-
-  //Esto es en general, excepto el primer graficos
-  const labels = [
-    "Actividad 1",
-    "Actividad 2",
-    "Actividad 3",
-    "Actividad 4",
-    "Actividad 5",
-    "Actividad 6",
-    "Actividad 7",
-  ];
-  const randomData1 = generatePositiveRandomData();
-  // const randomData2 = generatePositiveRandomData();
-
-  const sortDataDescending = (data) => {
+  const sortDataDescending = (data: any) => {
     return data.slice().sort((a, b) => b - a);
   };
-
   const data = {
-    labels,
+    labels: usersWithProgress.map((user) => user.username),
     datasets: [
       {
         label: "Usuario",
-        data: sortDataDescending(randomData1),
+        data: usersWithProgress.map((user) => user.progreso),
         borderColor: "#9dc065",
         backgroundColor: "#8ec640",
       },
@@ -241,107 +201,148 @@ function Dashboard() {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "left" as const,
+        display: false,
+        position: "top" as const,
       },
       title: {
         display: true,
-        text: "Progreso de actividades",
+        text: "Progreso general de actividades",
       },
       datalabels: {
         anchor: "end",
         align: "end",
-        display: "auto", // Configuración para mostrar los valores encima de las barras
+        display: "auto",
         color: "black",
+        formatter: (value: any) => {
+          return value + "%";
+        },
       },
     },
     scales: {
       x: {
-        ticks: {
-          callback: function (value) {
-            return value + "%";
-          },
-        },
-        grid: {
-          display: false, // Establece display en false para ocultar las líneas de la cuadrícula en el eje X
-        },
+        max: 150,
+        display: false,
       },
       y: {
-        max: 100, // Establece el valor máximo en el eje Y en 100
-
+        max: 100,
         grid: {
-          display: false, // Establece display en false para ocultar las líneas de la cuadrícula en el eje Y
+          display: false,
         },
       },
     },
   };
 
   // #### Grafico 2 Empleados por areas ####
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (logUser && logUser.tipo === "admin") {
+          const companyId = logUser.companyId;
+          const response = await axios.get(
+            `http://localhost:3001/areas/${companyId}`
+          );
+          const areas = response.data;
+          setAreas(areas);
+        }
+      } catch (error) {
+        console.error("Error al obtener datos de UserSteps:", error);
+      }
+    };
+    fetchData();
+  }, [logUser]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (logUser && logUser.tipo === "admin") {
+          const allRoles = [];
 
-  const randomData3 = generatePositiveRandomData();
-  const randomData4 = generatePositiveRandomData();
+          for (const area of areas) {
+            const response = await axios.get(
+              `http://localhost:3001/roles/${area.id}`
+            );
+            const roles = response.data;
+            allRoles.push(...roles);
+          }
 
+          setRoles(allRoles);
+
+          // Cálculo de employeesByArea
+          const calculatedEmployeesByArea = {};
+
+          areas.forEach((area) => {
+            calculatedEmployeesByArea[area.name] = 0;
+          });
+
+          totalUsers.forEach((user) => {
+            const role = allRoles.find((r) => r.id === user.roleId);
+            if (role) {
+              const area = areas.find((a) => a.id === role.areaId);
+              if (area) {
+                calculatedEmployeesByArea[area.name]++;
+              }
+            }
+          });
+
+          // Actualizar el estado con el resultado
+          setEmployeesByArea(calculatedEmployeesByArea);
+        }
+      } catch (error) {
+        console.error("Error al obtener datos de UserSteps:", error);
+      }
+    };
+
+    fetchData();
+  }, [logUser, areas, totalUsers]);
+
+  console.log("employeesByArea", employeesByArea);
   const data2 = {
-    labels,
+    labels: Object.keys(employeesByArea), // Nombres de las áreas
     datasets: [
       {
-        label: "Usuario 3",
-        data: sortDataDescending(randomData3),
-        borderColor: "rgb(75, 192, 192)",
-        backgroundColor: "rgba(75, 192, 192, 0.5)",
-      },
-      {
-        label: "Usuario 4",
-        data: sortDataDescending(randomData4),
-        borderColor: "rgb(255, 205, 86)",
-        backgroundColor: "rgba(255, 205, 86, 0.5)",
+        label: "Cantidad de Empleados",
+        data: Object.values(employeesByArea), // Cantidad de empleados
+        borderColor: "rgb(3, 152, 152)",
+        backgroundColor: "rgb(6, 145, 145)",
       },
     ],
   };
 
-  // #### Grafico 3 Empleados activos y su progreso ####
-
-  function generateRandomData(numPoints) {
-    const data = [];
-
-    for (let i = 0; i < numPoints; i++) {
-      data.push({
-        x: Math.floor(Math.random() * 85),
-        y: Math.floor(Math.random() * 100),
-      });
-    }
-
-    return data;
-  }
-
-  const scatterOptions = {
-    scales: {
-      y: {
-        beginAtZero: true,
+  const options2 = {
+    indexAxis: "x" as const,
+    elements: {
+      bar: {
+        borderWidth: 2,
       },
     },
-  };
-
-  const scatterData = {
-    datasets: [
-      {
-        label: "Usuario",
-        data: generateRandomData(15),
-        backgroundColor: "rgba(255, 99, 132, 1)",
-        pointRadius: 20,
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+        position: "top" as const,
       },
-      {
-        label: "Actividades",
-        data: generateRandomData(15),
-        backgroundColor: "#0bc8e1",
-        pointRadius: 15,
+      title: {
+        display: true,
+        text: "Empleados por Area",
       },
-      {
-        label: "Progreso",
-        data: generateRandomData(15),
-        backgroundColor: "#10481a",
-        pointRadius: 5,
+      datalabels: {
+        anchor: "end",
+        align: "end",
+        display: "auto",
+        color: "black",
       },
-    ],
+    },
+    scales: {
+      x: {
+        display: true, // Oculta completamente el eje X
+      },
+      y: {
+        max: Math.max(...Object.values(employeesByArea)) + 2, // Ajusta el valor máximo del eje X
+        grid: {
+          display: true,
+        },
+      },
+    },
   };
 
   // ### Escalamiento de graficos ###
@@ -427,19 +428,15 @@ function Dashboard() {
             {totalActivities ? totalActivities : "Esperando usuarios..."}
           </h3>
           <h3 className="text-xl font-semibold" style={{ textAlign: "center" }}>
-            Progreso general de Usuarios:{" "}
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <div key={chartKey} style={{ width: "60%", height: "500px" }}>
+              <div style={{ width: "40%", height: "400px" }}>
                 <Bar options={options} data={data} />
               </div>
-            </div>
-            Empleados por areas:{" "}
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <div key={chartKey} style={{ width: "60%", height: "300px" }}>
-                <Bar options={options} data={data2} />
+              <div style={{ width: "40%", height: "400px" }}>
+                <Bar options={options2} data={data2} />
               </div>
             </div>
-            <div>Acá</div>
+            <div style={{ display: "flex", justifyContent: "center" }}></div>
           </h3>
           <Button label="Escalar y Reiniciar" onClick={refreshChart} />
           {/* {false && (
