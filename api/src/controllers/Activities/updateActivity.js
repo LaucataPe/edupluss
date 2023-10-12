@@ -1,26 +1,24 @@
 const { catchedAsync } = require('../../utils');
 const { validateUpdateActivity } = require('./activitySchema');
 const patchActivity = require('./patchActivity');
-const { Activity } = require("../../db");
 
 
 const updateActivity = async (req, res) => {
   try {
-    // const validation = validateUpdateActivity(req.body);
+    const validation = validateUpdateActivity(req.body);
   
-    // if(!validation.success){
-    //   return res.status(400).json({message: validation.error.issues[0].message})
-    // }
-    // const activityUpdated = await patchActivity(id, validation.data);
+    if(!validation.success){
+      return res.status(400).json({message: validation.error.issues[0].message})
+    }
   
-    // if(typeof activityUpdated === "string"){
-    //   return res.status(404).json({message: activityUpdated})
-    // }
+    const { id } = req.body;
+    const activityUpdated = await patchActivity(id, validation.data);
   
-    const { id,title } = req.body;
-    const updateActivity = await Activity.update({title},{where:{id}})
+    if(typeof activityUpdated === "string"){
+      return res.status(404).json({message: activityUpdated})
+    }
   
-    res.status(200).json(updateActivity[0])
+    res.status(200).json(activityUpdated)
   } catch (error) {
     res.status(500).json({error: error})
   }
