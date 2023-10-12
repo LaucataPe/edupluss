@@ -9,7 +9,9 @@ import { useAppDispatch } from "../hooks/typedSelectors";
 import { getStepsActivity } from "../redux/features/stepsSlider";
 import { Button } from "primereact/button";
 import RateActivity from "../components/RateActivity";
+import { TestGrade } from "../utils/interfaces";
 import axios from "axios";
+
 
 function Activity() {
   const { id } = useParams();
@@ -26,7 +28,24 @@ function Activity() {
   const logUser = useSelector((state: RootState) => state.user.logUser);
   
   const [userReview, setUserReview] = useState<boolean>(false);
-  console.log(userReview);
+  const [testGrade, setTestGrade] = useState<TestGrade>({});
+
+  useEffect(() => {
+    const getTestGrade = async () => {
+      try {
+        const response = await axios(`http://localhost:3001/test?userId=${logUser.id}&activityId=${id}`);
+
+        if (response.data) {
+          setTestGrade(response.data);
+        } else {
+          console.error("El empleado no ha realizado el test de esta actividad.");
+        }
+      } catch (error) {
+        console.error("Error al obtener datos de TestGrade:", error);
+      }
+    };
+    getTestGrade();
+}, []);
 
   useEffect(() => {
     const stepSaved = window.localStorage.getItem(`Activity ${id}`);
@@ -74,7 +93,8 @@ function Activity() {
   const activityName = activities.find((act) => act.id === Number(id));
   const activityId = activityName?.id;
   const stepsList = steps.map((step) => step.id);
-  console.log("soy activityId",activityId);
+  //console.log("soy activityId",activityId);
+
   const handleNextClick = async () => {
     if (activeIndex < stepsList.length - 1) {
       const actualIndex = stepsList[activeIndex];
@@ -250,6 +270,7 @@ function Activity() {
                   severity="info"
                   outlined
                   onClick={showDialog}
+                  disabled={testGrade.testWatched ? true : false}
                   className="absolute w-auto bottom-4 right-4"
                 />
                 {/* </Link> */}
