@@ -440,7 +440,7 @@ function Dashboard() {
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
               <div className="card mb-0  p-3">
-                <div className="flex justify-content-between mb-0">
+                <div className="flex justify-content-around mb-0">
                   <div
                     className="flex align-items-center justify-content-center bg-cyan-100 border-round "
                     style={{ width: "3.5rem", height: "3.5rem" }}
