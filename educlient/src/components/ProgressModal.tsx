@@ -3,25 +3,10 @@ import { Activity } from "../utils/interfaces";
 import React, { useState, useEffect } from "react";
 import { CheckboxChangeEvent } from "primereact/checkbox";
 import axios from "axios";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  DoughnutController,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  DoughnutController,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 function ProgressModal({
   activities,
@@ -145,7 +130,6 @@ function ProgressModal({
     activity.totalStepTitles = activityCounts[activity.activityName];
   });
 
-  
   // Renderizado de elementos
   const renderedItems = ActivityProgress.map((activity, index) => {
     const { activityName, totalStepTitles } = activity;
@@ -162,6 +146,43 @@ function ProgressModal({
       (totalStepTitles * 100) / currentMaxSteps
     );
 
+    const data = {
+      labels: ["Progreso", "Restante"],
+      datasets: [
+        {
+          data: [activityProgress, 100 - activityProgress], // Cambia el valor 41 al valor de progreso que desees
+          backgroundColor: ["rgb(99, 195, 255)", "rgba(200, 200, 200, 0.500)"],
+          borderColor: ["#639aff", "#c8c8c8"],
+          borderWidth: 1,
+        },
+      ],
+    };
+
+    const options = {
+      plugins: {
+        legend: {
+          display: false,
+        },
+        title: {
+          display: false,
+        },
+        datalabels: {
+          display: false,
+          color: "black",
+          formatter: (value, context) => {
+            const label = context.chart.data.labels[context.dataIndex];
+            if (label === "Progreso") {
+              return value + "%";
+            }
+            return "";
+          },
+          text: {
+            align: "center",
+            anchor: "center",
+          },
+        },
+      },
+    };
     return (
       <div
         key={index}
@@ -169,13 +190,27 @@ function ProgressModal({
       >
         <label
           htmlFor={`checkOption${index}`}
-          className="col-12 border-2 shadow-sm p-2 my-2 rounded-2xl"
+          className="flex align-items-center justify-content-between col-12 border-2 shadow-sm p-2 my-2 rounded-2xl gap-4"
         >
           <strong className="text-xl">{activityName}</strong>
-          <span className="ml-2">
-            {/* Progreso: {totalStepTitles} / {currentMaxSteps} */}
-            Progreso: {activityProgress}%
-          </span>
+          <div
+            style={{
+              width: "100px",
+              position: "relative",
+            }}
+          >
+            <Doughnut options={options} data={data} />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%", // Cambia "35%" a "50%" para centrar horizontalmente
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              {activityProgress}%
+            </div>
+          </div>
         </label>
       </div>
     );
@@ -206,10 +241,10 @@ function ProgressModal({
           </svg>
         </div>
       </header>
-      <div className="rounded-b-md max-w-md px-4 py-6 border-x-2 border-b-2 lg:max-w-lg">
+      <div className="rounded-b-md max-w-xl px-4 py-6 border-x-2 border-b-2 lg:max-w-lg">
         {matchingStepTitles.length === 0 ? (
-          <div className="flex justify-between mt-4 px-2">
-            No se han realizado ningún paso
+          <div className="flex justify-between mt-4 p-10 text-2xl">
+            No se ha realizado ningun paso, ni empezado una actividad.
           </div>
         ) : (
           renderedItems
