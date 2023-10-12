@@ -23,6 +23,7 @@ function ProgressModal({
   const [steps, setSteps] = useState([]);
   const [checkboxValue, setCheckboxValue] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [lengthActivity, setLengthActivity] = useState(null); // Inicializa el estado con un valor nulo
 
   const onCheckboxChange = (e: CheckboxChangeEvent) => {
     let selectedValue = [...checkboxValue];
@@ -129,7 +130,6 @@ function ProgressModal({
   ActivityProgress.forEach((activity) => {
     activity.totalStepTitles = activityCounts[activity.activityName];
   });
-
   // Renderizado de elementos
   const renderedItems = ActivityProgress.map((activity, index) => {
     const { activityName, totalStepTitles } = activity;
@@ -138,10 +138,8 @@ function ProgressModal({
     const matchingActivity = activities.find(
       (activity) => activity.title === activityName
     );
-
     // Obtiene el numero de pasos si se encuentra
     const currentMaxSteps = matchingActivity ? matchingActivity.numberSteps : 0;
-
     const activityProgress = Math.floor(
       (totalStepTitles * 100) / currentMaxSteps
     );
@@ -215,7 +213,6 @@ function ProgressModal({
       </div>
     );
   });
-
   return (
     <>
       <header className="bg-1 p-2 max-w-md rounded-t-md lg:max-w-lg flex justify-between">
@@ -249,7 +246,7 @@ function ProgressModal({
         ) : (
           renderedItems
         )}
-        {matchingStepTitles.length > itemsPerPage && (
+        {ActivityProgress.length > 5 && (
           <div className="flex justify-between mt-2 mb-1">
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
