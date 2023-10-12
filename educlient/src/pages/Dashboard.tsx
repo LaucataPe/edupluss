@@ -173,7 +173,7 @@ function Dashboard() {
     }
   }, [totalUsers, userIdCount, totalStepsByRoleId]);
   const data = {
-    labels: usersWithProgress.map((user) => user.username).slice(0, 5),
+    labels: usersWithProgress.map((user) => user.username),
     datasets: [
       {
         label: "Usuario",
