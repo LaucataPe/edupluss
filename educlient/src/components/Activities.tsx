@@ -35,10 +35,10 @@ const Activities = () => {
   );
 
   const sortOptions = [
-    { label: "All", value: "all" },
-    { label: "Finished", value: "finished" },
-    { label: "Started", value: "started" },
-    { label: "Not started", value: "notStarted" },
+    { label: "All", value: "all", color: "#4F46E5" },
+    { label: "Finished", value: "finished", color: "#69de92" },
+    { label: "Started", value: "started", color: "#eec137" },
+    { label: "Not started", value: "notStarted", color: " #85b2f9" },
   ];
 
   useEffect(() => {
@@ -203,13 +203,26 @@ const Activities = () => {
 
   const dataViewHeader = (
     <div className="flex flex-column md:flex-row md:justify-content-between gap-2 rounded-lg">
-      <Dropdown
-        value={sortKey}
-        options={sortOptions}
-        optionLabel="label"
-        placeholder="Ordenar"
-        onChange={onSortChange}
-      />
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            width: "15px",
+            height: "15px",
+            backgroundColor: sortOptions.find(
+              (option) => option.value === sortKey
+            ).color,
+            borderRadius: "50%",
+            marginRight: "8px",
+          }}
+        ></div>
+        <Dropdown
+          value={sortKey}
+          options={sortOptions}
+          optionLabel="label"
+          placeholder="Ordenar"
+          onChange={onSortChange}
+        />
+      </div>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText value={globalFilterValue} placeholder="Buscar" />
@@ -221,6 +234,7 @@ const Activities = () => {
       />
     </div>
   );
+
   // Tengo que colocarles su UserSteps
 
   const dataviewListItem = (filteredValue: Activity) => {
