@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useEffect, useState } from "react";
 import { Button } from "primereact/button";
 import axios from "axios";
@@ -172,7 +173,7 @@ function Dashboard() {
     }
   }, [totalUsers, userIdCount, totalStepsByRoleId]);
   const data = {
-    labels: usersWithProgress.map((user) => user.username),
+    labels: usersWithProgress.map((user) => user.username).slice(0, 5),
     datasets: [
       {
         label: "Usuario",
@@ -399,45 +400,172 @@ function Dashboard() {
     <div className="flex">
       <div className="w-[100%]">
         <div className="p-5">
-          <h3 className="text-xl font-semibold ">
-            Graduados:{" "}
-            {graduatedCount ? graduatedCount : "Esperando graduados..."} y
-            faltan: {remainingCount ? remainingCount : "Esperando graduados..."}{" "}
-            entonces
-          </h3>
-          <strong>
-            {" "}
-            Porcentaje de graduados:{" "}
-            {graduatedCount && remainingCount
-              ? ((graduatedCount / remainingCount) * 100).toFixed(2) + "%"
-              : "No se puede calcular el porcentaje en este momento."}
-          </strong>
-          <h3 className="text-xl font-semibold">
-            Numero de usuarios activos:{" "}
-            {totalActiveUsers ? totalActiveUsers : "Esperando usuarios..."}
-          </h3>
-          <h3 className="text-xl font-semibold">
-            Numero de actividades activas:{" "}
-            {totalActivities ? totalActivities : "Esperando usuarios..."}
-          </h3>
-          <h3 className="text-xl font-semibold" style={{ textAlign: "center" }}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <div style={{ width: "40%", height: "400px" }}>
-                <Bar options={options2} data={data2} />
-              </div>
-              <div style={{ width: "40%", height: "400px" }}>
-                <Bar options={options} data={data} />
+          <div className="grid justify-center">
+            <div className="col-12 lg:col-6 xl:col-3">
+              <div className="card mb-0">
+                <div className="flex justify-content-around mb-0">
+                  <div
+                    className="flex align-items-center justify-content-center bg-orange-100 border-round "
+                    style={{ width: "3.5rem", height: "3.5rem" }}
+                  >
+                    <i className="pi pi-users text-orange-500 text-4xl" />
+                  </div>
+                  <div>
+                    <span className="block text-500 font-medium mb-1">
+                      Usuarios activos:
+                    </span>
+                    <div className="text-900 font-medium text-xl text-center">
+                      {totalActiveUsers
+                        ? totalActiveUsers
+                        : "Esperando usuarios..."}
+                    </div>
+                  </div>
+                </div>
+                {/* <span className="text-green-500 font-medium">
+                  Quedan{" "}
+                  {remainingCount ? remainingCount : "Esperando graduados..."}
+                </span>
+                <span className="text-500"> a la espera de graduarse</span>
+                <div>
+                  <strong>
+                    {graduatedCount && remainingCount
+                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
+                        "%"
+                      : "No se puede calcular el porcentaje en este momento."}{" "}
+                    Porcentaje de graduados
+                  </strong>
+                </div> */}
               </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "center" }}></div>
-          </h3>
-          <Button label="Escalar y Reiniciar" onClick={refreshChart} />
-          {/* {false && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-              <div className="bg-white p-0 rounded-md shadow-md"></div>
+            <div className="col-12 lg:col-6 xl:col-3">
+              <div className="card mb-0">
+                <div className="flex justify-content-between mb-0">
+                  <div
+                    className="flex align-items-center justify-content-center bg-cyan-100 border-round "
+                    style={{ width: "3.5rem", height: "3.5rem" }}
+                  >
+                    <i className="pi pi-book text-cyan-500 text-4xl" />
+                  </div>
+                  <div className="">
+                    <span className="block text-500 font-medium mb-1 ">
+                      Actividades activas:
+                    </span>
+                    <div className="text-900 font-medium text-xl text-center">
+                      {totalActivities
+                        ? totalActivities
+                        : "Esperando usuarios..."}
+                    </div>
+                  </div>
+                </div>
+                {/* <span className="text-green-500 font-medium">
+                  Quedan{" "}
+                  {remainingCount ? remainingCount : "Esperando graduados..."}
+                </span>
+                <span className="text-500"> a la espera de graduarse</span>
+                <div>
+                  <strong>
+                    {graduatedCount && remainingCount
+                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
+                        "%"
+                      : "No se puede calcular el porcentaje en este momento."}{" "}
+                    Porcentaje de graduados
+                  </strong>
+                </div> */}
+              </div>
             </div>
-          )} */}
-          <div className="flex"></div>
+            <div className="col-12 lg:col-6 xl:col-3">
+              <div className="card mb-0">
+                <div className="flex justify-content-around mb-0">
+                  <div
+                    className="flex align-items-center justify-content-center bg-blue-100 border-round "
+                    style={{ width: "3.5rem", height: "3.5rem" }}
+                  >
+                    <i className="pi pi-check-circle text-blue-500 text-4xl" />
+                  </div>
+                  <div>
+                    <span className="block text-500 font-medium mb-1">
+                      Graduados:{" "}
+                    </span>
+                    <div className="text-900 font-medium  text-xl text-center">
+                      {graduatedCount
+                        ? graduatedCount
+                        : "Esperando graduados..."}
+                    </div>
+                  </div>
+                </div>
+                {/* <span className="text-green-500 font-medium">
+                  Quedan{" "}
+                  {remainingCount ? remainingCount : "Esperando graduados..."}
+                </span>
+                <span className="text-500"> a la espera de graduarse</span>
+                <div>
+                  <strong>
+                    {graduatedCount && remainingCount
+                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
+                        "%"
+                      : "No se puede calcular el porcentaje en este momento."}{" "}
+                    Porcentaje de graduados
+                  </strong>
+                </div> */}
+              </div>
+            </div>
+            <div className="col-12 lg:col-6 xl:col-3">
+              <div className="card mb-0">
+                <div className="flex justify-content-around mb-0">
+                  <div
+                    className="flex align-items-center justify-content-center bg-blue-100 border-round"
+                    style={{ width: "3.5rem", height: "3.5rem" }}
+                  >
+                    <i className="pi pi-percentage text-blue-500 text-4xl" />
+                  </div>
+                  <div>
+                    <span className="block text-500 font-medium mb-1">
+                      de graduados:{" "}
+                    </span>
+                    <div className="text-900 font-medium text-xl text-center">
+                      {graduatedCount && remainingCount
+                        ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
+                          "%"
+                        : "No se puede calcular el porcentaje en este momento."}
+                    </div>
+                  </div>
+                </div>
+                {/* <span className="text-green-500 font-medium">
+                  Quedan{" "}
+                  {remainingCount ? remainingCount : "Esperando graduados..."}
+                </span>
+                <span className="text-500"> a la espera de graduarse</span>
+                <div>
+                  <strong>
+                    {graduatedCount && remainingCount
+                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
+                        "%"
+                      : "No se puede calcular el porcentaje en este momento."}{" "}
+                    Porcentaje de graduados
+                  </strong>
+                </div> */}
+              </div>
+            </div>
+          </div>
+          <div className="grid justify-center">
+            <div className="col-18 lg:col-6 xl:col-7 my-2">
+              <div className="card mb-0">
+                <div style={{ width: "100%", height: "400px" }}>
+                  <Bar options={options2} data={data2} />
+                </div>
+              </div>
+            </div>
+            <div className="col-18 lg:col-6 xl:col-5 my-2">
+              <div className="card mb-0">
+                <div style={{ width: "100%", height: "400px" }}>
+                  <Bar options={options} data={data} />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <Button label="Escalar y Reiniciar" onClick={refreshChart} />
+          </div>
         </div>
       </div>
     </div>
