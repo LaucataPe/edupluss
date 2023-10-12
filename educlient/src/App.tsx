@@ -34,6 +34,7 @@ import { setLogUser } from "./redux/features/userSlice";
 import { setEmpresa } from "./redux/features/activitiesSlice";
 import { RootState } from "./redux/store";
 import { fetchCompanyAreas } from "./redux/features/areaSlice";
+import Progress from "./pages/Progress";
 import Dashboard from "./pages/Dashboard";
 import Checkpoint from "./components/Checkpoint";
 
@@ -90,35 +91,40 @@ function App() {
 
   return (
     <>
-    {pathname !== '/' && pathname !== '/login' && <NavBar/>}
-	<div className="grid max-w-[100%]">
-		{pathname !== '/' && pathname!== '/login' && logUser.tipo === 'admin' && <AppMenu />}
-		<div className="col">
-		<Routes>
-				{/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
-				<Route path="/" element={<Landing />} />
-					<Route path="/home" element={<Home />} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/activity/:id" element={<Activity />} />
+      {pathname !== "/" && pathname !== "/login" && <NavBar />}
+      <div className="grid max-w-[100%]">
+        {pathname !== "/" &&
+          pathname !== "/login" &&
+          logUser.tipo === "admin" && <AppMenu />}
+        <div className="col">
+          <Routes>
+            {/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
+            <Route path="/" element={<Landing />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/activity/:id" element={<Activity />} />
 
-					<Route path="/dashboard" element={<Dashboard />} />
-					<Route path="/admin" element={<Admin />} />
-					<Route path="/activities/:roleId" element={<AdminActivities />} />
-					<Route path="/actvitySteps/:id" element={<ActivitySteps />} />
-					<Route path="/addActivity/:roleId" element={<AddActivity />} />
-					<Route path="/editActivity/:roleId/:actId" element={<AddActivity />} />
-					<Route path="/addArea" element={<AddArea />} />
-					<Route path="/editArea/:areaId" element={<AddArea />} />
-					<Route path="/addRole/:areaId" element={<AddRole />} />
-					<Route path="/editRole/:areaId/:roleId" element={<AddRole />} />
-					<Route path="/addStep/:id" element={<AddStep />} />
-					<Route path="/editStep/:id/:stepId" element={<AddStep />} />
-					<Route path="/crud" element={<Crud />} />
-					<Route path="/checkpoint/:id" element={<Checkpoint/>} />
-		</Routes>
-		</div>			
-	</div>
-	
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/progress" element={<Progress />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/activities/:roleId" element={<AdminActivities />} />
+            <Route path="/actvitySteps/:id" element={<ActivitySteps />} />
+            <Route path="/addActivity/:roleId" element={<AddActivity />} />
+            <Route
+              path="/editActivity/:roleId/:actId"
+              element={<AddActivity />}
+            />
+            <Route path="/addArea" element={<AddArea />} />
+            <Route path="/editArea/:areaId" element={<AddArea />} />
+            <Route path="/addRole/:areaId" element={<AddRole />} />
+            <Route path="/editRole/:areaId/:roleId" element={<AddRole />} />
+            <Route path="/addStep/:id" element={<AddStep />} />
+            <Route path="/editStep/:id/:stepId" element={<AddStep />} />
+            <Route path="/crud" element={<Crud />} />
+            <Route path="/checkpoint/:id" element={<Checkpoint />} />
+          </Routes>
+        </div>
+      </div>
     </>
   );
 }
