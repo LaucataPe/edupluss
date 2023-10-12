@@ -52,7 +52,7 @@ const Activities = () => {
     const filters = {
       //@ts-ignore
 
-      finished: (data) => {
+      finished: (data: any) => {
         const activityId = data.id;
         return (
           //@ts-ignore
@@ -337,9 +337,11 @@ const Activities = () => {
               );
               const userStepsForActivity = currentProgress.filter(
                 (
-                  userStep //@ts-ignore
+                  userStep: any //@ts-ignore
                 ) =>
-                  stepsForActivity.some((step) => step.id === userStep.StepId)
+                  stepsForActivity.some(
+                    (step: any) => step.id === userStep.StepId
+                  )
               );
               const maxStepId = Math.max(
                 //@ts-ignore
@@ -356,9 +358,10 @@ const Activities = () => {
 
               const stepNameToFind = stepName; // Nombre del paso que deseas encontrar
               const stepWithActivityId = stepsForActivity.find(
-                (step) => step.title === stepNameToFind
-              );
-              const activityIdForStepName = stepWithActivityId
+                (step: any) => step.title === stepNameToFind
+              ) as { activityId: string } | undefined;
+
+              const activityIdForStepName: string | null = stepWithActivityId
                 ? stepWithActivityId.activityId
                 : null;
 
