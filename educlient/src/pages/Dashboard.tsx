@@ -16,6 +16,7 @@ import {
 import { Bar } from "react-chartjs-2"; // Añade Scatter aquí si aún no lo has importado
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 ChartJS.register(
   CategoryScale,
@@ -550,16 +551,20 @@ function Dashboard() {
           <div className="grid justify-center">
             <div className="col-18 lg:col-6 xl:col-7 my-2">
               <div className="card mb-0">
-                <div style={{ width: "100%", height: "400px" }}>
-                  <Bar options={options2} data={data2} />
-                </div>
+                <Link to="/admin">
+                  <div style={{ width: "100%", height: "400px" }}>
+                    <Bar options={options2} data={data2} />
+                  </div>
+                </Link>
               </div>
             </div>
             <div className="col-18 lg:col-6 xl:col-5 my-2">
               <div className="card mb-0">
-                <div style={{ width: "100%", height: "400px" }}>
-                  <Bar options={options} data={data} />
-                </div>
+                <Link to="/progress">
+                  <div style={{ width: "100%", height: "400px" }}>
+                    <Bar options={options} data={data} />
+                  </div>
+                </Link>
               </div>
             </div>
           </div>
