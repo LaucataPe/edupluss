@@ -26,11 +26,9 @@ export const AxiosInterceptor = () => {
       return response;
     },
     (error) => {
-      console.log("soy error",error.response.data.error)
-      if(error.response.data.error === "token is invalid" && location.pathname !== "/" && location.pathname !== "/login"){
+       if(error.response.data.error === "token is invalid" && location.pathname !== "/" && location.pathname !== "/login"){
         navigate("/")
-        //window.location.replace("/");
-      }
+        }
       return Promise.reject(error);
     }
   );

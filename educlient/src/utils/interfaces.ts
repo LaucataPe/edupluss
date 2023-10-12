@@ -64,6 +64,7 @@ export interface Activity {
   excelURL: string;
   roleId: number;
   active?: boolean;
+  orderId:number;
 }
 
 export interface UserStep {
