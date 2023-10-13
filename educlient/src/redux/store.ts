@@ -19,8 +19,7 @@ export const store = configureStore({
     user: UserSlice,
     utils:utilsSlice,
     testGrades: testGradesSlice
-
-  },
+},
 });
 
 export type RootState = ReturnType<typeof store.getState>;
