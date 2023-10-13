@@ -10,6 +10,9 @@ const activitySchema = z.object({
     hasTest: z.boolean({
         invalid_type_error: "hasTest debe ser un valor booleano."
     }),
+    orderId: z.number({
+        invalid_type_error: "La propiedad orderId debe ser un número."
+    }),
     durationTest: z.string({
         invalid_type_error: "La duración del test debe ser una cadena de carácteres."
     }).nullable(),

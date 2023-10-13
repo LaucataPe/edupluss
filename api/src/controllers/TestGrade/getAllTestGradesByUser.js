@@ -3,7 +3,7 @@ const { catchedAsync } = require('../../utils');
 const { ClientError } = require("../../utils/index.js");
 
 const getAllTestGradesByUser = async (req, res) => {
-  let { adminId, employeeId } = req.body;
+  let { adminId, employeeId } = req.params;
   
   try {
     const adminUser = await User.findByPk(adminId);
