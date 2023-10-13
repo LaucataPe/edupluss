@@ -68,6 +68,7 @@ function AddActivity() {
           "http://localhost:3001/activity",
           activity
         );
+        console.log("soy activity", activity);
         if (response) {
           console.log("soy activities submited");
           await new Promise((resolve) => setTimeout(resolve, 1000));

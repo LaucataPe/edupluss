@@ -10,9 +10,6 @@ const setOrderActivities = async (req, res) => {
         roleId,
       },
     });
-    console.log("soy body", activitiesToChange);
-    // console.log("soy activitieDB", activitiesDB)
-    // console.log("soy activitiesToChange", activitiesToChange)
     activitiesDB.forEach(async (element) => {
       const activitieToChange = activitiesToChange.find(
         (e) => e.id === element.dataValues.id
