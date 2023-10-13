@@ -14,6 +14,10 @@ import {
 import ActivitiesList from "./ActivitiesList";
 import { Link, useParams } from "react-router-dom";
 import { Toast } from "primereact/toast";
+import {
+  handleActivityCreatedModal,
+  handleActivityEditedModal,
+} from "../../redux/features/utilsSlice";
 import axios from "axios";
 
 function AdminActivities() {
@@ -24,9 +28,33 @@ function AdminActivities() {
   const activities = useSelector(
     (state: RootState) => state.activities.activities
   );
+  const activityChanges = useSelector((state: RootState) => state.utils);
   const [enableDrag, setEnableDrag] = useState<Boolean>(true);
   const toast = useRef<Toast>(null);
+  console.log("soy message", activityChanges.activityEditedModal);
 
+  useEffect(() => {
+    if (activityChanges.activityEditedModal) {
+      dispatch(handleActivityEditedModal(false));
+      toast.current?.show({
+        severity: "success",
+        summary: "Editado!",
+        detail: "Actividad editada",
+        life: 2000,
+      });
+    }
+  }, [activityChanges.activityEditedModal]);
+  useEffect(() => {
+    if (activityChanges.activityCreatedModal) {
+      dispatch(handleActivityCreatedModal(false));
+      toast.current?.show({
+        severity: "success",
+        summary: "Creado!",
+        detail: "Actividad creada",
+        life: 2000,
+      });
+    }
+  }, [activityChanges.activityCreatedModal]);
   useEffect(() => {
     if (activities.length === 0 && roleId) {
       dispatch(getActivitiesByRole(Number(roleId)));
@@ -76,7 +104,6 @@ function AdminActivities() {
 
   return (
     <>
-      {/*Mapea todas las actividades*/}
       <Toast className="top-0 left-1/3 " ref={toast} />
       <div className="card p-fluid my-3 h-[720px] overflow-auto">
         <div className="flex justify-between items-center">

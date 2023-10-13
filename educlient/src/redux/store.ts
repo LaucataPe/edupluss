@@ -5,6 +5,7 @@ import AreasSlice from "./features/areaSlice";
 import UserSlice from "./features/userSlice";
 import userStepsSlice from "./features/userStepsSlice";
 import RoleSlice from "./features/roleSlice";
+import utilsSlice from "./features/utilsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     roles: RoleSlice,
     userSteps: userStepsSlice,
     user: UserSlice,
+    utils:utilsSlice,
   },
 });
 
