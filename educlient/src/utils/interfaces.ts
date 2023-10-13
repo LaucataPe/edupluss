@@ -81,6 +81,7 @@ export interface ProgressData {
 }
 
 export interface TestGrade {
+  id? : number,
   gradeValue? : number,
   maximunGradeValue? : number,
   testWatched? : boolean
@@ -88,14 +89,20 @@ export interface TestGrade {
 
 
 export interface excelRow {
-  A: number;
-  B: string | number;
+  A: string | number;
+  B: string;
   C: string;
   D: string;
   E: string;
   F: string;
   G: string;
   H: string;
+  I: string;
+  J: string;
+  K: string;
+  L: string;
+  M: string;
+  N: string;
   __EMPTY: number;
   __rowNum__: number;
   [key: string]: string | number;
