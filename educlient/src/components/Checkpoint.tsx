@@ -126,7 +126,7 @@ const Checkpoint = () => {
   const handleExcelImport = async () => {
     try {
       if (isUnmounted.current === false) {
-        console.log("Entro al return: Deberia hacer post Watched");
+        //console.log("Entro al return: Deberia hacer post Watched");
         
         isUnmounted.current = true;
         //Actualiza la propiedad testWatched
@@ -146,7 +146,6 @@ const Checkpoint = () => {
         }
         return;
       } else {
-        // Realiza una solicitud GET para obtener el archivo Excel
         let response;
         if(url){
           response = await axios.get(url, { responseType: "arraybuffer" });
@@ -157,7 +156,7 @@ const Checkpoint = () => {
         const workbook = XLSX.read(new Uint8Array(excelArrayBuffer), {
           type: "array",
         });
-        const sheetName = workbook.SheetNames[0]; // Suponiendo que solo hay una hoja en el archivo Excel
+        const sheetName = workbook.SheetNames[0]; 
 
         // Convierte la hoja de Excel en un array de objetos JSON
         const excelArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
@@ -175,10 +174,10 @@ const Checkpoint = () => {
         if (lastNonEmptyRow) {
           const headerRow : excelRow = excelArray[0] as excelRow;
           const puntuacionColumn = Object.keys(headerRow).find((key) =>
-              headerRow[key] === "Puntuación"
+            headerRow[key].toString().toLowerCase() === "puntuación"
           );
           const emailColumn = Object.keys(headerRow).find((key) =>
-            headerRow[key] === "Correo electrónico"
+            headerRow[key].toString().toLowerCase() === "correo electrónico"
           );
           let gradeValue;
           let maximunGradeValue;
@@ -190,8 +189,8 @@ const Checkpoint = () => {
             punctuation = lastNonEmptyRow[puntuacionColumn];
             email = lastNonEmptyRow[emailColumn];
        
-            console.log("Puntuación:", punctuation);
-            console.log("Correo Electrónico:", email);
+            //console.log("Puntuación:", punctuation);
+            //console.log("Correo Electrónico:", email);
 
             if (typeof punctuation === "number") {
               gradeValue = 0;
@@ -201,7 +200,7 @@ const Checkpoint = () => {
               [gradeValue, maximunGradeValue] = arrayValues;
             }
 
-            //Verificar que el correo del empleado coincida con el guardado en el ingresado en el Test
+            //Verificar que el correo del empleado coincida con el guardado en el excel del Test
             let objData;
             if(email === logUser.email){
               objData = {
@@ -220,11 +219,11 @@ const Checkpoint = () => {
             }
 
             try {
-              const response = await axios.put(
+              await axios.put(
                 "http://localhost:3001/test/update",
                 objData
               );
-              console.log(response.data);
+              //console.log(response.data);
             } catch (error: any) {
               console.log(error);
             }
@@ -236,11 +235,11 @@ const Checkpoint = () => {
                 userId: logUser.id,
               };
               try {
-                const response = await axios.put(
+                await axios.put(
                   "http://localhost:3001/test/update",
                   objData
                 );
-                console.log(response.data);
+                //console.log(response.data);
               } catch (error: any) {
                 console.log(error);
               }
@@ -255,7 +254,7 @@ const Checkpoint = () => {
                 delete excelArray[key];
               }
             }
-            console.log(excelArray);
+            //console.log(excelArray);
             
           } else {
             console.log("No se encontraron las columnas 'Puntuación' y 'Correo Electrónico'.");
