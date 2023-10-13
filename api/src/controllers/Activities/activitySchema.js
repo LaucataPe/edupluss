@@ -28,6 +28,7 @@ const activitySchema = z.object({
   }),
 });
 
+
 const validateActivity = (input) => {
   return activitySchema.partial().safeParse(input);
 };

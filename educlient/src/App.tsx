@@ -37,6 +37,8 @@ import Dashboard from "./pages/Dashboard";
 import Checkpoint from "./components/Checkpoint";
 import { AxiosInterceptor } from "./utils/interceptors/axiosInterceptor";
 import { useState } from "react";
+import ActivitiesListForTests from "./pages/ActivitiesListForTests";
+import ListEmployeesQualifications from "./pages/ListEmployeesQualifications";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -109,7 +111,7 @@ function App() {
         {pathname !== "/" &&
           pathname !== "/login" &&
           logUser.tipo === "admin" && <AppMenu />}
-        <div className="col">
+        <div className="col overflow-hidden">
           <Routes>
             {/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
             <Route path="/" element={<Landing />} />
@@ -136,6 +138,8 @@ function App() {
             <Route path="/addStep/:id" element={<AddStep />} />
             <Route path="/editStep/:id/:stepId" element={<AddStep />} />
             <Route path="/crud" element={<Crud />} />
+            <Route path="/activitiesList" element={<ActivitiesListForTests />} />
+            <Route path="/employees/qualifications/:activityId" element={<ListEmployeesQualifications />} />
             <Route path="/checkpoint/:id" element={<Checkpoint />} />
           </Routes>
         </div>

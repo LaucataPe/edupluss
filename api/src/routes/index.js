@@ -29,17 +29,12 @@ const { getCompanyRoles } = require("../controllers/Roles/getCompanyRoles");
 const { getReview } = require('../controllers/Reviews/getReview');
 const { getReviewsByUser } = require('../controllers/Reviews/getReviewsByUser');
 
-
+const { getActivitiesByAdminUser } = require("../controllers/Activities/getActivitiesByAdminUser");
+const { getEmployeesAndGrades } = require("../controllers/TestGrade/getEmployeesAndGrades");
 const { getTestGrade } = require("../controllers/TestGrade/getTestGrade");
-const {
-  getAllTestGradesByUser,
-} = require("../controllers/TestGrade/getAllTestGradesByUser");
-const {
-  getGradesOfAllEmployeesByActivity,
-} = require("../controllers/TestGrade/getGradesOfAllEmployeesByActivity");
-const {
-  getGradePercentageByCompany,
-} = require("../controllers/TestGrade/getGradePercentageByCompany");
+const { getAllTestGradesByUser } = require("../controllers/TestGrade/getAllTestGradesByUser");
+const { getGradesOfAllEmployeesByActivity } = require("../controllers/TestGrade/getGradesOfAllEmployeesByActivity");
+const { getGradePercentageByCompany } = require("../controllers/TestGrade/getGradePercentageByCompany");
 
 //USER GET
 const { getAllUsers } = require("../controllers/Users/getAllUsers");
@@ -78,15 +73,11 @@ router.get('/review', getReview);
 router.get('/reviews/activity', getReviewsByActivity);
 router.get('/reviews/user', getReviewsByUser);
 
-router.get('/test', getTestGrade);
-router.get('/tests', getAllTestGradesByUser);
-router.get('/tests/activity', getGradesOfAllEmployeesByActivity);
-router.get('/tests/company/:id', getGradePercentageByCompany);
-
-
+router.get("/admin/activities/:id", getActivitiesByAdminUser);
+router.get("/admin/employeesGrades/:adminId/:activityId", getEmployeesAndGrades);
 router.get("/test", getTestGrade);
-router.get("/tests", getAllTestGradesByUser);
-router.get("/tests/activity", getGradesOfAllEmployeesByActivity);
+router.get("/tests/:adminId/:employeeId", getAllTestGradesByUser);
+router.get("/tests/activity/:adminId/:activityId", getGradesOfAllEmployeesByActivity);
 router.get("/tests/company/:id", getGradePercentageByCompany);
 
 //Session
@@ -140,7 +131,7 @@ router.put("/role/update", updateRole);
 router.put("/area/update", updateArea);
 router.put("/step/update", updateStep);
 router.put("/test/update", updateTestGrade);
-router.patch("/activity/update", verifyRole("admin"), updateActivity);
+router.patch("/activity/update", updateActivity); //verifyRole("admin"),
 router.put("/activities/:roleId", verifyRole("admin"), setOrderActivities);
 
 //DELETE Controllers
