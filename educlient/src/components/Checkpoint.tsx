@@ -11,7 +11,6 @@ import { Dialog } from "primereact/dialog";
 import { Message } from 'primereact/message';
 import { Toast } from "primereact/toast";
 
-
 function formatTime(ms : number) {
   const hours = Math.floor(ms / 3600000);
   const minutes = Math.floor((ms % 3600000) / 60000);
@@ -20,9 +19,12 @@ function formatTime(ms : number) {
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-
 const Checkpoint = () => {
   const { id } = useParams();
+  let idAux : number;
+  if(id){
+    idAux = parseInt(id);
+  }
   const activity = useSelector((state: RootState) => state.activities.activities);
   const currentActivity = activity.find((a) => a.id == id);
   const logUser = useSelector((state: RootState) => state.user.logUser);
@@ -36,7 +38,6 @@ const Checkpoint = () => {
   const navigate = useNavigate();
 
   const toast = useRef<Toast>(null);
-
   const isUnmounted = useRef(false);
 
   window.addEventListener('beforeunload', (event) => {
@@ -66,7 +67,8 @@ const Checkpoint = () => {
     let interval: NodeJS.Timeout | undefined;
 
     if (duration > 0) {
-      const timeBeforeToast = duration - 15000; // 15 segundos antes
+      // Mostrar toast 15 segundos antes
+      const timeBeforeToast = duration - 15000; 
 
       timer = setTimeout(() => {
         toast.current?.show({
@@ -126,10 +128,7 @@ const Checkpoint = () => {
   const handleExcelImport = async () => {
     try {
       if (isUnmounted.current === false) {
-        //console.log("Entro al return: Deberia hacer post Watched");
-        
         isUnmounted.current = true;
-        //Actualiza la propiedad testWatched
         let obj = {
           activityId: id,
           userId: logUser.id,
@@ -151,17 +150,15 @@ const Checkpoint = () => {
           response = await axios.get(url, { responseType: "arraybuffer" });
         }
 
-        // Lee el archivo Excel y conviértelo en un objeto de datos
+        // Lee el archivo Excel y lo convierte en un objeto de datos JSON
         const excelArrayBuffer = response?.data;
         const workbook = XLSX.read(new Uint8Array(excelArrayBuffer), {
           type: "array",
         });
         const sheetName = workbook.SheetNames[0]; 
-
-        // Convierte la hoja de Excel en un array de objetos JSON
         const excelArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-        // Encuentra la última fila no vacía en excelArray
+        // Encuentra la última fila no vacía en excelArray (Nombres de las columnas del excel)
         let lastNonEmptyRow = null;
         for (let i = excelArray.length - 1; i >= 0; i--) {
           const row = excelArray[i] as excelRow;
@@ -173,7 +170,7 @@ const Checkpoint = () => {
 
         if (lastNonEmptyRow) {
           const headerRow : excelRow = excelArray[0] as excelRow;
-          const puntuacionColumn = Object.keys(headerRow).find((key) =>
+          const punctuationColumn = Object.keys(headerRow).find((key) =>
             headerRow[key].toString().toLowerCase() === "puntuación"
           );
           const emailColumn = Object.keys(headerRow).find((key) =>
@@ -183,18 +180,19 @@ const Checkpoint = () => {
           let maximunGradeValue;
           let punctuation;
           let email;
+          let errorTest = false;
 
-          if (puntuacionColumn && emailColumn) {
-            
-            punctuation = lastNonEmptyRow[puntuacionColumn];
+          if (punctuationColumn && emailColumn) {
+            punctuation = lastNonEmptyRow[punctuationColumn];
             email = lastNonEmptyRow[emailColumn];
-       
             //console.log("Puntuación:", punctuation);
             //console.log("Correo Electrónico:", email);
 
             if (typeof punctuation === "number") {
+              //!Error (JS lee la puntuacion como una operacion matematica)
               gradeValue = 0;
               maximunGradeValue = 0;
+              errorTest = true;
             } else {
               const arrayValues = punctuation.split(" / ");
               [gradeValue, maximunGradeValue] = arrayValues;
@@ -203,23 +201,33 @@ const Checkpoint = () => {
             //Verificar que el correo del empleado coincida con el guardado en el excel del Test
             let objData;
             if(email === logUser.email){
-              objData = {
-                gradeValue: gradeValue,
-                maximunGradeValue: maximunGradeValue,
-                activityId: id,
-                userId: logUser.id,
-              };
+              let gradeValueAux;
+              let maximunGradeValueAux;
+              if (typeof gradeValue === "string" && typeof maximunGradeValue === "string") {
+                gradeValueAux = parseInt(gradeValue); 
+                maximunGradeValueAux = parseInt(maximunGradeValue); 
+                objData = {
+                  gradeValue: gradeValueAux,
+                  maximunGradeValue: maximunGradeValueAux,
+                  activityId: idAux,
+                  userId: logUser.id,
+                  errorTest: errorTest
+                };
+              }
             } else {
+              //!Error (No se encontró el email del empleado en la ultima fila del excel)
               objData = {
                 gradeValue: 0,
                 maximunGradeValue: 0,
-                activityId: id,
+                activityId: idAux,
                 userId: logUser.id,
+                errorTest: true
               };
             }
-
+            console.log(objData);
+            
             try {
-              await axios.put(
+              await axios.patch(
                 "http://localhost:3001/test/update",
                 objData
               );
@@ -228,14 +236,17 @@ const Checkpoint = () => {
               console.log(error);
             }
             } else {
+              //!Error (No se encontraron las columnas "Puntuación" y "Correo electrónico" como parte del cuestionario)
               let objData = {
                 gradeValue: 0,
                 maximunGradeValue: 0,
-                activityId: id,
+                activityId: idAux,
                 userId: logUser.id,
+                errorTest: true
               };
+              console.log(objData);
               try {
-                await axios.put(
+                await axios.patch(
                   "http://localhost:3001/test/update",
                   objData
                 );
@@ -244,6 +255,7 @@ const Checkpoint = () => {
                 console.log(error);
               }
             }
+            //Modifica el array sin incluir los objetos (rows) vacios
             for (let key in excelArray) {
               const row = excelArray[key] as excelRow;
               if (
@@ -257,7 +269,13 @@ const Checkpoint = () => {
             //console.log(excelArray);
             
           } else {
-            console.log("No se encontraron las columnas 'Puntuación' y 'Correo Electrónico'.");
+            toast.current?.show({
+              severity: "error",
+              summary: "Error.",
+              detail: "No se encontraron las columnas 'Puntuación' y 'Correo Electrónico'.",
+              style: { marginTop: '80px' },
+              life: 3000,
+            });
           } 
       }
     } catch (error) {
@@ -268,7 +286,7 @@ const Checkpoint = () => {
   return (
     <>
     <Toast ref={toast} />
-    
+  
     <section className="flex flex-col justify-center  items-center py-3">
       <div className="w-full flex justify-between items-center my-2 px-2">
         <Button label="Recomendaciones" icon="pi pi-exclamation-triangle" onClick={() => setInfoVisible(true)} severity="danger" />
