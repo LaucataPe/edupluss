@@ -42,7 +42,7 @@ const Activities = () => {
   ];
 
   useEffect(() => {
-    setDataViewValue(activeActivities);
+    setDataViewValue(activeActivities.sort((a, b) => a.orderId - b.orderId));
     setGlobalFilterValue("");
   }, [activities]);
   const onSortChange = (event: DropdownChangeEvent) => {

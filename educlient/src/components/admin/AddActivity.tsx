@@ -13,6 +13,10 @@ import {
 } from "../../redux/features/roleSlice";
 import { useAppDispatch } from "../../hooks/typedSelectors";
 import { getActivitiesByRole } from "../../redux/features/activitiesSlice";
+import {
+  handleActivityCreatedModal,
+  handleActivityEditedModal,
+} from "../../redux/features/utilsSlice";
 
 function AddActivity() {
   const { roleId, orderId, actId } = useParams();
@@ -27,7 +31,6 @@ function AddActivity() {
     (state: RootState) => state.roles.currentRole
   );
   const logUser = useSelector((state: RootState) => state.user.logUser);
-  console.log("numberId", Number(orderId));
   const [activity, setActivity] = useState<Activity>({
     title: "",
     roleId: currentRole.id ?? 0,
@@ -68,11 +71,11 @@ function AddActivity() {
           "http://localhost:3001/activity",
           activity
         );
-        console.log("soy activity", activity);
         if (response) {
-          console.log("soy activities submited");
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          // console.log("soy activities submited");
+          // await new Promise((resolve) => setTimeout(resolve, 1000));
           dispatch(getActivitiesByRole(Number(roleId)));
+          dispatch(handleActivityCreatedModal(true));
           navigate(`/activities/${roleId}`);
         }
         setActivity({
@@ -95,21 +98,21 @@ function AddActivity() {
   const handleEdit = async () => {
     if (activity.roleId !== 0) {
       const data = { id: Number(actId), title: activity.title };
-      console.log("soy data", data);
       try {
         const response = await axios.patch(
           "http://localhost:3001/activity/update",
           data
         );
         if (response) {
-          toast.current?.show({
-            severity: "success",
-            summary: "Editado!",
-            detail: "Actividad editada",
-            life: 2000,
-          });
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          // toast.current?.show({
+          //   severity: "success",
+          //   summary: "Editado!",
+          //   detail: "Actividad editada",
+          //   life: 2000,
+          // });
+          // await new Promise((resolve) => setTimeout(resolve, 1000));
           dispatch(getActivitiesByRole(Number(roleId)));
+          dispatch(handleActivityEditedModal(true));
           navigate(`/activities/${roleId}`);
         }
         setActivity({
