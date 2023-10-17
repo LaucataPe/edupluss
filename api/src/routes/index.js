@@ -119,9 +119,11 @@ const { updateUser } = require("../controllers/Users/updateUser");
 const { updateRole } = require("../controllers/Roles/updateRole");
 const { updateStep } = require("../controllers/Steps/updateStep");
 const { updateTestGrade } = require("../controllers/TestGrade/updateTestGrade");
+const updateEmpresa = require("../controllers/Company/updateEmpresa");
 const {
   setOrderActivities,
 } = require("../controllers/Activities/setOrderActivities");
+
 
 //PUT
 router.put("/activity/state", ActivityState);
@@ -131,8 +133,10 @@ router.put("/role/update", updateRole);
 router.put("/area/update", updateArea);
 router.put("/step/update", updateStep);
 router.put("/test/update", updateTestGrade);
-router.patch("/activity/update", updateActivity); //verifyRole("admin"),
+router.patch("/activity/update", updateActivity);
+router.patch("/empresa/update", updateEmpresa);
 router.put("/activities/:roleId", verifyRole("admin"), setOrderActivities);
+
 
 //DELETE Controllers
 const { deleteAreaCascade } = require("../controllers/Areas/deleteArea");
