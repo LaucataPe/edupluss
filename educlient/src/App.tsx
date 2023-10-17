@@ -21,14 +21,13 @@ import AppMenu from "./components/SideMenu";
 
 import { useSelector } from "react-redux";
 
+import "./index.css";
+import "../public/tailwind-light/theme.css";
 
-import './index.css'
-import '../public/tailwind-light/theme.css'
-
-import 'primereact/resources/primereact.css';
-import 'primeflex/primeflex.css';
-import 'primeicons/primeicons.css';
-import './styles/layout/layout.scss';
+import "primereact/resources/primereact.css";
+import "primeflex/primeflex.css";
+import "primeicons/primeicons.css";
+import "./styles/layout/layout.scss";
 import { useAppDispatch } from "./hooks/typedSelectors";
 import { setLogUser } from "./redux/features/userSlice";
 import { setEmpresa } from "./redux/features/activitiesSlice";
@@ -36,92 +35,100 @@ import { RootState } from "./redux/store";
 import { fetchCompanyAreas } from "./redux/features/areaSlice";
 import Dashboard from "./pages/Dashboard";
 import Checkpoint from "./components/Checkpoint";
-
-
+import SuperAdminHome from "./components/superAdmin/SuperAdminHome";
+import UserByCompany from "./components/superAdmin/UsersByCompany";
 
 function App() {
-	const dispatch = useAppDispatch()
-	const navigate = useNavigate();
-	const {pathname} = useLocation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
-	const logUser = useSelector((state: RootState) => state.user.logUser)
-	const currentEmpresa = useSelector((state: RootState) => state.user.logUser.companyId)
+  const logUser = useSelector((state: RootState) => state.user.logUser);
+  const currentEmpresa = useSelector(
+    (state: RootState) => state.user.logUser.companyId
+  );
 
-	const session = window.localStorage.getItem("token");
+  const session = window.localStorage.getItem("token");
 
-	const headers = {
-		Authorization: `Bearer ${session}`,
-	};
+  const headers = {
+    Authorization: `Bearer ${session}`,
+  };
 
-	useEffect(() => {
-		if(pathname !== '/' && !session){
-			navigate('/login')
-		}
-		if(pathname === '/login' && session){
-			navigate('/home')
-		}
-		if(pathname === '/home' && logUser.tipo === 'admin'){
-			navigate('/crud')
-		}
-	},[pathname])
+  useEffect(() => {
+    if (pathname !== "/" && !session) {
+      navigate("/login");
+    }
+    if (pathname === "/login" && session) {
+      navigate("/home");
+    }
+    if (pathname === "/home" && logUser.tipo === "admin") {
+      navigate("/crud");
+    }
+  }, [pathname]);
 
-	useEffect(() => {
-		if (session) {
-			axios
-				.get(`http://localhost:3001/auth/token`, { headers })
-				.then((response) => {
-					if(response){
-						dispatch(setLogUser(response.data.data.user))
-            			dispatch(setEmpresa(response.data.findCompany))
-					}
-				})
-				.catch((error) => {
-					//? mejorar este error
-					console.log(error);
-				});
-		}
-	}, [dispatch, session]);
+  useEffect(() => {
+    if (session) {
+      axios
+        .get(`http://localhost:3001/auth/token`, { headers })
+        .then((response) => {
+          if (response) {
+            dispatch(setLogUser(response.data.data.user));
+            dispatch(setEmpresa(response.data.findCompany));
+          }
+        })
+        .catch((error) => {
+          //? mejorar este error
+          console.log(error);
+        });
+    }
+  }, [dispatch, session]);
 
-	useEffect(() => {
-		if(currentEmpresa){
-		  dispatch(fetchCompanyAreas(currentEmpresa));
-		}
-	  }, [currentEmpresa]);
+  useEffect(() => {
+    if (currentEmpresa) {
+      dispatch(fetchCompanyAreas(currentEmpresa));
+    }
+  }, [currentEmpresa]);
 
   return (
     <>
-    {pathname !== '/' && pathname !== '/login' && <NavBar/>}
-	<div className="grid max-w-[100%]">
-		{pathname !== '/' && pathname!== '/login' && logUser.tipo === 'admin' && <AppMenu />}
-		<div className="col">
-		<Routes>
-				{/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
-				<Route path="/" element={<Landing />} />
-					<Route path="/home" element={<Home />} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/activity/:id" element={<Activity />} />
+      {pathname !== "/" && pathname !== "/login" && <NavBar />}
+      <div className="grid max-w-[100%]">
+        {pathname !== "/" &&
+          pathname !== "/login" &&
+          logUser.tipo === "admin" && <AppMenu />}
+        <div className="col">
+          <Routes>
+            {/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
+            <Route path="/" element={<Landing />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/activity/:id" element={<Activity />} />
 
-					<Route path="/dashboard" element={<Dashboard />} />
-					<Route path="/admin" element={<Admin />} />
-					<Route path="/activities/:roleId" element={<AdminActivities />} />
-					<Route path="/actvitySteps/:id" element={<ActivitySteps />} />
-					<Route path="/addActivity/:roleId" element={<AddActivity />} />
-					<Route path="/editActivity/:roleId/:actId" element={<AddActivity />} />
-					<Route path="/addArea" element={<AddArea />} />
-					<Route path="/editArea/:areaId" element={<AddArea />} />
-					<Route path="/addRole/:areaId" element={<AddRole />} />
-					<Route path="/editRole/:areaId/:roleId" element={<AddRole />} />
-					<Route path="/addStep/:id" element={<AddStep />} />
-					<Route path="/editStep/:id/:stepId" element={<AddStep />} />
-					<Route path="/crud" element={<Crud />} />
-					<Route path="/checkpoint/:id" element={<Checkpoint/>} />
-		</Routes>
-		</div>			
-	</div>
-	
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/activities/:roleId" element={<AdminActivities />} />
+            <Route path="/actvitySteps/:id" element={<ActivitySteps />} />
+            <Route path="/addActivity/:roleId" element={<AddActivity />} />
+            <Route
+              path="/editActivity/:roleId/:actId"
+              element={<AddActivity />}
+            />
+            <Route path="/addArea" element={<AddArea />} />
+            <Route path="/editArea/:areaId" element={<AddArea />} />
+            <Route path="/addRole/:areaId" element={<AddRole />} />
+            <Route path="/editRole/:areaId/:roleId" element={<AddRole />} />
+            <Route path="/addStep/:id" element={<AddStep />} />
+            <Route path="/editStep/:id/:stepId" element={<AddStep />} />
+            <Route path="/crud" element={<Crud />} />
+            <Route path="/checkpoint/:id" element={<Checkpoint />} />
+
+            <Route path="/main" element={<SuperAdminHome />} />
+            <Route path="/allusers" element={<UserByCompany />} />
+          </Routes>
+        </div>
+      </div>
     </>
   );
 }
 
 export default App;
-
