@@ -19,6 +19,10 @@ const { DataTypes } = require("sequelize");
       type: DataTypes.BOOLEAN,
       allowNull: false
     },
+    errorTest: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
    /*  activityId: {
       type: DataTypes.INTEGER,
       allowNull: false,

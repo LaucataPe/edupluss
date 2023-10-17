@@ -34,10 +34,10 @@ const AppMenu = () => {
     {
       label: "Inicio",
       items: [
-        { label: "Lista de Actividades", icon: "pi pi-check-circle", to: "/activitiesList" },
         { label: "Dashboard", icon: "pi pi-chart-pie", to: "/dashboard" },
         { label: "Progreso de usuarios", icon: "pi pi-list", to: "/progress" },
         { label: "Usuarios", icon: "pi pi-users", to: `/crud` },
+        { label: "Evaluaciones", icon: "pi pi-check-circle", to: "/activitiesList" },
       ],
     },
     {

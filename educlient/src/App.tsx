@@ -39,7 +39,7 @@ import SuperAdminHome from "./components/superAdmin/SuperAdminHome";
 import UserByCompany from "./components/superAdmin/UsersByCompany";
 import { AxiosInterceptor } from "./utils/interceptors/axiosInterceptor";
 import { useState } from "react";
-import ActivitiesListForTests from "./pages/ActivitiesListForTests";
+import EvaluationList from "./pages/EvaluationList";
 import ListEmployeesQualifications from "./pages/ListEmployeesQualifications";
 
 function App() {
@@ -144,7 +144,7 @@ function App() {
             <Route path="/main" element={<SuperAdminHome />} />
             <Route path="/allusers" element={<UserByCompany />} />
 
-            <Route path="/activitiesList" element={<ActivitiesListForTests />} />
+            <Route path="/activitiesList" element={<EvaluationList />} />
             <Route path="/employees/qualifications/:activityId" element={<ListEmployeesQualifications />} />
             <Route path="/checkpoint/:id" element={<Checkpoint />} />
           </Routes>
