@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { LayoutType, SortOrderType } from "../utils/types/types";
 import { Link } from "react-router-dom";
 import { RootState } from "../redux/store";
-import { Activity } from "../utils/interfaces";
+import { Activity, EmployeeGrades } from "../utils/interfaces";
 import axios from "axios";
 
 const Activities = () => {
@@ -28,6 +28,7 @@ const Activities = () => {
   const totalCurrentActivities = useSelector(
     (state: RootState) => state.activities.activities
   );
+  const [testGrades, setTestGrades] = useState<EmployeeGrades[]>([]);
 
   const currentProgress = userSteps.filter(
     //@ts-ignore
@@ -156,6 +157,17 @@ const Activities = () => {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/tests/${currentUser.id}`);
+        setTestGrades(response.data)
+      } catch (error) {
+        console.error("Error al obtener datos de 'testGrades':", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const finishedActivityInfo = {};
 
@@ -275,7 +287,7 @@ const Activities = () => {
               isFinished ? "bg-green-200" : notStarted ? "bg-blue-200" : ""
             } hover:bg-slate-00 ${notStarted ? "text-red-500" : ""}`}
           >
-            <div className="text-2xl font-bold ">
+            <div className="flex justify-between text-2xl font-bold">
               <h3 className="m-0 flex align-items-center">
                 {filteredValue.title}
                 {notStarted ? (
@@ -284,6 +296,18 @@ const Activities = () => {
                   <i className="pi pi-check-circle text-4xl ml-2"></i>
                 ) : (
                   <i className="pi pi-lock-open text-4xl ml-2"></i>
+                )}
+              </h3>
+              <h3 className="m-0 flex align-items-center">
+                {testGrades.length > 0 && (
+                <span>
+                  {testGrades?.map((grade) => {
+                    if (grade.Activity.id === filteredValue.id) {
+                      return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
+                    }
+                  return null;
+                  })}
+                </span>
                 )}
               </h3>
             </div>
@@ -315,11 +339,27 @@ const Activities = () => {
               isFinished ? "bg-green-200" : notStarted ? "bg-blue-200" : ""
             }`}
           >
-            <div className="flex flex-column align-items-center text-center">
-              <div className="text-2xl font-bold">
+            <div className="flex items-center justify-between text-center">
+              <div className="text-2xl font-bold w-[90%]">
                 <h3 className="m-0 flex-row align-items-center">
                   {data.title}
-                  {notStarted ? (
+                </h3>
+                <h3 className="m-0 flex-row align-items-center">
+                  {testGrades.length > 0 && (
+                  <span>
+                    {testGrades?.map((grade) => {
+                      if (grade.Activity.id === data.id) {
+                        return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
+                      }
+                      return null;
+                    })}
+                  </span>
+                  )}
+                </h3>
+              </div>
+              <div className="pt-3">
+                <h3>
+                {notStarted ? (
                     <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
                   ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
                     <i className="pi pi-check-circle text-4xl ml-2"></i>
