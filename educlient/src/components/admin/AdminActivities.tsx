@@ -108,7 +108,6 @@ function AdminActivities() {
       <div className="card p-fluid my-3 h-[720px] overflow-auto">
         <div className="flex justify-between items-center">
           <h3 className="text-blue-500 text-bol m-0">Actividades:</h3>
-          <div className="max-lg:hidden block">TEST</div>
           <div className="h-[50px] flex flex-row-reverse mx-4 gap-2">
             <div>
               <Button
