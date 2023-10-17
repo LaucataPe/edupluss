@@ -81,7 +81,7 @@ function Activity() {
       currentPath.endsWith(`/${step.number}`)
     );
     setActiveIndex(
-      currentIndex === -1 ? currentIndex : currentIndex >= 0 ? currentStep : 0
+      currentIndex === -1 ? 0 : currentIndex >= 0 ? currentStep : 0
     );
   }, [steps]);
 
@@ -234,7 +234,7 @@ function Activity() {
               onSelect={handleStepChange}
               readOnly={true}
             />
-            {steps && id && (
+            {id && (
               <CurrentStep
                 step={steps[activeIndex]}
                 activityId={id}
