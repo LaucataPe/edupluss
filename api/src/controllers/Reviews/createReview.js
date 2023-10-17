@@ -3,7 +3,7 @@ const { catchedAsync } = require('../../utils');
 const { ClientError } = require("../../utils/index.js");
 
 const createReview = async (req, res) => {
-  let { text, rating, activityId, userId } = req.body;
+  let { text, rating, reviewRated, activityId, userId } = req.body;
   if(!text){ 
     text= "";
   }
@@ -43,7 +43,7 @@ const createReview = async (req, res) => {
         if (previousReview.length > 0) {
             throw new Error("Ya existe una reseña creada anteriormente.");
         } else {
-            const newReview = await Review.create({ text, rating, activityId, userId });
+            const newReview = await Review.create({ text, rating, reviewRated, activityId, userId });
             res.status(200).json(newReview);
         }
     }

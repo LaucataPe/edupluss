@@ -216,7 +216,7 @@ const Crud = () => {
   const leftToolbarTemplate = () => {
     return (
       <React.Fragment>
-        <div className="my-2">
+        <div className="my-2 ">
           <Button
             label="Nuevo"
             icon="pi pi-plus"
@@ -298,18 +298,20 @@ const Crud = () => {
   const actionBodyTemplate = (rowData: Demo.User) => {
     return (
       <>
-        <Button
-          icon="pi pi-pencil"
-          rounded
-          className="mr-1 p-button-success"
-          onClick={() => editUser(rowData)}
-        />
-        <Button
-          icon="pi pi-trash"
-          rounded
-          className="p-button-danger"
-          onClick={() => confirmDeleteUser(rowData)}
-        />
+        <div className="flex">
+          <Button
+            icon="pi pi-pencil"
+            rounded
+            className="mr-1 p-button-success"
+            onClick={() => editUser(rowData)}
+          />
+          <Button
+            icon="pi pi-trash"
+            rounded
+            className="p-button-danger"
+            onClick={() => confirmDeleteUser(rowData)}
+          />
+        </div>
       </>
     );
   };
@@ -363,225 +365,265 @@ const Crud = () => {
   );
 
   return (
-    <div className="grid crud-demo my-1">
-      <div className="col-12">
-        <div className="card">
-          <Toast ref={toast} />
-          <Toolbar className="mb-4" left={leftToolbarTemplate}></Toolbar>
+    <div className="flex crud-demo my-1 ">
+      <div className="col-12 align-items-center">
+        <div
+          className="card justify-content-center"
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          <div className="container">
+            {" "}
+            {/* Agrega un contenedor para ajustar el contenido al ancho de la página */}
+            <div className="row">
+              <div className="col-lg-12">
+                {" "}
+                {/* En pantallas grandes, ocupa todo el ancho; en pantallas más pequeñas, se ajustará automáticamente */}
+                <div className="card">
+                  <Toast ref={toast} />
+                  <Toolbar
+                    className="mb-4"
+                    left={leftToolbarTemplate}
+                  ></Toolbar>
 
-          <DataTable
-            ref={dt}
-            value={users}
-            selection={selectedUsers}
-            onSelectionChange={(e) => setSelectedUsers(e.value as Demo.User[])}
-            dataKey="id"
-            paginator
-            rows={10}
-            rowsPerPageOptions={[5, 10, 25]}
-            className="datatable-responsive p-datatable-responsive  overflow-auto"
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
-            globalFilter={globalFilter}
-            emptyMessage="No se encontraron usuarios."
-            header={header}
-            scrollable
-          >
-            <Column
-              selectionMode="multiple"
-              headerStyle={{ width: "4rem" }}
-            ></Column>
-            <Column field="id" header="ID" sortable></Column>
-            <Column
-              field="username"
-              header="Nombre de usuario"
-              sortable
-              body={usernameBodyTemplate}
-            ></Column>
-            <Column
-              field="email"
-              header="Correo electrónico"
-              sortable
-              body={emailBodyTemplate}
-            ></Column>
-            <Column
-              field="tipo"
-              header="Tipo"
-              sortable
-              body={tipoBodyTemplate}
-              className="capitalize"
-            ></Column>
-            <Column
-              field="area"
-              header="Área"
-              body={areasBodyTemplate}
-            ></Column>
-            <Column
-              field="role"
-              header="Cargo"
-              body={roleBodyTemplate}
-            ></Column>
-            <Column
-              field="active"
-              header="Activo"
-              body={activeBodyTemplate}
-            ></Column>
-            <Column body={actionBodyTemplate}></Column>
-          </DataTable>
+                  <DataTable
+                    ref={dt}
+                    value={users}
+                    selection={selectedUsers}
+                    onSelectionChange={(e) =>
+                      setSelectedUsers(e.value as Demo.User[])
+                    }
+                    dataKey="id"
+                    paginator
+                    rows={10}
+                    rowsPerPageOptions={[5, 10, 25]}
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
+                    globalFilter={globalFilter}
+                    emptyMessage="No se encontraron usuarios."
+                    header={header}
+                    scrollable
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignSelf: "center",
+                    }}
+                  >
+                    <Column
+                      selectionMode="multiple"
+                      headerStyle={{ width: "4rem" }}
+                      frozen // Esta columna estará congelada
+                    ></Column>
+                    <Column field="id" header="ID" sortable frozen></Column>
+                    <Column
+                      field="username"
+                      header="Nombre de usuario"
+                      sortable
+                      body={usernameBodyTemplate}
+                    ></Column>
+                    <Column
+                      field="email"
+                      header="Correo electrónico"
+                      sortable
+                      body={emailBodyTemplate}
+                    ></Column>
+                    <Column
+                      field="tipo"
+                      header="Tipo"
+                      sortable
+                      body={tipoBodyTemplate}
+                      className="capitalize"
+                    ></Column>
+                    <Column
+                      field="area"
+                      header="Área"
+                      body={areasBodyTemplate}
+                    ></Column>
+                    <Column
+                      field="role"
+                      header="Cargo"
+                      body={roleBodyTemplate}
+                    ></Column>
+                    <Column
+                      frozen
+                      field="active"
+                      header="Activo"
+                      body={activeBodyTemplate}
+                    ></Column>
+                    <Column
+                      body={actionBodyTemplate}
+                      frozen
+                      field="edit"
+                      header="Editar"
+                      alignFrozen="right"
+                    ></Column>
+                  </DataTable>
 
-          <Dialog
-            visible={userDialog}
-            style={{ width: "450px" }}
-            header={
-              user.id !== 0 ? "Edición de Usuario" : "Creación de Usuario"
-            }
-            modal
-            className="p-fluid"
-            footer={userDialogFooter}
-            onHide={hideDialog}
-          >
-            <div className="field">
-              <label htmlFor="username">Nombre de usuario</label>
-              <InputText
-                id="username"
-                value={user.username}
-                onChange={(e) => onInputChange(e, "username")}
-                required
-                autoFocus
-                className={classNames({
-                  "p-invalid": submitted && !user.username,
-                })}
-              />
-              {submitted && !user.username && (
-                <small className="p-error">
-                  El nombre de usuario es obligatorio.
-                </small>
-              )}
-            </div>
-            <div className="field">
-              <label htmlFor="email">Correo electrónico</label>
-              <InputText
-                id="email"
-                value={user.email}
-                onChange={(e) => onInputChange(e, "email")}
-                required
-                className={classNames({
-                  "p-invalid": submitted && !user.email,
-                })}
-              />
-              {submitted && !user.email && (
-                <small className="p-error">
-                  El correo electrónico es obligatorio.
-                </small>
-              )}
-            </div>
-            <div className="field">
-              <label htmlFor="email">Contraseña</label>
-              {user.id !== 0 && (
-                <input
-                  type="checkbox"
-                  checked={activePassword}
-                  onChange={() => setActivePassword(!activePassword)}
-                  className="mx-2"
-                />
-              )}
-              <Password
-                inputId="password1"
-                value={user.password}
-                onChange={(e) => onInputChange(e, "password")}
-                toggleMask
-                className="w-full mb-5"
-                promptLabel="Ingresa una contraseña"
-                weakLabel="Poco Segura"
-                mediumLabel="Segura"
-                strongLabel="Muy Segura"
-                disabled={user.id !== 0 ? !activePassword : false}
-              ></Password>
-              {submitted && !user.password && (
-                <small className="p-error">Ingrese una contraseña</small>
-              )}
-            </div>
-            <div className="field">
-              <label>Cargo</label>
-              <Dropdown
-                id="roles"
-                value={user.roleId}
-                options={roles}
-                onChange={onRoleChange}
-                placeholder="Seleccionar cargo"
-                optionLabel="name"
-                optionValue="id"
-                filter
-              />
-              {submitted && user.roleId === 0 && (
-                <small className="p-error">Debe seleccionar un cargo</small>
-              )}
-            </div>
-            <div className="field">
-              <label>Tipo de Usuario</label>
-              <Dropdown
-                value={user.tipo}
-                onChange={(e) => onTypeChange(e)}
-                options={dropdownValues}
-                optionLabel="name"
-                placeholder="Seleccionar tipo"
-              />
-              {submitted && !user.tipo && (
-                <small className="p-error">Debe seleccionar el tipo</small>
-              )}
-            </div>
+                  <Dialog
+                    visible={userDialog}
+                    style={{ width: "450px" }}
+                    header={
+                      user.id !== 0
+                        ? "Edición de Usuario"
+                        : "Creación de Usuario"
+                    }
+                    modal
+                    className="p-fluid"
+                    footer={userDialogFooter}
+                    onHide={hideDialog}
+                  >
+                    <div className="field">
+                      <label htmlFor="username">Nombre de usuario</label>
+                      <InputText
+                        id="username"
+                        value={user.username}
+                        onChange={(e) => onInputChange(e, "username")}
+                        required
+                        autoFocus
+                        className={classNames({
+                          "p-invalid": submitted && !user.username,
+                        })}
+                      />
+                      {submitted && !user.username && (
+                        <small className="p-error">
+                          El nombre de usuario es obligatorio.
+                        </small>
+                      )}
+                    </div>
+                    <div className="field">
+                      <label htmlFor="email">Correo electrónico</label>
+                      <InputText
+                        id="email"
+                        value={user.email}
+                        onChange={(e) => onInputChange(e, "email")}
+                        required
+                        className={classNames({
+                          "p-invalid": submitted && !user.email,
+                        })}
+                      />
+                      {submitted && !user.email && (
+                        <small className="p-error">
+                          El correo electrónico es obligatorio.
+                        </small>
+                      )}
+                    </div>
+                    <div className="field">
+                      <label htmlFor="email">Contraseña</label>
+                      {user.id !== 0 && (
+                        <input
+                          type="checkbox"
+                          checked={activePassword}
+                          onChange={() => setActivePassword(!activePassword)}
+                          className="mx-2"
+                        />
+                      )}
+                      <Password
+                        inputId="password1"
+                        value={user.password}
+                        onChange={(e) => onInputChange(e, "password")}
+                        toggleMask
+                        className="w-full mb-5"
+                        promptLabel="Ingresa una contraseña"
+                        weakLabel="Poco Segura"
+                        mediumLabel="Segura"
+                        strongLabel="Muy Segura"
+                        disabled={user.id !== 0 ? !activePassword : false}
+                      ></Password>
+                      {submitted && !user.password && (
+                        <small className="p-error">
+                          Ingrese una contraseña
+                        </small>
+                      )}
+                    </div>
+                    <div className="field">
+                      <label>Cargo</label>
+                      <Dropdown
+                        id="roles"
+                        value={user.roleId}
+                        options={roles}
+                        onChange={onRoleChange}
+                        placeholder="Seleccionar cargo"
+                        optionLabel="name"
+                        optionValue="id"
+                        filter
+                      />
+                      {submitted && user.roleId === 0 && (
+                        <small className="p-error">
+                          Debe seleccionar un cargo
+                        </small>
+                      )}
+                    </div>
+                    <div className="field">
+                      <label>Tipo de Usuario</label>
+                      <Dropdown
+                        value={user.tipo}
+                        onChange={(e) => onTypeChange(e)}
+                        options={dropdownValues}
+                        optionLabel="name"
+                        placeholder="Seleccionar tipo"
+                      />
+                      {submitted && !user.tipo && (
+                        <small className="p-error">
+                          Debe seleccionar el tipo
+                        </small>
+                      )}
+                    </div>
 
-            <div className="field flex">
-              <label className="pr-3">Activo</label>
-              <InputSwitch
-                checked={user.active}
-                onChange={(e) => onSwitchChange(e)}
-              />
-            </div>
-          </Dialog>
+                    <div className="field flex">
+                      <label className="pr-3">Activo</label>
+                      <InputSwitch
+                        checked={user.active}
+                        onChange={(e) => onSwitchChange(e)}
+                      />
+                    </div>
+                  </Dialog>
 
-          <Dialog
-            visible={deleteUserDialog}
-            style={{ width: "450px" }}
-            header="Confirmar"
-            modal
-            footer={deleteUserDialogFooter}
-            onHide={hideDeleteUserDialog}
-          >
-            <div className="flex items-center justify-center">
-              <i
-                className="pi pi-exclamation-triangle mr-3"
-                style={{ fontSize: "2rem" }}
-              />
-              {user && (
-                <span>
-                  ¿Estás seguro de que deseas eliminar al usuario{" "}
-                  <b>{user.username}</b>?
-                </span>
-              )}
-            </div>
-          </Dialog>
+                  <Dialog
+                    visible={deleteUserDialog}
+                    style={{ width: "450px" }}
+                    header="Confirmar"
+                    modal
+                    footer={deleteUserDialogFooter}
+                    onHide={hideDeleteUserDialog}
+                  >
+                    <div className="flex items-center justify-center">
+                      <i
+                        className="pi pi-exclamation-triangle mr-3"
+                        style={{ fontSize: "2rem" }}
+                      />
+                      {user && (
+                        <span>
+                          ¿Estás seguro de que deseas eliminar al usuario{" "}
+                          <b>{user.username}</b>?
+                        </span>
+                      )}
+                    </div>
+                  </Dialog>
 
-          <Dialog
-            visible={deleteUsersDialog}
-            style={{ width: "450px" }}
-            header="Confirmar"
-            modal
-            footer={deleteUsersDialogFooter}
-            onHide={hideDeleteUsersDialog}
-          >
-            <div className="flex items-center justify-center">
-              <i
-                className="pi pi-exclamation-triangle mr-3"
-                style={{ fontSize: "2rem" }}
-              />
-              {user && (
-                <span>
-                  ¿Estás seguro de que deseas eliminar los usuarios
-                  seleccionados?
-                </span>
-              )}
+                  <Dialog
+                    visible={deleteUsersDialog}
+                    style={{ width: "450px" }}
+                    header="Confirmar"
+                    modal
+                    footer={deleteUsersDialogFooter}
+                    onHide={hideDeleteUsersDialog}
+                  >
+                    <div className="flex items-center justify-center">
+                      <i
+                        className="pi pi-exclamation-triangle mr-3"
+                        style={{ fontSize: "2rem" }}
+                      />
+                      {user && (
+                        <span>
+                          ¿Estás seguro de que deseas eliminar los usuarios
+                          seleccionados?
+                        </span>
+                      )}
+                    </div>
+                  </Dialog>
+                </div>
+              </div>
             </div>
-          </Dialog>
+          </div>
         </div>
       </div>
     </div>
