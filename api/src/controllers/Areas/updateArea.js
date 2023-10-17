@@ -1,12 +1,12 @@
-const { Area } = require('../../db');
-const { catchedAsync } = require('../../utils');
+const { Area } = require("../../db");
+const { catchedAsync } = require("../../utils");
 const updateArea = async (req, res) => {
   const { id, name } = req.body;
   console.log(req.body);
   try {
     const getArea = await Area.findByPk(id);
 
-    if (!getArea) throw new Error('Área no encontrada');
+    if (!getArea) throw new Error("Área no encontrada");
 
     const updateArea = await getArea.update(
       {

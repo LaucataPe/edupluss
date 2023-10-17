@@ -26,26 +26,3 @@ const updateActivity = async (req, res) => {
 };
 
 module.exports = { updateActivity: catchedAsync(updateActivity) };
-
-
-// const { id, title } = req.body;
-  // try {
-  //   const getActivity = await Activity.findByPk(id);
-
-  //   if (!getActivity) throw new Error('Actividad no encontrada');
-
-  //   const updateActivity = await getActivity.update(
-  //     {
-  //       title,
-  //     },
-  //     {
-  //       where: {
-  //         id,
-  //       },
-  //     }
-  //   );
-
-  //   res.status(200).json(updateActivity);
-  // } catch (error) {
-  //   res.status(404).send(error.message);
-  // }

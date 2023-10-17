@@ -9,7 +9,6 @@ import { Menu } from "primereact/menu";
 
 function NavBar() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const currentEmpresa = useSelector(
@@ -26,7 +25,7 @@ function NavBar() {
   const logOut = () => {
     dispatch(resetActivities());
     window.localStorage.removeItem("token");
-    navigate("/");
+    window.location.replace("/");
   };
 
   const overlayMenuItems = [

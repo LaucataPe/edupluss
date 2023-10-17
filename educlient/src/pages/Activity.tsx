@@ -9,7 +9,9 @@ import { useAppDispatch } from "../hooks/typedSelectors";
 import { getStepsActivity } from "../redux/features/stepsSlider";
 import { Button } from "primereact/button";
 import RateActivity from "../components/RateActivity";
+import { TestGrade } from "../utils/interfaces";
 import axios from "axios";
+
 
 function Activity() {
   const { id } = useParams();
@@ -19,7 +21,31 @@ function Activity() {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [dialog, setDialog] = useState<boolean>(false);
+  const [infoVisible, setInfoVisible] = useState<boolean>(false);
   const [contiune, setContiune] = useState<boolean>(false);
+  
+
+  const logUser = useSelector((state: RootState) => state.user.logUser);
+  
+  const [userReview, setUserReview] = useState<boolean>(false);
+  const [testGrade, setTestGrade] = useState<TestGrade>({});
+
+  useEffect(() => {
+    const getTestGrade = async () => {
+      try {
+        const response = await axios(`http://localhost:3001/test?userId=${logUser.id}&activityId=${id}`);
+
+        if (response.data) {
+          setTestGrade(response.data);
+        } else {
+          console.error("El empleado no ha realizado el test de esta actividad.");
+        }
+      } catch (error) {
+        console.error("Error al obtener datos de TestGrade:", error);
+      }
+    };
+    getTestGrade();
+}, []);
 
   useEffect(() => {
     const stepSaved = window.localStorage.getItem(`Activity ${id}`);
@@ -44,6 +70,11 @@ function Activity() {
     return activityName?.title;
   };
 
+  let durationTest: undefined | string;
+  const activity = activities.find((act) => act.id === Number(id));
+  durationTest = activity?.durationTest;
+  
+
   useEffect(() => {
     const currentPath = window.location.pathname;
     const currentIndex = steps.findIndex((step) =>
@@ -62,7 +93,8 @@ function Activity() {
   const activityName = activities.find((act) => act.id === Number(id));
   const activityId = activityName?.id;
   const stepsList = steps.map((step) => step.id);
-  console.log("soy activityId",activityId);
+  //console.log("soy activityId",activityId);
+
   const handleNextClick = async () => {
     if (activeIndex < stepsList.length - 1) {
       const actualIndex = stepsList[activeIndex];
@@ -119,9 +151,50 @@ function Activity() {
     hasTest?.hasTest ? navigate(`/checkpoint/${id}`) : navigate("/home");
   };
 
+  const confirmationDialogFooter = (
+    <>
+      <Button
+        type="button"
+        label="Cancelar"
+        severity="danger"
+        icon="pi pi-times"
+        onClick={() => setInfoVisible(false)}
+        text
+        />
+      <Link to="/home">
+        <Button
+          type="button"
+          severity="success"
+          label="Empezar"
+          onClick={handleFinishClick}
+          icon="pi pi-check"
+          text
+          autoFocus
+        />
+      </Link>
+    </>
+  );
+
   const showDialog = () => {
     setDialog(true);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios(`http://localhost:3001/review?userId=${logUser.id}&activityId=${id}`);
+
+        if (response.data) {
+          setUserReview(response.data);
+        } else {
+          console.error("La review no ha sido creada todavía");
+        }
+      } catch (error) {
+        console.error("Error al obtener datos del Review:", error);
+      }
+    };
+    fetchData();
+}, [showDialog]);
 
   const hideDialog = () => {
     setDialog(false);
@@ -197,6 +270,7 @@ function Activity() {
                   severity="info"
                   outlined
                   onClick={showDialog}
+                  disabled={testGrade.testWatched ? true : false}
                   className="absolute w-auto bottom-4 right-4"
                 />
                 {/* </Link> */}
@@ -208,7 +282,7 @@ function Activity() {
       <Dialog
         visible={dialog}
         style={{ width: "650px" }}
-        header="Confirmar"
+        header="Confirme su siguiente paso"
         modal
         onHide={hideDialog}
       >
@@ -217,16 +291,20 @@ function Activity() {
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          <div onClick={checkHasTest}>
-            <RateActivity activityId={activityId} currentUser={currentUser}/>
-          </div>
-          {contiune && (
-            <>
+          {
+            userReview === false && (
+            <div onClick={checkHasTest}>
+              <RateActivity activityId={activityId} currentUser={currentUser}/>
+            </div>
+            )
+          }
+          {userReview || contiune ?
+            <div className=" pt-4 text-center text-lg text-slate-950">
               <p>
-                Si continuas seras redireccionado al formulario de la actividad
+                Si continuas serás redireccionado/a al test de la actividad.
               </p>
-              <span>¿Estás seguro de que continuar al formulario?</span>
-              <div className="flex justify-end w-full">
+              <span>¿Estás seguro/a de que continuar?</span>
+              <div className="flex justify-end w-full pt-4">
                 <Button
                   label="No"
                   icon="pi pi-times"
@@ -237,13 +315,44 @@ function Activity() {
                   label="Sí"
                   icon="pi pi-check"
                   text
-                  onClick={handleFinishClick}
+                  onClick={() => setInfoVisible(true)}
                 />
               </div>
-            </>
-          )}
+            </div>
+            :
+            null
+          }
         </div>
       </Dialog>
+
+      <Dialog
+          header="Recomendaciones al empleado"
+          visible={infoVisible}
+          onHide={() => setInfoVisible(false)}
+          className="w-[38vw]"
+          modal
+          footer={confirmationDialogFooter}
+        >
+          <div className="flex align-items-center justify-content-center">
+            <ul className="m-0 gap-4 text-lg text-slate-950">
+              <li className=" py-1">Antes de iniciar la prueba tome en cuenta lo siguiente:</li>
+              <li className=" py-1">Ingrese el correo electrónico con el que está registrado/a en Edupluss:
+                <b>{logUser ? ` ${logUser.email}` : " Si no lo recuerda, consulte con su encargado."}</b>
+              </li>
+              <li  className=" py-1">No actualice ni cierre la página mientras esté realizando la prueba.</li>
+              {
+                durationTest ?
+                <ul className="m-0 gap-4 text-lg text-slate-950">
+                  <li className=" py-1">El test contará con la siguiente duración: {durationTest}</li>
+                  <li className=" py-1">Intente enviar el cuestionario antes del tiempo especificado.</li>
+                </ul>
+                :
+                null
+              }
+              <li className=" py-1">Una vez haya termiando la prueba, puede regresar al Home mediante el boton "Finalizar"</li>
+            </ul>
+          </div>
+        </Dialog>
     </>
   );
 }

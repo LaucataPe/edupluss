@@ -19,7 +19,7 @@ const Activities = () => {
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [filteredValue, setFilteredValue] = useState<Activity[]>([]);
   const [layout, setLayout] = useState<LayoutType>("list");
-  const [sortKey, setSortKey] = useState(null);
+  const [sortKey, setSortKey] = useState("all");
   const [sortOrder] = useState<SortOrderType>(0);
   const [sortField] = useState("");
   const [userSteps, setUserSteps] = useState([]);
@@ -35,69 +35,58 @@ const Activities = () => {
   );
 
   const sortOptions = [
-    { label: "Finished", value: "finished" },
-    { label: "Started", value: "started" },
-    { label: "Not started", value: "notStarted" },
-    { label: "All", value: "all" },
+    { label: "All", value: "all", color: "#4F46E5" },
+    { label: "Finished", value: "finished", color: "#69de92" },
+    { label: "Started", value: "started", color: "#eec137" },
+    { label: "Not started", value: "notStarted", color: " #85b2f9" },
   ];
 
   useEffect(() => {
-    setDataViewValue(activeActivities);
+    setDataViewValue(activeActivities.sort((a, b) => a.orderId - b.orderId));
     setGlobalFilterValue("");
   }, [activities]);
-
-  const onFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLowerCase();
-    setGlobalFilterValue(value);
-    const filtered = dataViewValue.filter((act) =>
-      act.title.toLowerCase().includes(value)
-    );
-    setFilteredValue(filtered);
-  };
   const onSortChange = (event: DropdownChangeEvent) => {
     const value = event.value;
 
     let sortedData = [...dataViewValue]; // Copiamos los datos originales
-
     const filters = {
       //@ts-ignore
-
-      finished: (data) => {
+      finished: (data: any) => {
         const activityId = data.id;
         return (
           //@ts-ignore
-
           finishedActivityInfo[activityId] && //@ts-ignore
           finishedActivityInfo[activityId].count > 0
         );
-      }, //@ts-ignore
-
+      },
+      //@ts-ignore
       started: (data) => {
         const activityId = data.id;
         const notInFinishedInfo =
           !finishedActivityInfo.hasOwnProperty(activityId);
         const hasSteps = totalSteps.some(
-          //@ts-ignore
-
-          (step) => step.activityId === activityId
+          (step: any) => step.activityId === activityId
         );
-        return notInFinishedInfo && hasSteps;
-      }, //@ts-ignore
+        const isNotStarted =
+          !activityIdsWithNoStepsFinished.includes(String(activityId)) && //@ts-ignore
+          !finishedActivityInfo[activityId];
 
-      notStarted: (data) => {
+        return notInFinishedInfo && hasSteps && !isNotStarted;
+      },
+      notStarted: (data: any) => {
         const activityId = data.id;
         const notStarted =
           !activityIdsWithNoStepsFinished.includes(String(activityId)) && //@ts-ignore
-          !finishedActivityInfo[activityId];
+          (!finishedActivityInfo[activityId] || //@ts-ignore
+            finishedActivityInfo[activityId].count === 0);
         return notStarted;
-      }, //@ts-ignore
-
+      },
+      //@ts-ignore
       all: (data) => true,
     };
 
     if (value in filters) {
       //@ts-ignore
-
       sortedData = sortedData.filter(filters[value]);
     }
 
@@ -115,16 +104,34 @@ const Activities = () => {
       const isFinishedB = //@ts-ignore
         finishedActivityInfo[b.id] && finishedActivityInfo[b.id].count > 0;
 
-      if (notStartedA && !isFinishedA) {
-        return -1 * sortOrder;
+      if (value === "all") {
+        return 0;
       }
-      if (notStartedB && !isFinishedB) {
-        return 1 * sortOrder;
+
+      if (value === "started") {
+        if (notStartedA && !isFinishedA) {
+          return -1 * sortOrder;
+        }
+        if (notStartedB && !isFinishedB) {
+          return 1 * sortOrder;
+        }
       }
+
+      if (value === "finished") {
+        if (isFinishedA) {
+          return -1 * sortOrder;
+        }
+        if (isFinishedB) {
+          return 1 * sortOrder;
+        }
+      }
+
       return 0;
     });
+
     setSortKey(value);
     setFilteredValue(sortedData);
+    console.log(sortedData);
   };
 
   useEffect(() => {
@@ -210,28 +217,32 @@ const Activities = () => {
   const activityIdsWithNoStepsFinished = Object.keys(activityIds).filter(
     (activityId) => !(activityId in finishedActivityInfo)
   );
-  // console.log(
-  //   "Started",
-  //   activityIdsWithNoStepsFinished,
-  //   "Finished",
-  //   finishedActivityInfo
-  // );
+
   const dataViewHeader = (
     <div className="flex flex-column md:flex-row md:justify-content-between gap-2 rounded-lg">
-      <Dropdown
-        value={sortKey}
-        options={sortOptions}
-        optionLabel="label"
-        placeholder="Ordenar"
-        onChange={onSortChange}
-      />
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            width: "15px",
+            height: "15px", //@ts-ignore
+            backgroundColor: sortOptions.find(
+              (option) => option.value === sortKey
+            ).color,
+            borderRadius: "50%",
+            marginRight: "8px",
+          }}
+        ></div>
+        <Dropdown
+          value={sortKey}
+          options={sortOptions}
+          optionLabel="label"
+          placeholder="Ordenar"
+          onChange={onSortChange}
+        />
+      </div>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
-        <InputText
-          value={globalFilterValue}
-          onChange={(e) => onFilter(e)}
-          placeholder="Buscar"
-        />
+        <InputText value={globalFilterValue} placeholder="Buscar" />
       </span>
       <DataViewLayoutOptions
         layout={layout}
@@ -240,9 +251,11 @@ const Activities = () => {
       />
     </div>
   );
+
   // Tengo que colocarles su UserSteps
-  const dataviewListItem = (data: Activity) => {
-    const activityId = data.id;
+
+  const dataviewListItem = (filteredValue: Activity) => {
+    const activityId = filteredValue.id;
 
     // Comprobar si el activityId no se encuentra en activityIdsWithNoStepsFinished ni en finishedActivityInfo
     const notStarted =
@@ -256,7 +269,7 @@ const Activities = () => {
 
     return (
       <div className={`col-12 border-none`}>
-        <Link to={`/activity/${data.id}`}>
+        <Link to={`/activity/${filteredValue.id}`}>
           <div
             className={`flex flex-column my-3 border rounded-lg shadow-sm p-4 ${
               isFinished ? "bg-green-200" : notStarted ? "bg-blue-200" : ""
@@ -264,7 +277,7 @@ const Activities = () => {
           >
             <div className="text-2xl font-bold ">
               <h3 className="m-0 flex align-items-center">
-                {data.title}
+                {filteredValue.title}
                 {notStarted ? (
                   <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
                 ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
@@ -279,7 +292,6 @@ const Activities = () => {
       </div>
     );
   };
-
   const dataviewGridItem = (data: Activity) => {
     const activityId = data.id;
 
@@ -339,7 +351,7 @@ const Activities = () => {
     <div className="grid list-demo">
       <div className="col-12">
         <div
-          className="card flex py-0 mx-[5%]"
+          className="card flex mx-[5%]"
           id="pending-activities"
           style={{ overflowX: "auto" }}
         >
@@ -356,9 +368,11 @@ const Activities = () => {
               );
               const userStepsForActivity = currentProgress.filter(
                 (
-                  userStep 
-                ) =>//@ts-ignore
-                  stepsForActivity.some((step) => step.id === userStep.StepId)
+                  userStep: any //@ts-ignore
+                ) =>
+                  stepsForActivity.some(
+                    (step: any) => step.id === userStep.StepId
+                  )
               );
               const maxStepId = Math.max(
                 //@ts-ignore
@@ -372,15 +386,27 @@ const Activities = () => {
               const stepName = //@ts-ignore
                 stepsForActivity.find((step) => step.id === maxStepId)?.title ||
                 `Paso ${1}`;
+
+              const stepNameToFind = stepName; // Nombre del paso que deseas encontrar
+              const stepWithActivityId = stepsForActivity.find(
+                (step: any) => step.title === stepNameToFind
+              ) as { activityId: string } | undefined;
+
+              const activityIdForStepName: string | null = stepWithActivityId
+                ? stepWithActivityId.activityId
+                : null;
+
               return (
                 <div
                   className="col-12 w-auto flex-wrap"
                   id={`activities-list-${index}`}
                   key={index}
                 >
-                  <div className="card m-3 border-1 surface-border bg-yellow-100 hover:bg-slate-100">
-                    <h3 className="m-0">{`${activityTitle}: ${stepName}`}</h3>
-                  </div>
+                  <Link to={`/activity/${activityIdForStepName}`}>
+                    <div className="card m-3 border-1 surface-border bg-yellow-100 hover:bg-slate-100">
+                      <h3 className="m-0">{`${activityTitle}: ${stepName}`}</h3>
+                    </div>
+                  </Link>
                 </div>
               );
             })}
@@ -391,7 +417,13 @@ const Activities = () => {
             Tus actividades:
           </h3>
           <DataView
-            value={filteredValue.length > 0 ? filteredValue : dataViewValue}
+            value={
+              filteredValue.length > 0
+                ? filteredValue
+                : sortKey === "all"
+                ? dataViewValue
+                : []
+            }
             layout={layout}
             paginator
             rows={9}
