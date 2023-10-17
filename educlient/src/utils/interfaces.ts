@@ -2,6 +2,7 @@ export interface Empresa {
   id: number;
   name: string;
   nit: number;
+  active: boolean;
 }
 
 export interface User {

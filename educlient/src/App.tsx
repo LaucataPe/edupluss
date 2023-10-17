@@ -35,6 +35,8 @@ import { fetchCompanyAreas } from "./redux/features/areaSlice";
 import Progress from "./pages/Progress";
 import Dashboard from "./pages/Dashboard";
 import Checkpoint from "./components/Checkpoint";
+import SuperAdminHome from "./components/superAdmin/SuperAdminHome";
+import UserByCompany from "./components/superAdmin/UsersByCompany";
 import { AxiosInterceptor } from "./utils/interceptors/axiosInterceptor";
 import { useState } from "react";
 import ActivitiesListForTests from "./pages/ActivitiesListForTests";
@@ -120,7 +122,6 @@ function App() {
             <Route path="/activity/:id" element={<Activity />} />
 
             <Route path="/dashboard" element={<Dashboard />} />
-
             <Route path="/progress" element={<Progress />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/activities/:roleId" element={<AdminActivities />} />
@@ -138,6 +139,11 @@ function App() {
             <Route path="/addStep/:id" element={<AddStep />} />
             <Route path="/editStep/:id/:stepId" element={<AddStep />} />
             <Route path="/crud" element={<Crud />} />
+
+
+            <Route path="/main" element={<SuperAdminHome />} />
+            <Route path="/allusers" element={<UserByCompany />} />
+
             <Route path="/activitiesList" element={<ActivitiesListForTests />} />
             <Route path="/employees/qualifications/:activityId" element={<ListEmployeesQualifications />} />
             <Route path="/checkpoint/:id" element={<Checkpoint />} />

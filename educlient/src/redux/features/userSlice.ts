@@ -53,6 +53,9 @@ const userSlice = createSlice({
 			state.logUser = action.payload;
 			state.status = 'idle'
 		},
+		changeCurrentCompany: (state, action: PayloadAction<string>) => {
+			state.logUser.companyId = Number(action.payload);
+		}
 	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchUsers.pending, (state) => {
@@ -82,6 +85,7 @@ const userSlice = createSlice({
 
 export const {
 	setLogUser,
+	changeCurrentCompany
 } = userSlice.actions;
 export default userSlice.reducer;
 export const allUsers = (state: RootState) => state.user;
