@@ -96,7 +96,7 @@ function App() {
         {pathname !== "/" &&
           pathname !== "/login" &&
           logUser.tipo === "admin" && <AppMenu />}
-        <div className="col">
+        <div className="col overflow-hidden">
           <Routes>
             {/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
             <Route path="/" element={<Landing />} />
