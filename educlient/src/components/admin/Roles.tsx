@@ -73,6 +73,7 @@ function Roles() {
     return (
       <>
       {/*Mapea todos los roles*/}
+      
       <div className="w-[90%] relative mx-10">
         <div className="flex items-center justify-center">
           <h3 className="m-2 text-indigo-500">{currentArea.name}</h3>

@@ -372,12 +372,8 @@ const Crud = () => {
           style={{ display: "flex", flexDirection: "column" }}
         >
           <div className="container">
-            {" "}
-            {/* Agrega un contenedor para ajustar el contenido al ancho de la página */}
             <div className="row">
               <div className="col-lg-12">
-                {" "}
-                {/* En pantallas grandes, ocupa todo el ancho; en pantallas más pequeñas, se ajustará automáticamente */}
                 <div className="card">
                   <Toast ref={toast} />
                   <Toolbar
