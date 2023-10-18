@@ -81,13 +81,45 @@ export interface ProgressData {
   progress?: string;
 }
 
+export interface ListEvaluation {
+  active: boolean,
+  hasTest: boolean,
+  id: number,
+  title: string
+}
+
 export interface TestGrade {
   id? : number,
-  gradeValue? : number,
-  maximunGradeValue? : number,
+  gradeValue? : string,
+  maximunGradeValue? : string,
   testWatched? : boolean
 }
 
+export interface EmployeeGrades {
+  id: number,
+  gradeValue: number,
+  maximunGradeValue: number,
+  Activity: {
+    id: number,
+  }
+}
+
+export interface GradePercentage {
+  gradePercentage: number;
+  activityName: string;
+}
+
+export interface EmployeeQualification {
+  idUser?: number;
+  username?: string;
+  email?: string;
+  idTestGrade: number;
+  gradeValue: string | undefined;
+  maximunGradeValue: string | undefined;
+  testWatched?: boolean;
+  errorTest?: boolean;
+  activityId?: number;
+}
 
 export interface excelRow {
   A: string | number;
