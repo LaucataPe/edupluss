@@ -436,7 +436,7 @@ function Dashboard() {
       };
 
       const userId = step.UserId; // Obtener el ID del usuario que realizó el paso
-      const user = totalUsers.find((user) => user.id === userId);
+      const user = totalUsers?.find((user) => user.id === userId);
       const activityInfo = activitiesInfo[index];
       const activityName = activityInfo
         ? activityInfo.title
@@ -489,7 +489,7 @@ function Dashboard() {
     }
   }
 
-  console.log(userSteps, totalUsers);
+  console.log(userSteps, totalUsers, todayNotifications, momentNotifications);
 
   return (
     <div className="flex">
