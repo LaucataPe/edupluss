@@ -135,41 +135,45 @@ function AddActivity() {
   return (
     <>
       <Toast ref={toast} />
-      <Link to={`/activities/${roleId}`}>
-        <Button
-          icon="pi pi-angle-double-left"
-          label="Atrás"
-          className="m-2"
-          rounded
-          severity="secondary"
-        />
-      </Link>
-      <div className="card p-fluid my-3 mx-[10%]">
-        {actId ? <h5>Editando Actividad</h5> : <h5>Creando Actividad</h5>}
-        <div className="field">
-          <label>Nombre</label>
-          <InputText
-            type="text"
-            value={activity.title}
-            onChange={(e) =>
-              setActivity({ ...activity, title: e.target.value })
+      <div className="card my-3">
+        <div className="py-2">
+          <Link to={`/activities/${roleId}`}>
+            <Button
+              icon="pi pi-angle-double-left"
+              label="Atrás"
+              className="m-2"
+              rounded
+              severity="secondary"
+            />
+          </Link>
+        </div>
+        <div className="p-fluid my-3 mx-[10%]">
+          {actId ? <h5>Editando Actividad</h5> : <h5>Creando Actividad</h5>}
+          <div className="field">
+            <label>Nombre</label>
+            <InputText
+              type="text"
+              value={activity.title}
+              onChange={(e) =>
+                setActivity({ ...activity, title: e.target.value })
+              }
+            />
+          </div>
+          <div className="field">
+            <label>Cargo</label>
+            <InputText type="text" value={currentRole?.name} disabled />
+          </div>
+          <Button
+            label={actId ? "Editar" : "Crear Actividad"}
+            severity="info"
+            onClick={actId ? handleEdit : handleSubmit}
+            disabled={
+              activity.title.length > 0 && activity.roleId !== 0 ? false : true
             }
           />
         </div>
-        <div className="field">
-          <label>Cargo</label>
-          <InputText type="text" value={currentRole?.name} disabled />
-        </div>
-        <Button
-          label={actId ? "Editar" : "Crear Actividad"}
-          severity="info"
-          onClick={actId ? handleEdit : handleSubmit}
-          disabled={
-            activity.title.length > 0 && activity.roleId !== 0 ? false : true
-          }
-        />
+        <p className="text-red-500 font-semibold">{error}</p>{" "}
       </div>
-      <p className="text-red-500 font-semibold">{error}</p>
     </>
   );
 }
