@@ -163,8 +163,14 @@ function Dashboard() {
     }
   }, [totalUsers, totalStepsByRoleId, userIdCount]);
 
-  const graduatedCount = graduatedUsers.filter((user) => user.graduated).length;
-  const remainingCount = graduatedUsers.length - graduatedCount;
+  const graduatedCount = graduatedUsers?.filter(
+    (user) => user.graduated
+  ).length;
+
+  const remainingCount = totalUsers?.filter(
+    (user) => user.tipo === "empleado" && user.active === true
+  ).length;
+
   // #### Grafico 1 Progreso de usuarios ####
 
   useEffect(() => {
@@ -415,17 +421,18 @@ function Dashboard() {
       refreshChart();
     }
   }, [windowDimensions]);
-  //Notificaciones
+  // Notificaciones
   const now = new Date();
   const twentyFourHoursAgo = new Date(now - 24 * 60 * 60 * 1000);
   const fiveMinutesAgo = new Date(now - 5 * 60 * 1000);
   const totalChanges = {};
 
-  userSteps.forEach((step, index) => {
-    const createdAt = new Date(step.createdAt);
-    const timeDifference = now - createdAt;
+  const momentNotifications = userSteps
+    .filter((step) => step.finished)
+    .map((step, index) => {
+      const createdAt = new Date(step.createdAt);
+      const timeDifference = now - createdAt;
 
-    if (timeDifference <= 24 * 60 * 60 * 1000) {
       const timeParts = {
         days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
         hours: Math.floor(
@@ -435,28 +442,29 @@ function Dashboard() {
         seconds: Math.floor((timeDifference % (1000 * 60)) / 1000),
       };
 
-      const userId = step.UserId; // Obtener el ID del usuario que realizó el paso
+      const userId = step.UserId;
       const user = totalUsers?.find((user) => user.id === userId);
       const activityInfo = activitiesInfo[index];
       const activityName = activityInfo
         ? activityInfo.title
         : "Actividad no encontrada";
 
-      let message;
+      const hoursDifference = timeParts.hours;
+      const minutesDifference = timeParts.minutes;
 
-      if (step.finished) {
-        message = `El usuario ${
-          user?.username || "Usuario desconocido"
-        } completó la actividad ${activityName}`;
+      let timeAgo = "";
+
+      if (hoursDifference === 0) {
+        timeAgo = `hace ${minutesDifference} minutos`;
+      } else if (hoursDifference === 1) {
+        timeAgo = `hace 1 hora`;
       } else {
-        message = `El usuario ${
-          user?.username || "Usuario desconocido"
-        } realizó el paso ${index + 1}: hace${
-          timeParts.days > 0 ? ` ${timeParts.days} día(s)` : ""
-        }${timeParts.hours > 0 ? ` ${timeParts.hours} hora(s)` : ""}${
-          timeParts.minutes > 0 ? ` ${timeParts.minutes} minuto(s)` : ""
-        }${timeParts.seconds > 0 ? ` ${timeParts.seconds} segundo(s)` : ""}`;
+        timeAgo = `hace ${hoursDifference} horas`;
       }
+
+      const message = `El usuario ${
+        user?.username || "Usuario desconocido"
+      } completó la actividad "${activityName}" ${timeAgo}.`;
 
       if (Object.values(timeParts).some((part) => part > 0)) {
         totalChanges[index + 1] = {
@@ -467,14 +475,18 @@ function Dashboard() {
           message: message,
         };
 
-        console.log(`Actividad del paso ${index + 1}: ${activityName}`);
+        return totalChanges[index + 1];
       }
-    }
-  });
+    })
+    .filter((notification) => {
+      return (
+        notification.hoursDifference === 0 &&
+        notification.minutesDifference <= 5
+      );
+    });
 
   const todayNotifications = [];
   const yesterdayNotifications = [];
-  const momentNotifications = [];
 
   for (const stepIndex in totalChanges) {
     const change = totalChanges[stepIndex];
@@ -488,9 +500,6 @@ function Dashboard() {
       yesterdayNotifications.push(change);
     }
   }
-
-  console.log(userSteps, totalUsers, todayNotifications, momentNotifications);
-
   return (
     <div className="flex">
       <div className="container">
@@ -508,30 +517,18 @@ function Dashboard() {
                         <i className="pi pi-users text-orange-500 text-4xl" />
                       </div>
                       <div>
-                        <span className="block text-500 font-medium mb-1">
-                          Usuarios activos:
-                        </span>
-                        <div className="text-900 font-medium text-xl text-center">
-                          {totalActiveUsers
-                            ? totalActiveUsers
-                            : "Esperando usuarios..."}
+                        <div>
+                          <span className="block text-500 font-medium mb-1">
+                            Usuarios:
+                          </span>
+                          <div className="text-900 font-medium text-xl text-center">
+                            {totalActiveUsers
+                              ? totalActiveUsers
+                              : "Esperando usuarios..."}
+                          </div>
                         </div>
                       </div>
                     </div>
-                    {/* <span className="text-green-500 font-medium">
-                  Quedan{" "}
-                  {remainingCount ? remainingCount : "Esperando graduados..."}
-                </span>
-                <span className="text-500"> a la espera de graduarse</span>
-                <div>
-                  <strong>
-                    {graduatedCount && remainingCount
-                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
-                        "%"
-                      : "No se puede calcular el porcentaje en este momento."}{" "}
-                    Porcentaje de graduados
-                  </strong>
-                </div> */}
                   </div>
                 </div>
                 <div className="col-12 lg:col-6 xl:col-3">
@@ -545,7 +542,7 @@ function Dashboard() {
                       </div>
                       <div className="">
                         <span className="block text-500 font-medium mb-1 ">
-                          Actividades activas:
+                          Actividades:
                         </span>
                         <div className="text-900 font-medium text-xl text-center">
                           {totalActivities
@@ -554,20 +551,6 @@ function Dashboard() {
                         </div>
                       </div>
                     </div>
-                    {/* <span className="text-green-500 font-medium">
-                  Quedan{" "}
-                  {remainingCount ? remainingCount : "Esperando graduados..."}
-                </span>
-                <span className="text-500"> a la espera de graduarse</span>
-                <div>
-                  <strong>
-                    {graduatedCount && remainingCount
-                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
-                        "%"
-                      : "No se puede calcular el porcentaje en este momento."}{" "}
-                    Porcentaje de graduados
-                  </strong>
-                </div> */}
                   </div>
                 </div>
                 <div className="col-12 lg:col-6 xl:col-3">
@@ -590,20 +573,6 @@ function Dashboard() {
                         </div>
                       </div>
                     </div>
-                    {/* <span className="text-green-500 font-medium">
-                  Quedan{" "}
-                  {remainingCount ? remainingCount : "Esperando graduados..."}
-                </span>
-                <span className="text-500"> a la espera de graduarse</span>
-                <div>
-                  <strong>
-                    {graduatedCount && remainingCount
-                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
-                        "%"
-                      : "No se puede calcular el porcentaje en este momento."}{" "}
-                    Porcentaje de graduados
-                  </strong>
-                </div> */}
                   </div>
                 </div>
                 <div className="col-12 lg:col-6 xl:col-3">
@@ -628,26 +597,12 @@ function Dashboard() {
                         </div>
                       </div>
                     </div>
-                    {/* <span className="text-green-500 font-medium">
-                  Quedan{" "}
-                  {remainingCount ? remainingCount : "Esperando graduados..."}
-                </span>
-                <span className="text-500"> a la espera de graduarse</span>
-                <div>
-                  <strong>
-                    {graduatedCount && remainingCount
-                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
-                        "%"
-                      : "No se puede calcular el porcentaje en este momento."}{" "}
-                    Porcentaje de graduados
-                  </strong>
-                </div> */}
                   </div>
                 </div>
               </div>
               <div className="grid justify-center">
                 <div className="col-18 lg:col-6 xl:col-7 my-2">
-                  <div className="card mb-0 p-1">
+                  <div className="card mb-0 p-2">
                     <Link to="/admin">
                       <div style={{ width: "100%", height: "400px" }}>
                         <Bar options={options2} data={data2} />
@@ -656,7 +611,7 @@ function Dashboard() {
                   </div>
                 </div>
                 <div className="col-18 lg:col-6 xl:col-5 my-2">
-                  <div className="card mb-0">
+                  <div className="card mb-0 p-2">
                     <Link to="/progress">
                       <div style={{ width: "100%", height: "400px" }}>
                         <Bar options={options} data={data} />
@@ -666,86 +621,71 @@ function Dashboard() {
                 </div>
                 <div className="card">
                   <div className="flex align-items-center justify-content-between mb-4">
-                    <h5>Notifications</h5>
+                    <h5>Notificaciones</h5>
                   </div>
-                  {momentNotifications?.length > 0 && (
-                    <div>
-                      <span className="block text-600 font-medium mb-3">
-                        Últimas actualizaciones
-                      </span>
-                      <ul className="p-0 mx-0 mt-0 mb-4 list-none">
-                        {momentNotifications?.map((notification, index) => (
-                          <li
-                            key={index}
-                            className="flex align-items-center py-2 border-bottom-1 surface-border"
-                          >
-                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                              <i className="pi pi-book text-xl text-blue-500" />
-                            </div>
-                            <span className="text-900 line-height-3">
-                              El usuario {notification.user} realizó el paso{" "}
-                              {notification.step} de esta actividad{" "}
-                              {notification.activity}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {todayNotifications?.length > 0 && (
-                    <div>
-                      <span className="block text-600 font-medium mb-3">
-                        Hoy
-                      </span>
-                      <ul className="p-0 mx-0 mt-0 mb-4 list-none">
-                        {todayNotifications?.map((notification, index) => (
-                          <li
-                            key={index}
-                            className="flex align-items-center py-2 border-bottom-1 surface-border"
-                          >
-                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                              <i className="pi pi-book text-xl text-blue-500" />
-                            </div>
-                            <span className="text-900 line-height-3">
-                              El usuario {notification.user} realizó el paso{" "}
-                              {notification.step} de esta actividad{" "}
-                              {notification.activity}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {yesterdayNotifications.length > 0 && (
-                    <div>
-                      <span className="block text-600 font-medium mb-3">
-                        YESTERDAY
-                      </span>
-                      <ul className="p-0 m-0 list-none">
-                        {yesterdayNotifications.map((notification, index) => (
-                          <li
-                            key={index}
-                            className="flex align-items-center py-2 border-bottom-1 surface-border"
-                          >
-                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                              <i className="pi pi-dollar text-xl text-blue-500" />
-                            </div>
-                            <span className="text-900 line-height-3">
-                              El usuario {notification.user} realizó el paso{" "}
-                              {notification.step} de esta actividad{" "}
-                              {notification.activity}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                  <div className="notification-section">
+                    <span className="block text-600 font-medium mb-3">
+                      Últimas actualizaciones
+                    </span>
+                    <ul className="p-0 mx-0 mt-0 mb-4 list-none overflow-y-auto max-h-72">
+                      {momentNotifications?.map((notification, index) => (
+                        <li
+                          key={index}
+                          className="flex align-items-center py-2 border-bottom-1 surface-border"
+                        >
+                          <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-green-100 border-circle mr-3 flex-shrink-0">
+                            <i className="pi pi-check text-xl text-green-500" />
+                          </div>
+                          <span className="text-900 line-height-3">
+                            {notification.message}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="notification-section">
+                    <span className="block text-600 font-medium mb-3">Hoy</span>
+                    <ul className="p-0 mx-0 mt-0 mb-4 list-none overflow-y-auto max-h-72">
+                      {todayNotifications?.map((notification, index) => (
+                        <li
+                          key={index}
+                          className="flex align-items-center py-2 border-bottom-1 surface-border"
+                        >
+                          <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
+                            <i className="pi pi-book text-xl text-blue-500" />
+                          </div>
+                          <span className="text-900 line-height-3">
+                            {notification.message}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="notification-section">
+                    <span className="block text-600 font-medium mb-3">
+                      Ayer
+                    </span>
+                    <ul className="p-0 mx-0 mt-0 mb-4 list-none overflow-y-auto max-h-72">
+                      {yesterdayNotifications.map((notification, index) => (
+                        <li
+                          key={index}
+                          className="flex align-items-center py-2 border-bottom-1 surface-border"
+                        >
+                          <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-yellow-100 border-circle mr-3 flex-shrink-0">
+                            <i className="pi pi-lock text-xl text-yellow-400" />
+                          </div>
+                          <span className="text-900 line-height-3">
+                            {notification.message}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
-              <div className="flex justify-center">
+              {/* <div className="flex justify-center">
                 <Button label="Escalar y Reiniciar" onClick={refreshChart} />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
