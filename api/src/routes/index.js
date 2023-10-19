@@ -24,17 +24,25 @@ const {
 } = require("../controllers/Reviews/getReviewsByActivity");
 const { getCompanyRoles } = require("../controllers/Roles/getCompanyRoles");
 
+const { getReview } = require("../controllers/Reviews/getReview");
+const { getReviewsByUser } = require("../controllers/Reviews/getReviewsByUser");
 
-
-const { getReview } = require('../controllers/Reviews/getReview');
-const { getReviewsByUser } = require('../controllers/Reviews/getReviewsByUser');
-
-const { getActivitiesByAdminUser } = require("../controllers/Activities/getActivitiesByAdminUser");
-const { getEmployeesAndGrades } = require("../controllers/TestGrade/getEmployeesAndGrades");
+const {
+  getActivitiesByAdminUser,
+} = require("../controllers/Activities/getActivitiesByAdminUser");
+const {
+  getEmployeesAndGrades,
+} = require("../controllers/TestGrade/getEmployeesAndGrades");
 const { getTestGrade } = require("../controllers/TestGrade/getTestGrade");
-const { getAllTestGradesByUser } = require("../controllers/TestGrade/getAllTestGradesByUser");
-const { getGradesOfAllEmployeesByActivity } = require("../controllers/TestGrade/getGradesOfAllEmployeesByActivity");
-const { getGradePercentageByCompany } = require("../controllers/TestGrade/getGradePercentageByCompany");
+const {
+  getAllTestGradesByUser,
+} = require("../controllers/TestGrade/getAllTestGradesByUser");
+const {
+  getGradesOfAllEmployeesByActivity,
+} = require("../controllers/TestGrade/getGradesOfAllEmployeesByActivity");
+const {
+  getGradePercentageByCompany,
+} = require("../controllers/TestGrade/getGradePercentageByCompany");
 
 //USER GET
 const { getAllUsers } = require("../controllers/Users/getAllUsers");
@@ -68,16 +76,21 @@ router.get("/user/areas/:id", getUserAreas);
 
 router.get("/userStep", getUserSteps);
 
-
-router.get('/review', getReview);
-router.get('/reviews/activity', getReviewsByActivity);
-router.get('/reviews/user', getReviewsByUser);
+router.get("/review", getReview);
+router.get("/reviews/activity", getReviewsByActivity);
+router.get("/reviews/user", getReviewsByUser);
 
 router.get("/admin/activities/:id", getActivitiesByAdminUser);
-router.get("/admin/employeesGrades/:adminId/:activityId", getEmployeesAndGrades);
+router.get(
+  "/admin/employeesGrades/:adminId/:activityId",
+  getEmployeesAndGrades
+);
 router.get("/test", getTestGrade);
 router.get("/tests/:adminId/:employeeId", getAllTestGradesByUser);
-router.get("/tests/activity/:adminId/:activityId", getGradesOfAllEmployeesByActivity);
+router.get(
+  "/tests/activity/:adminId/:activityId",
+  getGradesOfAllEmployeesByActivity
+);
 router.get("/tests/company/:id", getGradePercentageByCompany);
 
 //Session
@@ -124,7 +137,6 @@ const {
   setOrderActivities,
 } = require("../controllers/Activities/setOrderActivities");
 
-
 //PUT
 router.put("/activity/state", ActivityState);
 router.put("/area/state", AreaState);
@@ -136,7 +148,6 @@ router.put("/test/update", updateTestGrade);
 router.patch("/activity/update", updateActivity);
 router.patch("/empresa/update", updateEmpresa);
 router.put("/activities/:roleId", verifyRole("admin"), setOrderActivities);
-
 
 //DELETE Controllers
 const { deleteAreaCascade } = require("../controllers/Areas/deleteArea");
@@ -151,7 +162,7 @@ router.delete("/area/:id", deleteAreaCascade);
 router.delete("/activity/:id", deleteActivity);
 router.delete("/role/:id", deleteRole);
 router.delete("/step/:id", deleteStep);
-router.delete("/user/:id", deleteUser);
+router.delete("/user/:companyUsersId", verifyRole("admin"), deleteUser);
 router.delete("/reviews", deleteReview);
 
 module.exports = { router };
