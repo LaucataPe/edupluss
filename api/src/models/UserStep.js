@@ -14,6 +14,6 @@ module.exports = (database) => {
       defaultValue: false
     },
   },{
-    timestamps: false
+    timestamps: true
   });
 };

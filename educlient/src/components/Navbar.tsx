@@ -1,10 +1,13 @@
 import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { resetActivities } from "../redux/features/activitiesSlice";
 import { Avatar } from "primereact/avatar";
+
 import { Button } from "primereact/button";
+import { InputSwitch } from "primereact/inputswitch";
+
 import { Menu } from "primereact/menu";
 import { handleSideBar } from "../redux/features/utilsSlice";
 import profile from "../assets/profile.png";
@@ -49,6 +52,7 @@ function NavBar() {
 
   return (
     <>
+
       <nav className=" navbar_background-color fixed py-3 top-0 px-3 w-full h-16  flex  justify-between items-center z-10">
         <div className="flex justify-between items-center w-full">
           <div className="flex gap-5 justify-center items-center ">
@@ -81,8 +85,10 @@ function NavBar() {
             image={profile}
           ></Avatar>
 
+
           <Menu ref={menu} model={overlayMenuItems} popup />
         </div>
+
       </nav>
     </>
   );
