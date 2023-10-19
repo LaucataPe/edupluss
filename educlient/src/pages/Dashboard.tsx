@@ -518,20 +518,6 @@ function Dashboard() {
                         </div>
                       </div>
                     </div>
-                    {/* <span className="text-green-500 font-medium">
-                  Quedan{" "}
-                  {remainingCount ? remainingCount : "Esperando graduados..."}
-                </span>
-                <span className="text-500"> a la espera de graduarse</span>
-                <div>
-                  <strong>
-                    {graduatedCount && remainingCount
-                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
-                        "%"
-                      : "No se puede calcular el porcentaje en este momento."}{" "}
-                    Porcentaje de graduados
-                  </strong>
-                </div> */}
                   </div>
                 </div>
                 <div className="col-12 lg:col-6 xl:col-3">
@@ -554,20 +540,6 @@ function Dashboard() {
                         </div>
                       </div>
                     </div>
-                    {/* <span className="text-green-500 font-medium">
-                  Quedan{" "}
-                  {remainingCount ? remainingCount : "Esperando graduados..."}
-                </span>
-                <span className="text-500"> a la espera de graduarse</span>
-                <div>
-                  <strong>
-                    {graduatedCount && remainingCount
-                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
-                        "%"
-                      : "No se puede calcular el porcentaje en este momento."}{" "}
-                    Porcentaje de graduados
-                  </strong>
-                </div> */}
                   </div>
                 </div>
                 <div className="col-12 lg:col-6 xl:col-3">
@@ -590,20 +562,6 @@ function Dashboard() {
                         </div>
                       </div>
                     </div>
-                    {/* <span className="text-green-500 font-medium">
-                  Quedan{" "}
-                  {remainingCount ? remainingCount : "Esperando graduados..."}
-                </span>
-                <span className="text-500"> a la espera de graduarse</span>
-                <div>
-                  <strong>
-                    {graduatedCount && remainingCount
-                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
-                        "%"
-                      : "No se puede calcular el porcentaje en este momento."}{" "}
-                    Porcentaje de graduados
-                  </strong>
-                </div> */}
                   </div>
                 </div>
                 <div className="col-12 lg:col-6 xl:col-3">
@@ -628,20 +586,6 @@ function Dashboard() {
                         </div>
                       </div>
                     </div>
-                    {/* <span className="text-green-500 font-medium">
-                  Quedan{" "}
-                  {remainingCount ? remainingCount : "Esperando graduados..."}
-                </span>
-                <span className="text-500"> a la espera de graduarse</span>
-                <div>
-                  <strong>
-                    {graduatedCount && remainingCount
-                      ? ((graduatedCount / remainingCount) * 100).toFixed(2) +
-                        "%"
-                      : "No se puede calcular el porcentaje en este momento."}{" "}
-                    Porcentaje de graduados
-                  </strong>
-                </div> */}
                   </div>
                 </div>
               </div>
@@ -683,9 +627,7 @@ function Dashboard() {
                               <i className="pi pi-book text-xl text-blue-500" />
                             </div>
                             <span className="text-900 line-height-3">
-                              El usuario {notification.user} realizó el paso{" "}
-                              {notification.step} de esta actividad{" "}
-                              {notification.activity}
+                              {notification.message}
                             </span>
                           </li>
                         ))}
@@ -707,9 +649,7 @@ function Dashboard() {
                               <i className="pi pi-book text-xl text-blue-500" />
                             </div>
                             <span className="text-900 line-height-3">
-                              El usuario {notification.user} realizó el paso{" "}
-                              {notification.step} de esta actividad{" "}
-                              {notification.activity}
+                              {notification.message}
                             </span>
                           </li>
                         ))}
@@ -732,9 +672,7 @@ function Dashboard() {
                               <i className="pi pi-dollar text-xl text-blue-500" />
                             </div>
                             <span className="text-900 line-height-3">
-                              El usuario {notification.user} realizó el paso{" "}
-                              {notification.step} de esta actividad{" "}
-                              {notification.activity}
+                              {notification.message}
                             </span>
                           </li>
                         ))}
