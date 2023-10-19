@@ -7,7 +7,7 @@ import { getStepsActivity } from "../../redux/features/stepsSlider";
 import { Button } from "primereact/button";
 import { DataView, DataViewLayoutOptions } from "primereact/dataview";
 import { Dialog } from "primereact/dialog";
-import { Calendar } from 'primereact/calendar';
+import { Calendar } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import { LayoutType } from "../../utils/types/types";
 import { Step } from "../../utils/interfaces";
@@ -20,7 +20,6 @@ interface testInputs {
   formURL: string;
   excelURL: string;
 }
-
 
 function ActivitySteps() {
   const dispatch = useAppDispatch();
@@ -40,8 +39,9 @@ function ActivitySteps() {
   const initialTime = new Date();
   initialTime.setHours(0);
   initialTime.setMinutes(0);
-  const [time, setTime] = useState<Nullable<string | Date | Date[]>>(initialTime);
-  
+  const [time, setTime] =
+    useState<Nullable<string | Date | Date[]>>(initialTime);
+
   const toast = useRef<Toast>(null);
 
   const handleChangeTestUrls = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +79,7 @@ function ActivitySteps() {
   const dataviewListItem = (data: Step) => {
     return (
       <div className="col-12">
-        <div className="flex flex-column md:flex-row align-items-center px-3 w-full">
+        <div className="flex flex-column md:flex-row align-items-center py-2 w-full">
           <img
             src="https://images.pexels.com/photos/15401447/pexels-photo-15401447/free-photo-of-texto-cartas-dados-fondo-blanco.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             alt="Foto Random"
@@ -112,9 +112,9 @@ function ActivitySteps() {
 
   const dataviewGridItem = (data: Step) => {
     return (
-      <div className="col-12 lg:col-4">
-        <div className="card m-3 border-1 surface-border">
-          <div className="flex flex-column align-items-center text-center mb-3">
+      <div className="col-12 px-3 lg:col-4">
+        <div className="card my-3 border-1 surface-border">
+          <div className="flex flex-column align-items-center text-center mb-3 mx-3">
             <img
               src="https://images.pexels.com/photos/15401447/pexels-photo-15401447/free-photo-of-texto-cartas-dados-fondo-blanco.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
               alt="Foto Random"
@@ -196,19 +196,19 @@ function ActivitySteps() {
 
       //Format data to send
       let urlsData;
-      if(time) {
+      if (time) {
         let duration;
 
         if (time instanceof Date) {
           // Get hours, minutes y seconds
-          const hours = time.getHours().toString().padStart(2, '0');
-          const minutes = time.getMinutes().toString().padStart(2, '0');
+          const hours = time.getHours().toString().padStart(2, "0");
+          const minutes = time.getMinutes().toString().padStart(2, "0");
           //const seconds = time.getSeconds().toString().padStart(2, '0');
-          const seconds = "00"
+          const seconds = "00";
           duration = `${hours}:${minutes}:${seconds}`;
         }
-        
-        if (duration === "00:00:00"){
+
+        if (duration === "00:00:00") {
           duration = null;
         }
 
@@ -218,15 +218,14 @@ function ActivitySteps() {
           durationTest: duration,
           ...testUrls,
         };
-        
-      }else {
+      } else {
         urlsData = {
           id: id,
           hasTest: true,
           ...testUrls,
         };
       }
-      
+
       const response = await axios.patch(
         "http://localhost:3001/activity/update",
         urlsData,
@@ -285,19 +284,20 @@ function ActivitySteps() {
   return (
     <>
       <Toast ref={toast} />
-
-      <Link to={`/activities/${role.id}`}>
-        <Button
-          icon="pi pi-angle-double-left"
-          label="Atrás"
-          className="mt-3 mx-2"
-          rounded
-          severity="secondary"
-        />
-      </Link>
-      <div className="list-demo relative">
+      <div className="list-demo relative pt-2">
         <div className="col-12">
           <div className="card h-[700px] overflow-auto">
+            <div className="py-2">
+              <Link to={`/activities/${role.id}`}>
+                <Button
+                  icon="pi pi-angle-double-left"
+                  label="Atrás"
+                  className="mt-3 mx-2"
+                  rounded
+                  severity="secondary"
+                />
+              </Link>
+            </div>
             <DataView
               value={steps}
               emptyMessage="No hay pasos en este actividad"
@@ -306,25 +306,24 @@ function ActivitySteps() {
               itemTemplate={itemTemplate}
               header={dataViewHeader}
             ></DataView>
+            <div className="flex justify-content-between">
+              <div className="flex align-items-start">
+                <Link to={`/addStep/${id}`}>
+                  <Button label="+ Crear Paso" severity="info" rounded />
+                </Link>
+              </div>
+              <div className="flex align-items-end">
+                <Button
+                  label="+ Agregar test"
+                  severity="info"
+                  rounded
+                  onClick={() => setShowAddTestModal(true)}
+                />
+              </div>
+            </div>
           </div>
         </div>
-        <Link to={`/addStep/${id}`}>
-          <Button
-            label="+ Crear Paso"
-            severity="info"
-            rounded
-            className="absolute right-4 bottom-4 "
-          />
-        </Link>
-        <Button
-          label="+ Agregar test"
-          severity="info"
-          rounded
-          className="absolute left-4 bottom-4"
-          onClick={() => setShowAddTestModal(true)}
-        />
       </div>
-
       <Dialog
         header="Eliminar Paso"
         visible={displayConfirmation}
@@ -341,7 +340,6 @@ function ActivitySteps() {
           <span>¿Estás seguro que desea eliminar este paso?</span>
         </div>
       </Dialog>
-
       <Dialog
         header="Agregar test"
         visible={showAddTestModal}
@@ -372,19 +370,27 @@ function ActivitySteps() {
             />
           </div>
           <div className="field flex gap-2">
-            <InputSwitch checked={checked} onChange={(e: InputSwitchChangeEvent) => setChecked(e.value ?? false)} />
+            <InputSwitch
+              checked={checked}
+              onChange={(e: InputSwitchChangeEvent) =>
+                setChecked(e.value ?? false)
+              }
+            />
             <label>Agregar tiempo al Test</label>
           </div>
-            {
-              checked ?
-              <div className="flex-auto">
-                <label htmlFor="calendar-timeonly" className=" block mb-2">
-                    Duración - Horas : Minutos
-                </label>
-                <Calendar id="calendar-timeonly" value={time} onChange={(e) => setTime(e.value)} timeOnly />
+          {checked ? (
+            <div className="flex-auto">
+              <label htmlFor="calendar-timeonly" className=" block mb-2">
+                Duración - Horas : Minutos
+              </label>
+              <Calendar
+                id="calendar-timeonly"
+                value={time}
+                onChange={(e) => setTime(e.value)}
+                timeOnly
+              />
             </div>
-            : null
-            }
+          ) : null}
         </div>
       </Dialog>
     </>
