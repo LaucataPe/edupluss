@@ -40,7 +40,7 @@ import UserByCompany from "./components/superAdmin/UsersByCompany";
 import { AxiosInterceptor } from "./utils/interceptors/axiosInterceptor";
 import { useState } from "react";
 import EvaluationList from "./pages/EvaluationList";
-import ListEmployeesQualifications from "./pages/ListEmployeesQualifications";
+import ListEmployeesQualifications from "./pages/ListEmployeesQualifications/ListEmployeesQualifications";
 import Sidebar from "./components/Sidebar";
 
 function App() {

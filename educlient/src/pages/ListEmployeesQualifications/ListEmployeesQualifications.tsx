@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState } from "../../redux/store";
 import { Doughnut } from "react-chartjs-2";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
@@ -11,7 +11,9 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
-import { TestGrade, GradePercentage, EmployeeQualification } from "../utils/interfaces";
+import { TestGrade, GradePercentage, EmployeeQualification } from "../../utils/interfaces";
+import styles from "./ListEmployeesQuealifications.module.css";
+
 
 function ListEmployeesQualifications() {
   const { activityId } = useParams();
@@ -33,7 +35,6 @@ function ListEmployeesQualifications() {
     gradeValue: "0",
     maximunGradeValue: "0",
   };
-  const [errorTests, setErrorTests] = useState<EmployeeQualification[]>([]);
   
   const [testGrade, setTestGrade] = useState<EmployeeQualification>(emptyUserTestGrade);
   const toast = useRef<Toast>(null);
@@ -60,8 +61,10 @@ function ListEmployeesQualifications() {
         console.error("Error al obtener datos de las calificaciones:", error);
       }
     };
-    getEmployeesQualifications();
-  }, [isUpdated]);
+    if(logUser.id !== 0){
+      getEmployeesQualifications();
+    }
+  }, [isUpdated, logUser.id]);
   
   const hideDialog = () => {
     setSubmitted(false);
@@ -243,7 +246,14 @@ function ListEmployeesQualifications() {
   const punctuationBodyTemplate = (rowData: EmployeeQualification) => {
     return (
       <div className=" pl-4">
-        {rowData.gradeValue}/{rowData.maximunGradeValue}
+        {
+          rowData.gradeValue === null && rowData.maximunGradeValue === null ?
+          <p>0/0</p>
+          :
+          <p>
+            {rowData.gradeValue}/{rowData.maximunGradeValue}
+          </p>
+        }
       </div>
     );
   };
@@ -270,6 +280,7 @@ function ListEmployeesQualifications() {
 
   const statusBodyTemplate = (rowData: EmployeeQualification) => {
     return (
+      <div className="">
       <span
         key={rowData.idTestGrade}
         className={`p-badge p-mr-1 h-auto ${
@@ -278,6 +289,7 @@ function ListEmployeesQualifications() {
       >
         {rowData.errorTest ? "Error Test" : "Completado"}
       </span>
+      </div>
     );
   };
 
@@ -303,7 +315,6 @@ function ListEmployeesQualifications() {
       </>
     );
   };
-  //pi-info-circle
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -312,11 +323,11 @@ function ListEmployeesQualifications() {
             onClick={() => setInfoVisible(true)}
             severity="info"
           >
-          <i className="pi pi-exclamation-circle text-2xl"></i>
+          <i className="pi pi-exclamation-circle w-[30px] md:w-[26px] text-md md:text-2xl"></i>
           </Button>
-        <h5 className="m-0 text-2xl">Gestionar Evaluados</h5>
+        <h5 className="m-0 text-base lg:text-2xl">Gestionar Evaluados</h5>
       </div>
-      <div className=" flex gap-2">
+      <div className="  sm:flex flex-col-reverse  md:flex-row gap-2 hidden ">
         <Button
           label="Eliminar"
           icon="pi pi-trash"
@@ -324,10 +335,11 @@ function ListEmployeesQualifications() {
           onClick={confirmDeleteSelected}
           disabled={!selectedUsers || selectedUsers.length < 2}
         />
-        <span className="block mt-2 md:mt-0 p-input-icon-left">
+        <span className="block mt-2 md:mt-0 p-input-icon-left ">
           <i className="pi pi-search" />
           <InputText
             type="search"
+            className=" w-[100%]"
             onInput={(e) => setGlobalFilter(e.currentTarget.value)}
             placeholder="Buscar por nombre..."
           />
@@ -389,34 +401,34 @@ function ListEmployeesQualifications() {
   };
 
   return (
-    <div className="flex mt-2">
+    <div className="flex mt-2 ml-3 sm:ml-0">
       <Toast ref={toast} />
       <div className="col-12 align-items-center ">
-        <section className="card justify-content-center  overflow-hidden py-0 gird grid-cols-3 h-[88vh]">
-          <div className=" h-[10%] flex items-center justify-evenly px-6">
+        <section className="card justify-content-center overflow-hidden py-0 gird grid-cols-3 md:h-[88vh] w-[100%]">
+          <div className=" h-[100px]  gap-2  w-[100%] flex items-center justify-evenly md:px-6 md:h-[10%] md:gap-0">
             <Link to={"/activitiesList"} className="no-underline">
               <i
-                className="pi pi-arrow-left"
-                style={{ fontSize: "2rem", color: "grey" }}
+                className="pi pi-arrow-left text-xl sm:text-2xl lg:text-3xl xl:text-4xl"
+                style={{  color: "grey" }}
               ></i>
             </Link>
-            <p className=" text-4xl text-cyan-800  text-center flex-grow">
+            <p className=" text-xl md:text-2xl lg:text-4xl text-cyan-800  text-center md:flex-grow">
               Evaluación de: {activityTitle}
             </p>
           </div>
 
-          <div className="flex justify-between h-[25%]">
-            <div className=" flex flex-col items-center w-[20vw] bg-slate-200  rounded-2xl">
-              <p className=" text-2xl text-cyan-800 mt-2"># Respuestas</p>
-              <p className=" text-7xl text-black h-[133px] py-5">
+          <div className="flex flex-col justify-center items-center gap-4 md:flex-row md:justify-between md:gap-0 md:h-[25%] w-[100%]">
+            <div className=" flex flex-col items-center w-[100%] h-[220px] md:w-[22%] lg:md:h-[200px] bg-slate-200 rounded-2xl text-center">
+              <p className=" text-xl lg:text-2xl text-cyan-800 mt-2"># Respuestas</p>
+              <p className=" text-6xl h-[160px] md:text-7xl text-black sm:h-[133px] py-6 sm:py-5">
                 {employeesQualifications.length}
               </p>
             </div>
-            <div className=" flex flex-col items-center w-[20vw] bg-slate-200 rounded-2xl">
-              <p className=" text-2xl text-cyan-800 mt-2">
+            <div className=" flex flex-col items-center text-center w-[100%] h-[220px] md:w-[38%] lg:w-[20vw] lg:md:h-[200px] bg-slate-200 rounded-2xl">
+              <p className=" text-xl lg:text-2xl text-cyan-800 mt-2">
                 Porcentaje de Aprobación
               </p>
-              <div className="relative w-[38%]">
+              <div className="relative w-[54%] sm:w-[70%] md:w-[56%] lg:w-[34%]">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <p className="text-md font-semibold text-gray-800">
                     {percentageGrades}%
@@ -425,16 +437,16 @@ function ListEmployeesQualifications() {
                 <Doughnut data={data} options={options} />
               </div>
             </div>
-            <div className=" flex flex-col items-center w-[20vw] bg-slate-200  rounded-2xl">
-              <p className=" text-2xl text-cyan-800 mt-2"># Errores en Tests</p>
-              <p className=" text-7xl text-black h-[133px] py-5">
+            <div className=" flex flex-col items-center w-[100%] h-[220px] md:w-[22%] lg:h-[200px] bg-slate-200  rounded-2xl">
+              <p className=" text-xl lg:text-2xl text-cyan-800 mt-2"># Errores Tests</p>
+              <p className=" text-6xl md:text-7xl text-black h-[160px] sm:h-[133px] py-6 sm:py-5">
                 {employeesQualifications.filter(employee => employee.errorTest).length}
               </p>
             </div>
           </div>
 
           <div className=" h-[65%] flex items-center justify-center">
-            <div className="card h-[96%] w-full">
+            <div className=" card h-[96%] w-full mb-4 mt-4 md:mt-0 md:mb-0">
               <DataTable
                 ref={dt}
                 value={employeesQualifications}
@@ -456,13 +468,15 @@ function ListEmployeesQualifications() {
                   display: "flex",
                   flexDirection: "column",
                   alignSelf: "center",
+                  height: "100%",
+                  width: "100%"
                 }}
-                className=" h-[100%] w-[100%]"
               >
                 <Column
                   selectionMode="multiple"
                   headerStyle={{ width: "4rem" }}
                   frozen 
+                  className={styles.hiddenSmall}
                 ></Column>
                 <Column
                   field="username"
@@ -474,38 +488,36 @@ function ListEmployeesQualifications() {
                   field="errorTest"
                   header="Estado"
                   sortable
+                  className={styles.hiddenSmall}
                   body={statusBodyTemplate}
                 ></Column>
                 <Column
                   field="punctuation"
                   header="Puntuación"
-                  //sortable
                   body={punctuationBodyTemplate}
                 ></Column>
                 <Column
                   field="gradePercentage"
                   header="Porcentaje"
+                  className={styles.hiddenSmall}
                   body={percentageBodyTemplate}
                 ></Column>
                 <Column
                   body={actionBodyTemplate}
-                  frozen
                   field="edit"
                   header="Editar/Eliminar"
                   alignFrozen="right"
                 ></Column>
               </DataTable>
-
               <Dialog
                 visible={userDialog}
-                style={{ width: "450px" }}
                 header={
                   testGrade.idTestGrade !== 0
                     ? "Editar Calificación"
                     : "Error: Calificación no encontrada"
                 }
                 modal
-                className="p-fluid"
+                className="p-fluid w-[340px] md:w-[450px]"
                 footer={userDialogFooter}
                 onHide={hideDialog}
               >
@@ -551,7 +563,7 @@ function ListEmployeesQualifications() {
 
               <Dialog
                 visible={deleteUserDialog}
-                className="w-[30vw]"
+                className="w-[340px] md:w-[450px]"
                 header="Confirmar"
                 modal
                 footer={deleteUserDialogFooter}
@@ -563,7 +575,7 @@ function ListEmployeesQualifications() {
                     style={{ fontSize: "2rem" }}
                   />
                   {testGrade && (
-                    <div className=" flex flex-col gap-1">
+                    <div className=" flex flex-col gap-1 pt-4 md:pt0">
                       <span>
                         ¿Estás seguro que deseas eliminar el registro de
                         evaluación del usuario <b>{testGrade?.username}</b>?
@@ -601,11 +613,16 @@ function ListEmployeesQualifications() {
                 header="Información al administrador"
                 visible={infoVisible}
                 onHide={() => setInfoVisible(false)}
-                className="w-[38vw]"
+                className="p-fluid w-[340px] md:w-[500px]"
                 modal
               >
                 <div className="flex align-items-center justify-content-center">
                   <ul className="m-0 gap-4 text-lg text-slate-950">
+                  <li className=" pb-4 sm:hidden text-center">
+                      <b className=" text-red-700 ">
+                        Para una mejor experiencia le recomendamos utilizar un dispositivo de mayor tamaño.
+                      </b>
+                    </li>
                     <li className=" py-1">
                       Posibles casos del estado "Error Test":
                     </li>
@@ -614,6 +631,9 @@ function ListEmployeesQualifications() {
                     </li>
                     <li className=" py-1">
                       Si el empleado recarga la página y no envió el Test.
+                    </li>
+                    <li className=" py-1">
+                      Si el empleado realiza el test, lo envia y luego recarga la pagina.
                     </li>
                     <li className=" py-1">
                       Si el empleado ingresa un correo electrónico en el Test que no coincide con el ingresado en Edupluss.

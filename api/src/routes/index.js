@@ -86,7 +86,7 @@ router.get(
   getEmployeesAndGrades
 );
 router.get("/test", getTestGrade);
-router.get("/tests/:adminId/:employeeId", getAllTestGradesByUser);
+router.get("/tests/:employeeId", getAllTestGradesByUser);
 router.get(
   "/tests/activity/:adminId/:activityId",
   getGradesOfAllEmployeesByActivity
