@@ -163,8 +163,14 @@ function Dashboard() {
     }
   }, [totalUsers, totalStepsByRoleId, userIdCount]);
 
-  const graduatedCount = graduatedUsers.filter((user) => user.graduated).length;
-  const remainingCount = graduatedUsers.length - graduatedCount;
+  const graduatedCount = graduatedUsers?.filter(
+    (user) => user.graduated
+  ).length;
+
+  const remainingCount = totalUsers?.filter(
+    (user) => user.tipo === "empleado" && user.active === true
+  ).length;
+
   // #### Grafico 1 Progreso de usuarios ####
 
   useEffect(() => {
@@ -469,7 +475,6 @@ function Dashboard() {
           message: message,
         };
 
-        console.log(`Actividad del paso ${index + 1}: ${activityName}`);
         return totalChanges[index + 1];
       }
     })
@@ -495,9 +500,6 @@ function Dashboard() {
       yesterdayNotifications.push(change);
     }
   }
-
-  console.log(userSteps, totalUsers, todayNotifications, momentNotifications);
-
   return (
     <div className="flex">
       <div className="container">
