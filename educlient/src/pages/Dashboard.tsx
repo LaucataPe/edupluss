@@ -617,7 +617,7 @@ function Dashboard() {
                 </div>
                 <div className="card">
                   <div className="flex align-items-center justify-content-between mb-4">
-                    <h5>Notifications</h5>
+                    <h5>Notificaciones</h5>
                   </div>
                   <div className="notification-section">
                     <span className="block text-600 font-medium mb-3">
