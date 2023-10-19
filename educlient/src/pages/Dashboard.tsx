@@ -474,7 +474,6 @@ function Dashboard() {
       }
     })
     .filter((notification) => {
-      // Filtrar notificaciones que tienen 5 minutos o menos de antigüedad
       return (
         notification.hoursDifference === 0 &&
         notification.minutesDifference <= 5
@@ -599,7 +598,7 @@ function Dashboard() {
               </div>
               <div className="grid justify-center">
                 <div className="col-18 lg:col-6 xl:col-7 my-2">
-                  <div className="card mb-0 p-1">
+                  <div className="card mb-0 p-2">
                     <Link to="/admin">
                       <div style={{ width: "100%", height: "400px" }}>
                         <Bar options={options2} data={data2} />
@@ -608,7 +607,7 @@ function Dashboard() {
                   </div>
                 </div>
                 <div className="col-18 lg:col-6 xl:col-5 my-2">
-                  <div className="card mb-0">
+                  <div className="card mb-0 p-2">
                     <Link to="/progress">
                       <div style={{ width: "100%", height: "400px" }}>
                         <Bar options={options} data={data} />
@@ -620,8 +619,6 @@ function Dashboard() {
                   <div className="flex align-items-center justify-content-between mb-4">
                     <h5>Notifications</h5>
                   </div>
-
-                  {/* Últimas actualizaciones */}
                   <div className="notification-section">
                     <span className="block text-600 font-medium mb-3">
                       Últimas actualizaciones
@@ -642,8 +639,6 @@ function Dashboard() {
                       ))}
                     </ul>
                   </div>
-
-                  {/* Hoy */}
                   <div className="notification-section">
                     <span className="block text-600 font-medium mb-3">Hoy</span>
                     <ul className="p-0 mx-0 mt-0 mb-4 list-none overflow-y-auto max-h-72">
@@ -662,8 +657,6 @@ function Dashboard() {
                       ))}
                     </ul>
                   </div>
-
-                  {/* Ayer */}
                   <div className="notification-section">
                     <span className="block text-600 font-medium mb-3">
                       Ayer
@@ -686,9 +679,9 @@ function Dashboard() {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-center">
+              {/* <div className="flex justify-center">
                 <Button label="Escalar y Reiniciar" onClick={refreshChart} />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
