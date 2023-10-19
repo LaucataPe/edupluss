@@ -208,128 +208,132 @@ function Progress() {
 
   return (
     <div className="flex">
-      <div className="w-[100%]">
-        <div className="p-5">
-          <h3 className="text-xl font-semibold">
-            Progreso general de Actividades:{" "}
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                rounded
-                severity="info"
-                icon="pi pi-arrow-left"
-                onClick={() => {
-                  if (currentPage > 1) {
-                    setCurrentPage((prevPage) => prevPage - 1);
-                  }
-                }}
-                disabled={currentPage === 1}
-                className="btn btn-primary"
-              ></Button>
-              <Button
-                rounded
-                severity="info"
-                icon="pi pi-arrow-right"
-                onClick={() => {
-                  if (currentPage < totalPages) {
-                    setCurrentPage((prevPage) => prevPage + 1);
-                  }
-                }}
-                disabled={currentPage === totalPages}
-                className="btn btn-primary"
-                style={{ marginLeft: "10px" }}
-              ></Button>
-            </div>
-          </h3>
+      <div className="container">
+        <div className="card my-3">
+          <div className="w-[100%]">
+            <div className="p-5">
+              <h3 className="text-xl font-semibold">
+                Progreso general de Actividades:{" "}
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Button
+                    rounded
+                    severity="info"
+                    icon="pi pi-arrow-left"
+                    onClick={() => {
+                      if (currentPage > 1) {
+                        setCurrentPage((prevPage) => prevPage - 1);
+                      }
+                    }}
+                    disabled={currentPage === 1}
+                    className="btn btn-primary"
+                  ></Button>
+                  <Button
+                    rounded
+                    severity="info"
+                    icon="pi pi-arrow-right"
+                    onClick={() => {
+                      if (currentPage < totalPages) {
+                        setCurrentPage((prevPage) => prevPage + 1);
+                      }
+                    }}
+                    disabled={currentPage === totalPages}
+                    className="btn btn-primary"
+                    style={{ marginLeft: "10px" }}
+                  ></Button>
+                </div>
+              </h3>
 
-          {showProgressModal && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-              <div className="bg-white p-0 rounded-md shadow-md">
-                <ProgressModal
-                  activities={activities}
-                  closeModal={closeProgressModal}
-                  userSteps={userSteps}
-                  selectedUser={selectedUserId}
-                />
-              </div>
-            </div>
-          )}
-
-          <div className="flex">
-            {Object.entries(usersByRole)
-              .slice(
-                (currentPage - 1) * itemsPerPage,
-                currentPage * itemsPerPage
-              )
-              .map(([roleName, users]) => (
-                <div key={roleName} className="col-4 col-md-4">
-                  <div className="border-2 shadow-2xl p-4 rounded-2xl">
-                    <h4>{roleName}</h4>
-                    {users
-                      .map((user) => (
-                        <div
-                          key={user.id}
-                          className={`card mb-3 text-center ${
-                            user.progress === 0 ? "gray-card" : ""
-                          }`}
-                        >
-                          <strong>{user.username}</strong>
-                          <div className="col-10 col-xl-3 mx-auto">
-                            <ProgressBar
-                              value={
-                                generalProgress.find(
-                                  //@ts-ignore
-                                  (item) => item.userId === user.id //@ts-ignore
-                                )?.progress || 0
-                              }
-                            />
-                            <div className="col-6 col-xl-3 mx-auto">
-                              <Button
-                                rounded //@ts-ignore
-                                severity={
-                                  generalProgress.find(
-                                    //@ts-ignore
-                                    (item) => item.userId === user.id //@ts-ignore
-                                  )?.progress <= 100 &&
-                                  generalProgress.find(
-                                    //@ts-ignore
-                                    (item) => item.userId === user.id //@ts-ignore
-                                  )?.progress > 0
-                                    ? "primary"
-                                    : "secondary"
-                                }
-                                icon="pi pi-arrow-right"
-                                onClick={() => handleButtonClick(user.id)}
-                              ></Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                      .slice(0, visibleUsers)}
-                    {users.length > visibleUsers && (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <div>
-                          {visibleUsers > 5 && (
-                            <Button
-                              onClick={handleCollapseAll}
-                              severity="danger"
-                            >
-                              Ver menos
-                            </Button>
-                          )}
-                        </div>
-                        <Button onClick={handleShowMore} severity="info">
-                          Ver más
-                        </Button>
-                      </div>
-                    )}
+              {showProgressModal && (
+                <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                  <div className="bg-white p-0 rounded-md shadow-md">
+                    <ProgressModal
+                      activities={activities}
+                      closeModal={closeProgressModal}
+                      userSteps={userSteps}
+                      selectedUser={selectedUserId}
+                    />
                   </div>
                 </div>
-              ))}
+              )}
+
+              <div className="flex">
+                {Object.entries(usersByRole)
+                  .slice(
+                    (currentPage - 1) * itemsPerPage,
+                    currentPage * itemsPerPage
+                  )
+                  .map(([roleName, users]) => (
+                    <div key={roleName} className="col-4 col-md-4">
+                      <div className="border-2 shadow-2xl p-4 rounded-2xl">
+                        <h4>{roleName}</h4>
+                        {users
+                          .map((user) => (
+                            <div
+                              key={user.id}
+                              className={`card mb-3 text-center ${
+                                user.progress === 0 ? "gray-card" : ""
+                              }`}
+                            >
+                              <strong>{user.username}</strong>
+                              <div className="col-10 col-xl-3 mx-auto">
+                                <ProgressBar
+                                  value={
+                                    generalProgress.find(
+                                      //@ts-ignore
+                                      (item) => item.userId === user.id //@ts-ignore
+                                    )?.progress || 0
+                                  }
+                                />
+                                <div className="col-6 col-xl-3 mx-auto">
+                                  <Button
+                                    rounded //@ts-ignore
+                                    severity={
+                                      generalProgress.find(
+                                        //@ts-ignore
+                                        (item) => item.userId === user.id //@ts-ignore
+                                      )?.progress <= 100 &&
+                                      generalProgress.find(
+                                        //@ts-ignore
+                                        (item) => item.userId === user.id //@ts-ignore
+                                      )?.progress > 0
+                                        ? "primary"
+                                        : "secondary"
+                                    }
+                                    icon="pi pi-arrow-right"
+                                    onClick={() => handleButtonClick(user.id)}
+                                  ></Button>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                          .slice(0, visibleUsers)}
+                        {users.length > visibleUsers && (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <div>
+                              {visibleUsers > 5 && (
+                                <Button
+                                  onClick={handleCollapseAll}
+                                  severity="danger"
+                                >
+                                  Ver menos
+                                </Button>
+                              )}
+                            </div>
+                            <Button onClick={handleShowMore} severity="info">
+                              Ver más
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

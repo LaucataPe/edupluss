@@ -144,7 +144,7 @@ router.put("/user/update", updateUser);
 router.put("/role/update", updateRole);
 router.put("/area/update", updateArea);
 router.put("/step/update", updateStep);
-router.put("/test/update", updateTestGrade);
+router.patch("/test/update", updateTestGrade);
 router.patch("/activity/update", updateActivity);
 router.patch("/empresa/update", updateEmpresa);
 router.put("/activities/:roleId", verifyRole("admin"), setOrderActivities);
@@ -156,6 +156,7 @@ const { deleteStep } = require("../controllers/Steps/deleteStep");
 const { deleteUser } = require("../controllers/Users/deleteUser");
 const { deleteRole } = require("../controllers/Roles/deleteRole");
 const { deleteReview } = require("../controllers/Reviews/deleteReview");
+const { deleteTestGrade } = require("../controllers/TestGrade/deleteTestGrade");
 
 //DELETE
 router.delete("/area/:id", deleteAreaCascade);
@@ -164,5 +165,6 @@ router.delete("/role/:id", deleteRole);
 router.delete("/step/:id", deleteStep);
 router.delete("/user/:companyUsersId", verifyRole("admin"), deleteUser);
 router.delete("/reviews", deleteReview);
+router.delete("/test/:userId/:id", deleteTestGrade);
 
 module.exports = { router };
