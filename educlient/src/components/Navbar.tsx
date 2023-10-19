@@ -1,12 +1,9 @@
 import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { resetActivities } from "../redux/features/activitiesSlice";
 import { Avatar } from "primereact/avatar";
-
-import { Button } from "primereact/button";
-import { InputSwitch } from "primereact/inputswitch";
 
 import { Menu } from "primereact/menu";
 import { handleSideBar } from "../redux/features/utilsSlice";
@@ -16,7 +13,7 @@ import logo from "../assets/edupluss2.png";
 function NavBar() {
   const [active, setActive] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { pathname } = useLocation();
+
   const enableSideBar = useSelector(
     (state: RootState) => state.utils.handleSideBar
   );
