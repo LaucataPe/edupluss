@@ -620,72 +620,70 @@ function Dashboard() {
                   <div className="flex align-items-center justify-content-between mb-4">
                     <h5>Notifications</h5>
                   </div>
-                  {momentNotifications?.length > 0 && (
-                    <div>
-                      <span className="block text-600 font-medium mb-3">
-                        Últimas actualizaciones
-                      </span>
-                      <ul className="p-0 mx-0 mt-0 mb-4 list-none">
-                        {momentNotifications?.map((notification, index) => (
-                          <li
-                            key={index}
-                            className="flex align-items-center py-2 border-bottom-1 surface-border"
-                          >
-                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-green-100 border-circle mr-3 flex-shrink-0">
-                              <i className="pi pi-check text-xl text-green-500" />
-                            </div>
-                            <span className="text-900 line-height-3">
-                              {notification.message}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {todayNotifications?.length > 0 && (
-                    <div>
-                      <span className="block text-600 font-medium mb-3">
-                        Hoy
-                      </span>
-                      <ul className="p-0 mx-0 mt-0 mb-4 list-none">
-                        {todayNotifications?.map((notification, index) => (
-                          <li
-                            key={index}
-                            className="flex align-items-center py-2 border-bottom-1 surface-border"
-                          >
-                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                              <i className="pi pi-book text-xl text-blue-500" />
-                            </div>
-                            <span className="text-900 line-height-3">
-                              {notification.message}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {yesterdayNotifications.length > 0 && (
-                    <div>
-                      <span className="block text-600 font-medium mb-3">
-                        Ayer
-                      </span>
-                      <ul className="p-0 m-0 list-none">
-                        {yesterdayNotifications.map((notification, index) => (
-                          <li
-                            key={index}
-                            className="flex align-items-center py-2 border-bottom-1 surface-border"
-                          >
-                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-yellow-100 border-circle mr-3 flex-shrink-0">
-                              <i className="pi pi-lock text-xl text-yellow-400" />
-                            </div>
-                            <span className="text-900 line-height-3">
-                              {notification.message}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+
+                  {/* Últimas actualizaciones */}
+                  <div className="notification-section">
+                    <span className="block text-600 font-medium mb-3">
+                      Últimas actualizaciones
+                    </span>
+                    <ul className="p-0 mx-0 mt-0 mb-4 list-none overflow-y-auto max-h-72">
+                      {momentNotifications?.map((notification, index) => (
+                        <li
+                          key={index}
+                          className="flex align-items-center py-2 border-bottom-1 surface-border"
+                        >
+                          <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-green-100 border-circle mr-3 flex-shrink-0">
+                            <i className="pi pi-check text-xl text-green-500" />
+                          </div>
+                          <span className="text-900 line-height-3">
+                            {notification.message}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Hoy */}
+                  <div className="notification-section">
+                    <span className="block text-600 font-medium mb-3">Hoy</span>
+                    <ul className="p-0 mx-0 mt-0 mb-4 list-none overflow-y-auto max-h-72">
+                      {todayNotifications?.map((notification, index) => (
+                        <li
+                          key={index}
+                          className="flex align-items-center py-2 border-bottom-1 surface-border"
+                        >
+                          <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
+                            <i className="pi pi-book text-xl text-blue-500" />
+                          </div>
+                          <span className="text-900 line-height-3">
+                            {notification.message}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Ayer */}
+                  <div className="notification-section">
+                    <span className="block text-600 font-medium mb-3">
+                      Ayer
+                    </span>
+                    <ul className="p-0 mx-0 mt-0 mb-4 list-none overflow-y-auto max-h-72">
+                      {yesterdayNotifications.map((notification, index) => (
+                        <li
+                          key={index}
+                          className="flex align-items-center py-2 border-bottom-1 surface-border"
+                        >
+                          <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-yellow-100 border-circle mr-3 flex-shrink-0">
+                            <i className="pi pi-lock text-xl text-yellow-400" />
+                          </div>
+                          <span className="text-900 line-height-3">
+                            {notification.message}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
               <div className="flex justify-center">
