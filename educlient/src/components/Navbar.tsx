@@ -52,6 +52,7 @@ function NavBar() {
 
   return (
     <>
+
       <nav className=" navbar_background-color fixed py-3 top-0 px-3 w-full h-16  flex  justify-between items-center z-10">
         <div className="flex justify-between items-center w-full">
           <div className="flex gap-5 justify-center items-center ">
@@ -84,8 +85,10 @@ function NavBar() {
             image={profile}
           ></Avatar>
 
+
           <Menu ref={menu} model={overlayMenuItems} popup />
         </div>
+
       </nav>
     </>
   );

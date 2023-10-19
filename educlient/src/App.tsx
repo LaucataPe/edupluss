@@ -151,11 +151,10 @@ function App() {
             <Route path="/main" element={<SuperAdminHome />} />
             <Route path="/allusers" element={<UserByCompany />} />
 
+
             <Route path="/activitiesList" element={<EvaluationList />} />
-            <Route
-              path="/employees/qualifications/:activityId"
-              element={<ListEmployeesQualifications />}
-            />
+            <Route path="/employees/qualifications/:activityId" element={<ListEmployeesQualifications />} />
+
             <Route path="/checkpoint/:id" element={<Checkpoint />} />
           </Routes>
         </div>

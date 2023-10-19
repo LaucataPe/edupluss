@@ -37,11 +37,7 @@ const AppMenu = () => {
         { label: "Dashboard", icon: "pi pi-chart-pie", to: "/dashboard" },
         { label: "Progreso de usuarios", icon: "pi pi-list", to: "/progress" },
         { label: "Usuarios", icon: "pi pi-users", to: `/crud` },
-        {
-          label: "Evaluaciones",
-          icon: "pi pi-check-circle",
-          to: "/activitiesList",
-        },
+        { label: "Evaluaciones", icon: "pi pi-check-circle", to: "/activitiesList" },
       ],
     },
     {
@@ -106,11 +102,8 @@ const AppMenu = () => {
     <>
       <Button
         className="ml-1 py-5 px-4 rounded-lg h-[2rem] w-[5rem] z-10 shadow-xl"
-        style={{
-          position: "fixed",
-          opacity: buttonOpacity,
-          // backgroundColor: "#071426", // Aquí establecemos el color de fondo
-        }} // Aplicar opacidad dinámica
+        severity="info"
+        style={{ position: "fixed", opacity: buttonOpacity }} // Aplicar opacidad dinámica
         onClick={() => setShowNav(!showNav)} // Toggle the nav visibility
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -118,7 +111,7 @@ const AppMenu = () => {
         <i className="pi pi-bars" style={{ fontSize: "2rem" }}></i>
       </Button>
       <nav
-        className={`layout-menu border-2 p-3 h-[100%] w-[14rem] my-4 mx-3 rounded-lg col-2 ${
+        className={`bg-gray-50 layout-menu border-2 p-3 h-[100%] w-[14rem] my-4 mx-3 rounded-lg col-2 ${
           !showNav ? "hidden" : "block"
         }`}
         style={{
