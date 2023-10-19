@@ -264,7 +264,7 @@ function Progress() {
                   )
                   .map(([roleName, users]) => (
                     <div key={roleName} className="col-4 col-md-4">
-                      <div className="border-2 shadow-2xl p-4 rounded-2xl">
+                      <div className="border-2 shadow-lg p-4 rounded-2xl">
                         <h4>{roleName}</h4>
                         {users
                           .map((user) => (
