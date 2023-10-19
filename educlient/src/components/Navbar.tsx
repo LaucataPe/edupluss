@@ -47,7 +47,6 @@ function NavBar() {
         >
           <i className="pi pi-bars" style={{ fontSize: "2rem" }}></i>
         </Button> */}
-
         <h2 className="text-white font-bold m-0">
           {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
         </h2>
