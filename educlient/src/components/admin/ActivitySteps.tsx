@@ -285,14 +285,14 @@ function ActivitySteps() {
     <>
       <Toast ref={toast} />
       <div className="list-demo relative pt-2">
-        <div className="col-12">
+        <div className="col-12 pt-2">
           <div className="card h-[700px] overflow-auto">
             <div className="py-2">
               <Link to={`/activities/${role.id}`}>
                 <Button
                   icon="pi pi-angle-double-left"
                   label="Atrás"
-                  className="mt-3 mx-2"
+                  className="mx-2"
                   rounded
                   severity="secondary"
                 />
@@ -306,7 +306,7 @@ function ActivitySteps() {
               itemTemplate={itemTemplate}
               header={dataViewHeader}
             ></DataView>
-            <div className="flex justify-content-between">
+            <div className="flex justify-content-between pt-2">
               <div className="flex align-items-start">
                 <Link to={`/addStep/${id}`}>
                   <Button label="+ Crear Paso" severity="info" rounded />
