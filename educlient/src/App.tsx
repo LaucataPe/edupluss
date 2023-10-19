@@ -126,7 +126,10 @@ function App() {
             <Route path="/admin" element={<Admin />} />
             <Route path="/activities/:roleId" element={<AdminActivities />} />
             <Route path="/actvitySteps/:id" element={<ActivitySteps />} />
-            <Route path="/addActivity/:roleId/:orderId" element={<AddActivity />} />
+            <Route
+              path="/addActivity/:roleId/:orderId"
+              element={<AddActivity />}
+            />
 
             <Route
               path="/editActivity/:roleId/:actId"
@@ -139,7 +142,6 @@ function App() {
             <Route path="/addStep/:id" element={<AddStep />} />
             <Route path="/editStep/:id/:stepId" element={<AddStep />} />
             <Route path="/crud" element={<Crud />} />
-
 
             <Route path="/main" element={<SuperAdminHome />} />
             <Route path="/allusers" element={<UserByCompany />} />

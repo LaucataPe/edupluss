@@ -1,9 +1,10 @@
 import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { resetActivities } from "../redux/features/activitiesSlice";
 import { Avatar } from "primereact/avatar";
+import { InputSwitch } from "primereact/inputswitch";
 
 import { Menu } from "primereact/menu";
 
@@ -46,9 +47,13 @@ function NavBar() {
         >
           <i className="pi pi-bars" style={{ fontSize: "2rem" }}></i>
         </Button> */}
+
         <h2 className="text-white font-bold m-0">
           {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
         </h2>
+        <div className="flex">
+          <InputSwitch checked />
+        </div>
         {pathname !== "/" && pathname !== "/login" ? (
           <Avatar
             icon="pi pi-user"
@@ -60,6 +65,7 @@ function NavBar() {
         ) : (
           ""
         )}
+
         <Menu ref={menu} model={overlayMenuItems} popup />
       </nav>
     </>
