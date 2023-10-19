@@ -25,3 +25,43 @@
         top: 100px;
     }
 }
+
+
+  
+
+  .active span:nth-child(1) {
+    width: 2rem;
+    background-color: #6836cc;
+    transform: translateY(8px) translateX(-4px) rotate(450deg);
+  }
+  .active span:nth-child(2) {
+    background-color: #6836cc;
+    left: 9rem;
+  }
+  
+  .active span:nth-child(3) {
+    width: 2rem;
+    background-color: #6836cc;
+    transform: translateY(-11px) translateX(-4px) rotate(360deg);
+  }
+
+  .navbar_background-color {
+    background: rgb(148,150,220);
+background: linear-gradient(90deg, rgba(148,150,220,1) 0%, rgba(121,167,245,1) 100%);
+  }
+
+  @keyframes zoom {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.07);
+    }
+  }
+  .animation:hover {
+    animation-duration: 0.3s;
+    animation-name: zoom;
+  }
+  
+ 

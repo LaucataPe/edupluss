@@ -1,18 +1,21 @@
-const { User } = require('../../db');
-const { catchedAsync } = require('../../utils');
+const { User } = require("../../db");
+const { catchedAsync } = require("../../utils");
 const deleteUser = async (req, res) => {
-  const { id } = req.params;
+  const { companyUsersId } = req.params;
+  const { usersToDelete } = req.body;
+  const currentUserID = req.companyId.toString();
 
+  if (companyUsersId !== currentUserID) {
+    return res
+      .status(401)
+      .json({ error: "you cannot delete users from other companies" });
+  }
   try {
-    const getUser = await User.findByPk(id);
+    User.destroy({ where: { id: usersToDelete } });
 
-    if (!getUser) throw new Error('Usuario no encontrado');
-
-    await getUser.destroy();
-
-    res.status(200).send('Usuario eliminado correctamente');
+    return res.status(200).send("deleted users");
   } catch (error) {
-    res.status(404).send(error.message);
+    return res.status(404).send(error.message);
   }
 };
 
