@@ -61,7 +61,11 @@ export function SidebarItem({ icon, text, active, url }) {
         )}
       </Link>
 
-      <div className=" h-0 mt-4 w-24 border-[0.5px]"></div>
+      <div
+        className={`h-0 mt-4 w-24 border-[0.5px] relative ${
+          expanded ? "right-0" : "right-24"
+        }`}
+      ></div>
     </li>
   );
 }
