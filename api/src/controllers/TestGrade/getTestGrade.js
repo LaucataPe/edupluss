@@ -20,7 +20,6 @@ const getTestGrade = async (req, res) => {
                 activityId: activityId,
             },
         });
-        console.log(test);
         if (!test) {
             throw new Error("El empleado aún no ha visto/realizado esta prueba.");
         } else {
