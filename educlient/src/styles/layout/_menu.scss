@@ -15,10 +15,12 @@
 }
 
 .layout-menu {
-    margin: 0;
+    height: 100%;
+    max-height: 100%;
     padding: 0;
     list-style-type: none;
     user-select: none;
+    width: 11rem;
 
     .layout-root-menuitem {
         >.layout-menuitem-root-text {
@@ -42,7 +44,7 @@
         }
 
         > ul {
-            max-height: auto;
+            //max-height: auto;
         }
     }
 
@@ -94,7 +96,7 @@
 
         ul {
             overflow: hidden;
-            max-height: 0;
+            //max-height: 0;
             border-radius: $borderRadius;
 
             li {

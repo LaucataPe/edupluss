@@ -41,6 +41,7 @@ import { AxiosInterceptor } from "./utils/interceptors/axiosInterceptor";
 import { useState } from "react";
 import ActivitiesListForTests from "./pages/ActivitiesListForTests";
 import ListEmployeesQualifications from "./pages/ListEmployeesQualifications";
+import Sidebar from "./components/Sidebar";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -50,6 +51,9 @@ function App() {
   const logUser = useSelector((state: RootState) => state.user.logUser);
   const currentEmpresa = useSelector(
     (state: RootState) => state.user.logUser.companyId
+  );
+  const enableSideBar = useSelector(
+    (state: RootState) => state.utils.handleSideBar
   );
 
   const [tokenValid, setTokenValid] = useState<Boolean>(false);
@@ -104,16 +108,17 @@ function App() {
     }
   }, [currentEmpresa]);
 
+  const pathAvailable = pathname !== "/" && pathname !== "/login";
+
   AxiosInterceptor();
 
   return (
     <>
-      {pathname !== "/" && pathname !== "/login" && <NavBar />}
-      <div className="grid max-w-[100%]">
-        {pathname !== "/" &&
-          pathname !== "/login" &&
-          logUser.tipo === "admin" && <AppMenu />}
-        <div className="col overflow-hidden">
+      {pathAvailable && <NavBar />}
+      <div className="flex  w-[100%] ">
+        {pathAvailable && logUser.tipo === "admin" && <Sidebar />}
+
+        <div className={`w-full ${pathAvailable ? "mt-16" : ""}`}>
           <Routes>
             {/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
             <Route path="/" element={<Landing />} />
@@ -126,7 +131,10 @@ function App() {
             <Route path="/admin" element={<Admin />} />
             <Route path="/activities/:roleId" element={<AdminActivities />} />
             <Route path="/actvitySteps/:id" element={<ActivitySteps />} />
-            <Route path="/addActivity/:roleId/:orderId" element={<AddActivity />} />
+            <Route
+              path="/addActivity/:roleId/:orderId"
+              element={<AddActivity />}
+            />
 
             <Route
               path="/editActivity/:roleId/:actId"
@@ -140,12 +148,17 @@ function App() {
             <Route path="/editStep/:id/:stepId" element={<AddStep />} />
             <Route path="/crud" element={<Crud />} />
 
-
             <Route path="/main" element={<SuperAdminHome />} />
             <Route path="/allusers" element={<UserByCompany />} />
 
-            <Route path="/activitiesList" element={<ActivitiesListForTests />} />
-            <Route path="/employees/qualifications/:activityId" element={<ListEmployeesQualifications />} />
+            <Route
+              path="/activitiesList"
+              element={<ActivitiesListForTests />}
+            />
+            <Route
+              path="/employees/qualifications/:activityId"
+              element={<ListEmployeesQualifications />}
+            />
             <Route path="/checkpoint/:id" element={<Checkpoint />} />
           </Routes>
         </div>

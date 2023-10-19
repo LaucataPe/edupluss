@@ -18,6 +18,7 @@ import { RootState } from "../../redux/store";
 import { fetchCompanyAreas } from "../../redux/features/areaSlice";
 import axios from "axios";
 import { getCompanyRoles } from "../../redux/features/roleSlice";
+import { cp } from "fs";
 
 const Crud = () => {
   const dispatch = useAppDispatch();
@@ -148,34 +149,58 @@ const Crud = () => {
     setDeleteUserDialog(true);
   };
 
-  const deleteUser = () => {
+  const deleteUser = async () => {
+    const companyId = user.companyId;
+    const usersToDelete = user.id;
     let _users = users.filter((val) => val.id !== user.id);
-    setUsers(_users);
-    setDeleteUserDialog(false);
-    setUser(emptyUser);
-    toast.current?.show({
-      severity: "success",
-      summary: "Éxito",
-      detail: "Usuario eliminado",
-      life: 3000,
-    });
+    try {
+      const response = await axios.delete(
+        `http://localhost:3001/user/${companyId}`,
+        { data: { usersToDelete } }
+      );
+      if (response.status === 200) {
+        setUsers(_users);
+        setDeleteUserDialog(false);
+        setUser(emptyUser);
+        toast.current?.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Usuario eliminado",
+          life: 3000,
+        });
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   const confirmDeleteSelected = () => {
     setDeleteUsersDialog(true);
   };
 
-  const deleteSelectedUsers = () => {
-    let _users = users.filter((val) => !selectedUsers?.includes(val));
-    setUsers(_users);
-    setDeleteUsersDialog(false);
-    setSelectedUsers([]);
-    toast.current?.show({
-      severity: "success",
-      summary: "Éxito",
-      detail: "Usuarios eliminados",
-      life: 3000,
-    });
+  const deleteSelectedUsers = async () => {
+    const companyId = selectedUsers[0].companyId;
+    const usersToDelete = selectedUsers.map((e) => e.id);
+    try {
+      const response = await axios.delete(
+        `http://localhost:3001/user/${companyId}`,
+        { data: { usersToDelete } }
+      );
+      if (response.status === 200) {
+        let _users = users.filter((val) => !selectedUsers?.includes(val));
+        setUsers(_users);
+        setDeleteUsersDialog(false);
+        setSelectedUsers([]);
+        toast.current?.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Usuarios eliminados",
+          life: 2000,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onInputChange = (
@@ -341,7 +366,7 @@ const Crud = () => {
       <Button
         label="No"
         icon="pi pi-times"
-        text
+        textDeleteUsersDialog
         onClick={hideDeleteUserDialog}
       />
       <Button label="Sí" icon="pi pi-check" text onClick={deleteUser} />
@@ -368,7 +393,7 @@ const Crud = () => {
     <div className="flex crud-demo my-1 ">
       <div className="col-12 align-items-center">
         <div
-          className="card justify-content-center"
+          className=" justify-content-center" //aqui habia card//
           style={{ display: "flex", flexDirection: "column" }}
         >
           <div className="container">
@@ -416,13 +441,13 @@ const Crud = () => {
                     <Column field="id" header="ID" sortable frozen></Column>
                     <Column
                       field="username"
-                      header="Nombre de usuario"
+                      header="Usuario"
                       sortable
                       body={usernameBodyTemplate}
                     ></Column>
                     <Column
                       field="email"
-                      header="Correo electrónico"
+                      header="Email"
                       sortable
                       body={emailBodyTemplate}
                     ></Column>
