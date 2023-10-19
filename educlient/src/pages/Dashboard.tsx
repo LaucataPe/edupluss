@@ -515,13 +515,15 @@ function Dashboard() {
                         <i className="pi pi-users text-orange-500 text-4xl" />
                       </div>
                       <div>
-                        <span className="block text-500 font-medium mb-1">
-                          Usuarios activos:
-                        </span>
-                        <div className="text-900 font-medium text-xl text-center">
-                          {totalActiveUsers
-                            ? totalActiveUsers
-                            : "Esperando usuarios..."}
+                        <div>
+                          <span className="block text-500 font-medium mb-1">
+                            Usuarios:
+                          </span>
+                          <div className="text-900 font-medium text-xl text-center">
+                            {totalActiveUsers
+                              ? totalActiveUsers
+                              : "Esperando usuarios..."}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -538,7 +540,7 @@ function Dashboard() {
                       </div>
                       <div className="">
                         <span className="block text-500 font-medium mb-1 ">
-                          Actividades activas:
+                          Actividades:
                         </span>
                         <div className="text-900 font-medium text-xl text-center">
                           {totalActivities
