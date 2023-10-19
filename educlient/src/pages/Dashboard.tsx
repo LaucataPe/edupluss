@@ -631,8 +631,8 @@ function Dashboard() {
                             key={index}
                             className="flex align-items-center py-2 border-bottom-1 surface-border"
                           >
-                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                              <i className="pi pi-book text-xl text-blue-500" />
+                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-green-100 border-circle mr-3 flex-shrink-0">
+                              <i className="pi pi-check text-xl text-green-500" />
                             </div>
                             <span className="text-900 line-height-3">
                               {notification.message}
@@ -675,8 +675,8 @@ function Dashboard() {
                             key={index}
                             className="flex align-items-center py-2 border-bottom-1 surface-border"
                           >
-                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                              <i className="pi pi-dollar text-xl text-blue-500" />
+                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-yellow-100 border-circle mr-3 flex-shrink-0">
+                              <i className="pi pi-lock text-xl text-yellow-400" />
                             </div>
                             <span className="text-900 line-height-3">
                               {notification.message}
