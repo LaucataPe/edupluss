@@ -21,7 +21,7 @@ import AppMenu from "./components/SideMenu";
 import { useSelector } from "react-redux";
 
 import "./index.css";
-import "../public/tailwind-light/theme.css";
+import "../public/dark/theme.css";
 
 import "primereact/resources/primereact.css";
 import "primeflex/primeflex.css";
