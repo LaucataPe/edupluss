@@ -415,17 +415,18 @@ function Dashboard() {
       refreshChart();
     }
   }, [windowDimensions]);
-  //Notificaciones
+  // Notificaciones
   const now = new Date();
   const twentyFourHoursAgo = new Date(now - 24 * 60 * 60 * 1000);
   const fiveMinutesAgo = new Date(now - 5 * 60 * 1000);
   const totalChanges = {};
 
-  userSteps.forEach((step, index) => {
-    const createdAt = new Date(step.createdAt);
-    const timeDifference = now - createdAt;
+  const momentNotifications = userSteps
+    .filter((step) => step.finished)
+    .map((step, index) => {
+      const createdAt = new Date(step.createdAt);
+      const timeDifference = now - createdAt;
 
-    if (timeDifference <= 24 * 60 * 60 * 1000) {
       const timeParts = {
         days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
         hours: Math.floor(
@@ -435,28 +436,29 @@ function Dashboard() {
         seconds: Math.floor((timeDifference % (1000 * 60)) / 1000),
       };
 
-      const userId = step.UserId; // Obtener el ID del usuario que realizó el paso
+      const userId = step.UserId;
       const user = totalUsers?.find((user) => user.id === userId);
       const activityInfo = activitiesInfo[index];
       const activityName = activityInfo
         ? activityInfo.title
         : "Actividad no encontrada";
 
-      let message;
+      const hoursDifference = timeParts.hours;
+      const minutesDifference = timeParts.minutes;
 
-      if (step.finished) {
-        message = `El usuario ${
-          user?.username || "Usuario desconocido"
-        } completó la actividad ${activityName}`;
+      let timeAgo = "";
+
+      if (hoursDifference === 0) {
+        timeAgo = `hace ${minutesDifference} minutos`;
+      } else if (hoursDifference === 1) {
+        timeAgo = `hace 1 hora`;
       } else {
-        message = `El usuario ${
-          user?.username || "Usuario desconocido"
-        } realizó el paso ${index + 1}: hace${
-          timeParts.days > 0 ? ` ${timeParts.days} día(s)` : ""
-        }${timeParts.hours > 0 ? ` ${timeParts.hours} hora(s)` : ""}${
-          timeParts.minutes > 0 ? ` ${timeParts.minutes} minuto(s)` : ""
-        }${timeParts.seconds > 0 ? ` ${timeParts.seconds} segundo(s)` : ""}`;
+        timeAgo = `hace ${hoursDifference} horas`;
       }
+
+      const message = `El usuario ${
+        user?.username || "Usuario desconocido"
+      } completó la actividad "${activityName}" ${timeAgo}.`;
 
       if (Object.values(timeParts).some((part) => part > 0)) {
         totalChanges[index + 1] = {
@@ -468,13 +470,19 @@ function Dashboard() {
         };
 
         console.log(`Actividad del paso ${index + 1}: ${activityName}`);
+        return totalChanges[index + 1];
       }
-    }
-  });
+    })
+    .filter((notification) => {
+      // Filtrar notificaciones que tienen 5 minutos o menos de antigüedad
+      return (
+        notification.hoursDifference === 0 &&
+        notification.minutesDifference <= 5
+      );
+    });
 
   const todayNotifications = [];
   const yesterdayNotifications = [];
-  const momentNotifications = [];
 
   for (const stepIndex in totalChanges) {
     const change = totalChanges[stepIndex];
@@ -656,11 +664,10 @@ function Dashboard() {
                       </ul>
                     </div>
                   )}
-
                   {yesterdayNotifications.length > 0 && (
                     <div>
                       <span className="block text-600 font-medium mb-3">
-                        YESTERDAY
+                        Ayer
                       </span>
                       <ul className="p-0 m-0 list-none">
                         {yesterdayNotifications.map((notification, index) => (
