@@ -227,7 +227,8 @@ function Dashboard() {
         anchor: "end",
         align: "end",
         display: "auto",
-        color: "black",
+        color: "white", // Cambia el color del texto a blanco
+
         formatter: (value: any) => {
           return value + "%";
         },
@@ -343,7 +344,7 @@ function Dashboard() {
         anchor: "end",
         align: "end",
         display: "auto",
-        color: "black",
+        color: "white", // Cambia el color del texto a blanco 
       },
     },
     scales: {
