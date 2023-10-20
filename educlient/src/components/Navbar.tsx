@@ -4,8 +4,6 @@ import { RootState } from "../redux/store";
 import { useLocation } from "react-router-dom";
 import { resetActivities } from "../redux/features/activitiesSlice";
 import { Avatar } from "primereact/avatar";
-
-import { Button } from "primereact/button";
 import { InputSwitch } from "primereact/inputswitch";
 
 import { Menu } from "primereact/menu";
@@ -13,7 +11,7 @@ import { handleSideBar } from "../redux/features/utilsSlice";
 import profile from "../assets/profile.png";
 import logo from "../assets/edupluss2.png";
 
-function NavBar() {
+function NavBar({ isDarkMode, toggleDarkMode }) {
   const [active, setActive] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { pathname } = useLocation();
@@ -52,7 +50,7 @@ function NavBar() {
 
   return (
     <>
-      <nav className=" navbar_background-color fixed py-3 top-0 px-3 w-full h-16  flex  justify-between items-center z-10">
+      <nav className="dark:bg-[whitesmoke] bg-[#040d19] fixed py-3 top-0 px-3 w-full h-16  flex  justify-between items-center z-10">
         <div className="flex justify-between items-center w-full">
           <div className="flex gap-5 justify-center items-center ">
             <img
@@ -72,9 +70,25 @@ function NavBar() {
             </button>
           </div>
 
-          <h2 className="text-white font-normal m-0">
+          <h2 className="font-normal m-0">
             {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
           </h2>
+          <div className="flex">
+            <span>
+              {isDarkMode ? (
+                <i className="pi pi-sun text-4xl" />
+              ) : (
+                <i className="pi pi-moon text-4xl" />
+              )}
+            </span>
+            <div className="ml-4">
+              <InputSwitch
+                checked={isDarkMode}
+                onChange={toggleDarkMode}
+                style={{ marginRight: "8px" }}
+              />
+            </div>
+          </div>
 
           <Avatar
             icon="pi pi-user"

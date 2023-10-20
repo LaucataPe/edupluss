@@ -446,7 +446,7 @@ function Dashboard() {
       const user = totalUsers?.find((user) => user.id === userId);
       const activityInfo = activitiesInfo[index];
       const activityName = activityInfo
-        ? activityInfo.title
+        ? activityInfo?.title
         : "Actividad no encontrada";
 
       const hoursDifference = timeParts.hours;

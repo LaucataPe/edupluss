@@ -40,7 +40,7 @@ export function SidebarItem({ icon, text, active, url }) {
         ${
           currentUrl.pathname === url
             ? "bg-gradient-to-tr text-white opacity-80"
-            : "hover:bg-indigo-50 text-gray-600 opacity-50"
+            : "hover:bg-indigo-50 text-gray-600 opacity-80 dark:opacity-100"
         }
     `}
       >
@@ -61,7 +61,7 @@ export function SidebarItem({ icon, text, active, url }) {
         )}
       </Link>
 
-      <div className=" h-0 mt-4 w-24 border-[0.1px] border-[#0b213f]"></div>
+      <div className="h-0 mt-4 w-24 border-b"></div>
     </li>
   );
 }

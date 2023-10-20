@@ -245,7 +245,7 @@ function Progress() {
 
               {showProgressModal && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-80">
-                  <div className="bg-[#0b213f] p-0 rounded-md shadow-md">
+                  <div className="dark:bg-[whitesmoke] bg-[#040d19] p-0 rounded-md shadow-md">
                     <ProgressModal
                       activities={activities}
                       closeModal={closeProgressModal}
@@ -264,7 +264,7 @@ function Progress() {
                   )
                   .map(([roleName, users]) => (
                     <div key={roleName} className="col-4 col-md-4">
-                      <div className="border-1 border-[#0b213f] shadow-2xl p-4 rounded-2xl">
+                      <div className=" border-[#0b213f] shadow-2xl p-4 rounded-2xl">
                         <h4>{roleName}</h4>
                         {users
                           .map((user) => (

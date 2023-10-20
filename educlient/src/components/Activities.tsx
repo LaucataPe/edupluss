@@ -160,8 +160,10 @@ const Activities = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/tests/${currentUser.id}`);
-        setTestGrades(response.data)
+        const response = await axios.get(
+          `http://localhost:3001/tests/${currentUser.id}`
+        );
+        setTestGrades(response.data);
       } catch (error) {
         console.error("Error al obtener datos de 'testGrades':", error);
       }
@@ -288,26 +290,26 @@ const Activities = () => {
             } hover:bg-slate-00 ${notStarted ? "text-red-500" : ""}`}
           >
             <div className="flex justify-between text-2xl font-bold">
-              <h3 className="m-0 flex align-items-center">
+              <h3 className="m-0 flex align-items-center text-[#0b1522]">
                 {filteredValue.title}
                 {notStarted ? (
-                  <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
+                  <i className="pi pi-exclamation-circle text-4xl ml-2 text-[#0b1522]"></i>
                 ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
-                  <i className="pi pi-check-circle text-4xl ml-2"></i>
+                  <i className="pi pi-check-circle text-4xl ml-2 text-[#0b1522]"></i>
                 ) : (
-                  <i className="pi pi-lock-open text-4xl ml-2"></i>
+                  <i className="pi pi-lock-open text-4xl ml-2 text-[#0b1522]"></i>
                 )}
               </h3>
               <h3 className="m-0 flex align-items-center">
                 {testGrades.length > 0 && (
-                <span>
-                  {testGrades?.map((grade) => {
-                    if (grade.Activity.id === filteredValue.id) {
-                      return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
-                    }
-                  return null;
-                  })}
-                </span>
+                  <span>
+                    {testGrades?.map((grade) => {
+                      if (grade.Activity.id === filteredValue.id) {
+                        return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
+                      }
+                      return null;
+                    })}
+                  </span>
                 )}
               </h3>
             </div>
@@ -341,30 +343,30 @@ const Activities = () => {
           >
             <div className="flex items-center justify-between text-center">
               <div className="text-2xl font-bold w-[90%]">
-                <h3 className="m-0 flex-row align-items-center">
+                <h3 className="m-0 flex-row align-items-center text-[#0b1522]">
                   {data.title}
                 </h3>
                 <h3 className="m-0 flex-row align-items-center">
                   {testGrades.length > 0 && (
-                  <span>
-                    {testGrades?.map((grade) => {
-                      if (grade.Activity.id === data.id) {
-                        return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
-                      }
-                      return null;
-                    })}
-                  </span>
+                    <span>
+                      {testGrades?.map((grade) => {
+                        if (grade.Activity.id === data.id) {
+                          return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
+                        }
+                        return null;
+                      })}
+                    </span>
                   )}
                 </h3>
               </div>
               <div className="pt-3">
                 <h3>
-                {notStarted ? (
-                    <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
+                  {notStarted ? (
+                    <i className="pi pi-exclamation-circle text-4xl ml-2 text-[#0b1522]"></i>
                   ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
-                    <i className="pi pi-check-circle text-4xl ml-2"></i>
+                    <i className="pi pi-check-circle text-4xl ml-2 text-[#0b1522]"></i>
                   ) : (
-                    <i className="pi pi-lock-open text-4xl ml-2"></i>
+                    <i className="pi pi-lock-open text-4xl ml-2 text-[#0b1522]"></i>
                   )}
                 </h3>
               </div>
