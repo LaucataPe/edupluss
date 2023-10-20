@@ -40,7 +40,8 @@ import UserByCompany from "./components/superAdmin/UsersByCompany";
 import { AxiosInterceptor } from "./utils/interceptors/axiosInterceptor";
 import { useState } from "react";
 import EvaluationList from "./pages/EvaluationList";
-import ListEmployeesQualifications from "./pages/ListEmployeesQualifications";
+import ListEmployeesQualifications from "./pages/ListEmployeesQualifications/ListEmployeesQualifications";
+import Sidebar from "./components/Sidebar";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -50,6 +51,9 @@ function App() {
   const logUser = useSelector((state: RootState) => state.user.logUser);
   const currentEmpresa = useSelector(
     (state: RootState) => state.user.logUser.companyId
+  );
+  const enableSideBar = useSelector(
+    (state: RootState) => state.utils.handleSideBar
   );
 
   const [tokenValid, setTokenValid] = useState<Boolean>(false);
@@ -104,16 +108,17 @@ function App() {
     }
   }, [currentEmpresa]);
 
+  const pathAvailable = pathname !== "/" && pathname !== "/login";
+
   AxiosInterceptor();
 
   return (
     <>
-      {pathname !== "/" && pathname !== "/login" && <NavBar />}
-      <div className="grid max-w-[100%]">
-        {pathname !== "/" &&
-          pathname !== "/login" &&
-          logUser.tipo === "admin" && <AppMenu />}
-        <div className="col overflow-hidden">
+      {pathAvailable && <NavBar />}
+      <div className="flex  w-[100%] ">
+        {pathAvailable && logUser.tipo === "admin" && <Sidebar />}
+
+        <div className={`w-full ${pathAvailable ? "mt-16" : ""}`}>
           <Routes>
             {/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
             <Route path="/" element={<Landing />} />
@@ -146,11 +151,10 @@ function App() {
             <Route path="/main" element={<SuperAdminHome />} />
             <Route path="/allusers" element={<UserByCompany />} />
 
+
             <Route path="/activitiesList" element={<EvaluationList />} />
-            <Route
-              path="/employees/qualifications/:activityId"
-              element={<ListEmployeesQualifications />}
-            />
+            <Route path="/employees/qualifications/:activityId" element={<ListEmployeesQualifications />} />
+
             <Route path="/checkpoint/:id" element={<Checkpoint />} />
           </Routes>
         </div>

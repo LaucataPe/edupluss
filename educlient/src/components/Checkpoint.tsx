@@ -29,14 +29,11 @@ const Checkpoint = () => {
   const currentActivity = activity.find((a) => a.id == id);
   const logUser = useSelector((state: RootState) => state.user.logUser);
   const [url] = useState<string | undefined>(currentActivity?.excelURL);
-
   const [visible, setVisible] = useState<boolean>(false);
   const [infoVisible, setInfoVisible] = useState<boolean>(false);
-
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const navigate = useNavigate();
-
   const toast = useRef<Toast>(null);
   const isUnmounted = useRef(false);
 
@@ -44,14 +41,18 @@ const Checkpoint = () => {
     const confirmationMessage = '¿Estás seguro de que deseas salir de esta página? Te recomendamos cerrar la pagina en la ventana Home';
     event.returnValue = confirmationMessage;
     isUnmounted.current = true;
-    handleExcelImport();
+    if(logUser.id !== 0) {
+      handleExcelImport();
+    }
   });
 
   useEffect(() => {
     return () => {
-      handleExcelImport();
+      if(logUser.id !== 0){
+        handleExcelImport();
+      }
     };
-  }, []);
+  }, [logUser.id]);
 
   useEffect(() => {
     if (currentActivity?.durationTest) {
@@ -224,7 +225,7 @@ const Checkpoint = () => {
                 errorTest: true
               };
             }
-            console.log(objData);
+            //console.log(objData);
             
             try {
               await axios.patch(
@@ -244,7 +245,7 @@ const Checkpoint = () => {
                 userId: logUser.id,
                 errorTest: true
               };
-              console.log(objData);
+              //console.log(objData);
               try {
                 await axios.patch(
                   "http://localhost:3001/test/update",
@@ -287,19 +288,22 @@ const Checkpoint = () => {
     <>
     <Toast ref={toast} />
   
-    <section className="flex flex-col justify-center  items-center py-3">
+    <section className="flex flex-col justify-center  items-center py-3 ml-3 sm:ml-0">
+      <h3 className=" text-2xl  m-0 text-center mb-2 sm:hidden ">
+        Prueba de: {currentActivity?.title}
+      </h3>
       <div className="w-full flex justify-between items-center my-2 px-2">
-        <Button label="Recomendaciones" icon="pi pi-exclamation-triangle" onClick={() => setInfoVisible(true)} severity="danger" />
-        <h3 className=" text-lg md:text-2xl m-0">
-          Checkpoint de {currentActivity?.title}
+        <Button label="Recomendaciones" icon="pi pi-exclamation-triangle " className=" h-[40px] text-xs sm:h-[50px] sm:text-base" onClick={() => setInfoVisible(true)} severity="danger" />
+        <h3 className=" hidden sm:block text-xl md:text-2xl lg:text-4xl m-0">
+          Prueba de: {currentActivity?.title}
         </h3>
-        <Button label="Finalizar" icon="pi pi-external-link" onClick={() => setVisible(true)} />
+        <Button label="Finalizar" className=" h-[40px] text-xs sm:h-[50px] sm:text-base" icon="pi pi-external-link" onClick={() => setVisible(true)} />
 
         <Dialog
           header="Confirme su siguiente paso"
           visible={visible}
-          onHide={() => setVisible(false)}
-          style={{ width: "450px" }}
+          onHide={() => setVisible(false)}  
+          className="p-fluid w-[340px] sm:w-[450px]"
           modal
           footer={confirmationDialogFooter}
         >
@@ -316,12 +320,12 @@ const Checkpoint = () => {
           header="Recomendaciones al empleado"
           visible={infoVisible}
           onHide={() => setInfoVisible(false)}
-          className="w-[38vw]"
+          className="p-fluid w-[340px] sm:w-[450px] lg:w-[550px]"
           modal
         >
           <div className="flex align-items-center justify-content-center">
             <i
-              className="pi pi-exclamation-triangle mr-3 color-orange-500"
+              className="pi pi-exclamation-triangle mr-3 color-orange-500 hidden sm:block"
               style={{ fontSize: "2rem" }}
             />
             <ul className="m-0 gap-4 text-lg text-slate-950">

@@ -27,6 +27,7 @@ const activitySchema = z.object({
     invalid_type_error: "La URL del excel debe ser una cadena de carácteres.",
   }),
 });
+
 const validateActivity = (input) => {
   return activitySchema.partial().safeParse(input);
 };

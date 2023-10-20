@@ -287,19 +287,17 @@ function AddStep() {
 
   return (
     <>
-      <form className="card my-3">
-        <div className="py-2">
-          <Link to={`/actvitySteps/${id}`}>
-            <Button
-              icon="pi pi-angle-double-left"
-              label="Atrás"
-              rounded
-              severity="secondary"
-              className="mx-2 mb-2"
-            />
-          </Link>
-        </div>
-        <div className=" p-fluid mx-3">
+      <Link to={`/actvitySteps/${id}`}>
+        <Button
+          icon="pi pi-angle-double-left"
+          label="Atrás"
+          rounded
+          severity="secondary"
+          className="mt-3 mx-3 mb-2"
+        />
+      </Link>
+      <form>
+        <div className="card p-fluid mx-3">
           <h5>Paso #{stepNumber}</h5>
           <div className="field">
             <label>Título:</label>

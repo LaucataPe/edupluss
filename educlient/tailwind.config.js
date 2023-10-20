@@ -5,10 +5,10 @@ export default {
     extend: {
       colors: {
         1: "#349cfc",
-        2: "#071426",
-        3: "#071426",
+        4: "#071426",
       },
     },
   },
+  darkMode: "class",
   plugins: [],
 };

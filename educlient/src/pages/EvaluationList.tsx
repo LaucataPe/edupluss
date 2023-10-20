@@ -28,8 +28,11 @@ function EvaluationList() {
             console.error("Error al obtener datos de las actividades:", error);
           }
         };
-        getActivitiesOfCompany();
-    }, []);
+        if(logUser.id !== 0){
+          getActivitiesOfCompany();
+        }
+        
+    }, [logUser.id]);
 
     const handleOnClick = (activityId : number)=> {
         navigate(`/employees/qualifications/${activityId}`)
@@ -38,8 +41,8 @@ function EvaluationList() {
     const startContent = (title : string) => {
         return (
           <React.Fragment>
-            <div className="my-2">
-                <p className=" text-4xl text-black">Evaluación de: {title}</p>
+            <div className="my-2 w-[62vw] lg:w-[58vw] xl:w-[64vw]">
+                <p className=" text-lg md:text-3xl xl:text-4xl text-black">Evaluación de: {title}</p>
             </div>
           </React.Fragment>
         );
@@ -51,7 +54,7 @@ function EvaluationList() {
             <div className="my-2">
               <Button
                 label="Resultados"
-                className=" primary-900"
+                className=" primary-900 w-[96px] h-[40px] text-xs md:w-[118px] md:h-[50px] md:text-base"
                 onClick={() => handleOnClick(id)}
               />
             </div>
@@ -64,7 +67,7 @@ function EvaluationList() {
             <div>
             {
               evaluationsList?.map((activity, index)=>(
-                <Toolbar className="my-4 " key={index} start={startContent(activity.title)} end={endContent(activity.id)}> 
+                <Toolbar className="my-4 overflow-auto" key={index} start={startContent(activity.title)} end={endContent(activity.id)}> 
                 </Toolbar>
               ))
             }
@@ -73,9 +76,9 @@ function EvaluationList() {
         }
     return(
         <div className="flex mt-2">
-            <div className="col-12 align-items-center">
+            <div className="col-12 align-items-center ml-2 sm:ml-0">
               <div className="card grid grid-cols-2 overflow-hidden h-[88vh]">
-                <p className="text-4xl text-cyan-800">Evaluaciones:</p>
+                <p className=" text-xl md:text-4xl  text-cyan-800">Evaluaciones:</p>
                 <DataScroller value={evaluationsList} itemTemplate={itemTemplate} className="h-[100%] w-[100%]" rows={1} inline scrollHeight="100%" />     
               </div>
             </div>
