@@ -451,17 +451,40 @@ function Dashboard() {
 
       const hoursDifference = timeParts.hours;
       const minutesDifference = timeParts.minutes;
-
+      const daysDifference = timeParts.days;
       let timeAgo = "";
 
       if (hoursDifference === 0) {
-        timeAgo = `hace ${minutesDifference} minutos`;
+        if (timeParts.days !== 0) {
+          timeAgo =
+            timeParts.days === 1 ? `hace 1 día` : `hace ${daysDifference} días`;
+        } else if (minutesDifference !== 0) {
+          timeAgo =
+            minutesDifference === 1
+              ? `hace 1 minuto`
+              : `hace ${minutesDifference} minutos`;
+        }
       } else if (hoursDifference === 1) {
         timeAgo = `hace 1 hora`;
+        if (minutesDifference !== 0) {
+          timeAgo += `, ${minutesDifference} minutos`;
+        }
       } else {
-        timeAgo = `hace ${hoursDifference} horas`;
+        if (timeParts.days !== 0) {
+          timeAgo =
+            timeParts.days === 1 ? `hace 1 día` : `hace ${daysDifference} días`;
+          if (hoursDifference !== 0) {
+            timeAgo += `, ${hoursDifference} horas`;
+          }
+        } else if (minutesDifference !== 0) {
+          timeAgo =
+            minutesDifference === 1
+              ? `hace 1 minuto`
+              : `hace ${minutesDifference} minutos`;
+        }
       }
 
+      console.log(timeParts.hours, timeParts.days);
       const message = `El usuario ${
         user?.username || "Usuario desconocido"
       } completó la actividad "${activityName}" ${timeAgo}.`;
