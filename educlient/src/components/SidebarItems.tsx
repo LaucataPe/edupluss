@@ -39,8 +39,8 @@ export function SidebarItem({ icon, text, active, url }) {
         ${expanded ? "right-0" : "right-24"}
         ${
           currentUrl.pathname === url
-            ? "bg-gradient-to-tr text-white opacity-80"
-            : "hover:bg-indigo-50 text-gray-600 opacity-80 dark:opacity-100"
+            ? "bg-gradient-to-tr dark:text-black opacity-100"
+            : "hover:bg-[#122236] dark:hover:bg-[#d7d7d7] text-gray-600 opacity-80 dark:opacity-100"
         }
     `}
       >
