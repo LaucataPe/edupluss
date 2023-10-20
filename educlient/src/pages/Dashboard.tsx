@@ -454,34 +454,35 @@ function Dashboard() {
       const daysDifference = timeParts.days;
       let timeAgo = "";
 
-      if (hoursDifference === 0) {
-        if (timeParts.days !== 0) {
+      switch (true) {
+        case hoursDifference === 0:
           timeAgo =
-            timeParts.days === 1 ? `hace 1 día` : `hace ${daysDifference} días`;
-        } else if (minutesDifference !== 0) {
-          timeAgo =
-            minutesDifference === 1
+            timeParts.days !== 0
+              ? timeParts.days === 1
+                ? `hace 1 día`
+                : `hace ${daysDifference} días`
+              : minutesDifference === 1
               ? `hace 1 minuto`
               : `hace ${minutesDifference} minutos`;
-        }
-      } else if (hoursDifference === 1) {
-        timeAgo = `hace 1 hora`;
-        if (minutesDifference !== 0) {
-          timeAgo += `, ${minutesDifference} minutos`;
-        }
-      } else {
-        if (timeParts.days !== 0) {
+          break;
+        case hoursDifference === 1:
+          timeAgo = `hace 1 hora`;
+          if (minutesDifference !== 0) {
+            timeAgo += `, ${minutesDifference} minutos`;
+          }
+          break;
+        default:
           timeAgo =
-            timeParts.days === 1 ? `hace 1 día` : `hace ${daysDifference} días`;
+            timeParts.days !== 0
+              ? timeParts.days === 1
+                ? `hace 1 día`
+                : `hace ${daysDifference} días`
+              : minutesDifference === 1
+              ? `hace 1 minuto`
+              : `hace ${minutesDifference} minutos`;
           if (hoursDifference !== 0) {
             timeAgo += `, ${hoursDifference} horas`;
           }
-        } else if (minutesDifference !== 0) {
-          timeAgo =
-            minutesDifference === 1
-              ? `hace 1 minuto`
-              : `hace ${minutesDifference} minutos`;
-        }
       }
 
       console.log(timeParts.hours, timeParts.days);
