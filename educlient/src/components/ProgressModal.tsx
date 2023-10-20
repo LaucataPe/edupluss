@@ -215,7 +215,7 @@ function ProgressModal({
   });
   return (
     <>
-      <header className="bg-1 p-2 max-w-md rounded-t-md lg:max-w-lg flex justify-between">
+      <header className="bg-[#040d19] max-w-md rounded-t-md lg:max-w-lg flex justify-between">
         <h3 className="mb-0 text-white text-base flex justify-center items-center p-2">
           Progreso de actividad
         </h3>
@@ -249,13 +249,13 @@ function ProgressModal({
         {ActivityProgress.length > 5 && (
           <div className="flex justify-between mt-2 mb-1">
             <button
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+              className="bg-[#071426] hover:bg-[#203a5f] text-white font-semibold py-2 px-4 rounded"
               onClick={handleBackButtonClick}
             >
               Atrás
             </button>
             <button
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+              className="bg-[#071426] hover:bg-[#203a5f] text-white font-semibold py-2 px-4 rounded"
               onClick={handleNextButtonClick}
             >
               Adelante

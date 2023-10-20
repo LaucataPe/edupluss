@@ -80,7 +80,7 @@ const ActivitiesList = ({ act, enableDrag }) => {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className="py-1 px-2 border rounded m-3 flex items-center hover:bg-slate-100"
+      className="py-1 px-2 border rounded m-3 flex items-center hover:bg-[#182d4a] hover:text-white"
     >
       <div className="col-12">
         <div className="flex flex-column md:flex-row align-items-center w-full">

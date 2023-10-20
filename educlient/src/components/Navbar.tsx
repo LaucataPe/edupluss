@@ -62,8 +62,9 @@ function NavBar() {
             />
             <button
               onClick={() => setShowSideBar()}
-              className={`animation cursor-pointer transition-transform duration-500 overflow-hidden relative w-[3rem] h-12 bg-none  ease-in-out  hover:scale-105
-  rounded-full ${active ? "active" : ""} `}
+              className={`animation cursor-pointer transition-transform duration-500 overflow-hidden relative w-[3rem] h-12 bg-none  ease-in-out  hover:scale-105 rounded-full border-0 ${
+                active ? "active" : ""
+              } `}
             >
               <span className="rounded-md w-7 bg-[#3b82f6] absolute h-1 top-3.5 left-3.5 transition-transform duration-500"></span>
               <span className="rounded-md w-4 bg-[#3b82f6] absolute h-1 left-3.5  top-[24px] transition-transform duration-500"></span>
