@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { RootState } from "../redux/store";
 import { Activity, EmployeeGrades } from "../utils/interfaces";
 import axios from "axios";
+import { log } from "console";
 
 const Activities = () => {
   const activities = useSelector(
@@ -29,11 +30,11 @@ const Activities = () => {
     (state: RootState) => state.activities.activities
   );
   const [testGrades, setTestGrades] = useState<EmployeeGrades[]>([]);
-
+  
   const currentProgress = userSteps.filter(
     //@ts-ignore
     (entrada) => entrada.UserId === currentUser.id
-  );
+    );
 
   const sortOptions = [
     { label: "All", value: "all", color: "#4F46E5" },
@@ -139,6 +140,7 @@ const Activities = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:3001/userStep");
+        console.log(response.data)
         setUserSteps(response.data);
       } catch (error) {
         console.error("Error al obtener datos de UserSteps:", error);
@@ -168,8 +170,10 @@ const Activities = () => {
         console.error("Error al obtener datos de 'testGrades':", error);
       }
     };
-    fetchData();
-  }, []);
+    if(currentUser.id !== 0){
+      fetchData();
+    }
+  }, [currentUser.id]);
 
   const finishedActivityInfo = {};
 
@@ -281,6 +285,18 @@ const Activities = () => {
       finishedActivityInfo[activityId] && //@ts-ignore
       finishedActivityInfo[activityId].count > 0; // Verifica si hay pasos finalizados
 
+
+    //Filtro los pasos de la actividad actual y luego comparo con currentProgress para encontrar pasos terminados
+    const stepsForActivity = //@ts-ignore
+    totalSteps.filter(step => step.activityId === filteredValue.id);
+
+    const completedSteps = stepsForActivity.filter(step => {
+      const progress = //@ts-ignore
+        currentProgress.find(progressStep => progressStep.StepId === step.id);
+        //@ts-ignore
+      return progress && progress;
+    });
+    
     return (
       <div className={`col-12 border-none`}>
         <Link to={`/activity/${filteredValue.id}`}>
@@ -311,7 +327,7 @@ const Activities = () => {
                     })}
                   </span>
                 )}
-              </h3>
+              </h4>
             </div>
           </div>
         </Link>
@@ -332,6 +348,17 @@ const Activities = () => {
       finishedActivityInfo[activityId] &&
       //@ts-ignore
       finishedActivityInfo[activityId].count > 0; // Verifica si hay pasos finalizados
+
+    //Filtro los pasos de la actividad actual y luego comparo con currentProgress para encontrar pasos terminados
+    const stepsForActivity = //@ts-ignore
+    totalSteps.filter(step => step.activityId === activityId);
+
+    const completedSteps = stepsForActivity.filter(step => {
+      const progress = //@ts-ignore
+        currentProgress.find(progressStep => progressStep.StepId === step.id);
+        //@ts-ignore
+      return progress && progress;
+    });
 
     return (
       <div className="col-12 lg:col-4">

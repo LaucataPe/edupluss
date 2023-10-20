@@ -22,7 +22,7 @@ function Home() {
           <h2 className="text-3xl font-semibold text-center p-5">
             {" "}
             <i className="pi pi-home text-4xl mx-2"></i>
-            Bienvenido {logUser.username}!{" "}
+            Bienvenido, {logUser.username}!{" "}
           </h2>
           <Activities />
         </div>

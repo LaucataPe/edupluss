@@ -99,8 +99,10 @@ function NavBar({ isDarkMode, toggleDarkMode }) {
             image={profile}
           ></Avatar>
 
+
           <Menu ref={menu} model={overlayMenuItems} popup />
         </div>
+
       </nav>
     </>
   );
