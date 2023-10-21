@@ -20,6 +20,16 @@ const LandingPage: Page = () => {
     setIsHidden((prevState) => !prevState);
   };
 
+  const videoRef: any = useRef(null);
+
+  const handleVideoClick = () => {
+    const video: any = videoRef.current;
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  };
   return (
     <div className="surface-0 flex justify-content-center">
       <div id="home" className="landing-wrapper overflow-hidden">
@@ -167,7 +177,76 @@ const LandingPage: Page = () => {
             </div>
           </div>
         </section>
+        <section
+          id="presentation"
+          className="flex flex-column pt-4 mt-10 lg:mt-48 xs:pt-1 px-4 lg:px-4 overflow-hidden relative "
+        >
+          <div className="grid justify-content-center">
+            <div className="flex flex-column-reverse lg:flex-row col-12 text-center mt-8 mb-28 lg:max-w-7xl max-w-xl ">
+              <div
+                className="flex bg-black border-2 border-blue-100 rounded-lg overflow-hidden shadow-2xl transform scale-100 xl:hover:scale-125 lg:hover:scale-110 transition-transform duration-500 ease-in-out"
+                onClick={handleVideoClick}
+              >
+                <video
+                  ref={videoRef}
+                  src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                  autoPlay
+                  controls
+                ></video>
+              </div>
 
+              <div className="mx-5 px-5 py-12 lg:py-0">
+                <h2 className="text-900 font-semibold mb-2">
+                  Desarrolla las habilidades y aptitudes de tus empleados
+                </h2>
+                <span className="text-600 text-2xl">
+                  Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                  para cada uno de ellos, llevando el control de su progreso y
+                  evaluando sus conocimientos
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          id="planCards"
+          className="flex flex-column pt-4 mt-10 lg:mt-12 xs:pt-1 px-4 lg:px-4 overflow-hidden relative "
+        >
+          <div className="grid justify-content-center">
+            <div className="flex flex-column-reverse lg:flex-row col-12 text-center mt-8 mb-28 lg:max-w-7xl max-w-xl ">
+              <div className="card mx-5 px-5 py-12 lg:py-0">
+                <h2 className="text-900 font-semibold mb-2">
+                  Desarrolla las habilidades y aptitudes de tus empleados
+                </h2>
+                <span className="text-600 text-2xl">
+                  Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                  para cada uno de ellos, llevando el control de su progreso y
+                  evaluando sus conocimientos
+                </span>
+              </div>
+              <div className="card mx-5 px-5 py-12 lg:py-0">
+                <h2 className="text-900 font-semibold mb-2">
+                  Desarrolla las habilidades y aptitudes de tus empleados
+                </h2>
+                <span className="text-600 text-2xl">
+                  Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                  para cada uno de ellos, llevando el control de su progreso y
+                  evaluando sus conocimientos
+                </span>
+              </div>
+              <div className="card mx-5 px-5 py-12 lg:py-0">
+                <h2 className="text-900 font-semibold mb-2">
+                  Desarrolla las habilidades y aptitudes de tus empleados
+                </h2>
+                <span className="text-600 text-2xl">
+                  Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                  para cada uno de ellos, llevando el control de su progreso y
+                  evaluando sus conocimientos
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
         <section id="features" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
           <div className="grid justify-content-center">
             <div className="col-12 text-center mt-8 mb-4">
@@ -468,7 +547,6 @@ const LandingPage: Page = () => {
             </div>
           </div>
         </section>
-
         <section id="pricing" className="py-4 px-4 lg:px-8 my-2 md:my-4">
           <div className="text-center">
             <h2 className="text-900 font-normal mb-2">Planes y Precios</h2>
@@ -598,7 +676,6 @@ const LandingPage: Page = () => {
             </div>
           </div>
         </section>
-
         <section className="py-4 px-4 mx-0 bg-slate-100 w-[100%]">
           <div className="grid justify-content-between">
             <div className="col-12 md:col-2 m-1">
