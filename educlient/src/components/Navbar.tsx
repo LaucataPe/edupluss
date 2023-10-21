@@ -1,9 +1,10 @@
 import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { resetActivities } from "../redux/features/activitiesSlice";
 import { Avatar } from "primereact/avatar";
+
 import { InputSwitch } from "primereact/inputswitch";
 
 import { Menu } from "primereact/menu";
@@ -14,7 +15,7 @@ import logo from "../assets/edupluss2.png";
 function NavBar({ isDarkMode, toggleDarkMode }) {
   const [active, setActive] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { pathname } = useLocation();
+
   const enableSideBar = useSelector(
     (state: RootState) => state.utils.handleSideBar
   );
@@ -53,11 +54,14 @@ function NavBar({ isDarkMode, toggleDarkMode }) {
       <nav className="dark:bg-[whitesmoke] bg-[#040d19] fixed py-3 top-0 px-3 w-full h-16  flex  justify-between items-center z-10">
         <div className="flex justify-between items-center w-full">
           <div className="flex gap-5 justify-center items-center ">
-            <img
-              src={logo}
-              alt=""
-              className="animation h-14 order-0 cursor-pointer"
-            />
+            <Link to={"/"}>
+              <img
+                src={logo}
+                alt=""
+                className="animation h-14 order-0 cursor-pointer"
+              />
+            </Link>
+
             <button
               onClick={() => setShowSideBar()}
               className={`animation cursor-pointer transition-transform duration-500 overflow-hidden relative w-[3rem] h-12 bg-none  ease-in-out  hover:scale-105 rounded-full border-0 ${
@@ -99,10 +103,8 @@ function NavBar({ isDarkMode, toggleDarkMode }) {
             image={profile}
           ></Avatar>
 
-
           <Menu ref={menu} model={overlayMenuItems} popup />
         </div>
-
       </nav>
     </>
   );
