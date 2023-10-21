@@ -56,7 +56,7 @@ const LandingPage: Page = () => {
           </StyleClass>
           <div
             className={classNames(
-              "align-items-center surface-0 flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2 bg-transparent",
+              "align-items-center surface-0 flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2 bg-[#ffffff]",
               { hidden: isHidden }
             )}
             style={{ top: "100%" }}
@@ -216,13 +216,13 @@ const LandingPage: Page = () => {
           id="planCards"
           className="flex flex-column pt-4 mt-10 lg:mt-12 xs:pt-1 px-4 lg:px-4 overflow-hidden relative"
         >
-          <div className="grid justify-content-center lg:mx-8">
-            <div className="flex flex-column lg:flex-row col-12 text-center mt-8 mb-28 lg:max-w-7xl max-w-lg ">
-              <div className="shadow-2xl m-2 flex card-container">
-                <div className="card flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
-                  <h2 className="font-semibold flex">
+          <div className="grid justify-content-center lg:mx-8 ">
+            <div className="flex flex-column lg:flex-row col-12 text-center mt-8 mb-28 lg:max-w-7xl max-w-md ">
+              <div className="shadow-2xl m-4 flex card-container ">
+                <div className="card p-5 flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
+                  <h2 className="font-semibold flex ">
                     <img
-                      src={work1}
+                      src={planning1}
                       alt="Admin Image"
                       className="w-120 md:w-120"
                     />
@@ -235,11 +235,11 @@ const LandingPage: Page = () => {
                   </span>
                 </div>
               </div>
-              <div className="shadow-2xl m-2 flex card-container">
-                <div className="card flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
-                  <h2 className="text-900 font-semibold flex ">
+              <div className="shadow-2xl m-4 flex card-container">
+                <div className="card p-5 flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
+                  <h2 className=" font-semibold flex ">
                     <img
-                      src={eval1}
+                      src={work1}
                       alt="Admin Image"
                       className="w-120 md:w-120"
                     />
@@ -252,11 +252,11 @@ const LandingPage: Page = () => {
                   </span>
                 </div>
               </div>
-              <div className="shadow-2xl m-2 flex card-container">
-                <div className="card flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
+              <div className="shadow-2xl m-4 flex card-container">
+                <div className="card p-5 flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
                   <h2 className=" font-semibold flex">
                     <img
-                      src={planning1}
+                      src={eval1}
                       alt="Admin Image"
                       className="w-120 md:w-120"
                     />
