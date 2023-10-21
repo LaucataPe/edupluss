@@ -23,7 +23,10 @@ const LandingPage: Page = () => {
   return (
     <div className="surface-0 flex justify-content-center">
       <div id="home" className="landing-wrapper overflow-hidden">
-        <div className="py-2 px-4 mx-0 bg-white z-10 lg:px-8 w-12 flex align-items-center justify-content-between fixed lg:fixed">
+        <header
+          id="navbar"
+          className="py-2 cursor-auto px-4 mx-0 bg-[#ffffffa1] hover:bg-[#ffffff] z-10 lg:px-8 w-12 flex align-items-center justify-content-between fixed lg:fixed transition-transform duration-700 ease-in-out translate-y-[-90px] hover:-translate-y-0 over:-translate-y-0 hover:shadow-xl hover:transition-shadow-duration-700-ease-in-out"
+        >
           <img src={logo} alt="Sakai Logo" className="mr-0 lg:mr-2 h-[80px]" />
           <StyleClass
             nodeRef={menuRef as NodeRef}
@@ -39,7 +42,7 @@ const LandingPage: Page = () => {
           </StyleClass>
           <div
             className={classNames(
-              "align-items-center surface-0 flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2",
+              "align-items-center surface-0 flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2 bg-transparent",
               { hidden: isHidden }
             )}
             style={{ top: "100%" }}
@@ -86,10 +89,20 @@ const LandingPage: Page = () => {
               </Link>
             </div>
           </div>
-        </div>
-        <div
+          <div
+            style={{
+              position: "absolute",
+              top: "50px",
+              right: "0px",
+              height: "105px",
+              width: "100%",
+              background: "transparent",
+            }}
+          ></div>
+        </header>
+        <section
           id="hero"
-          className="flex flex-column pt-4 mt-20 lg:mt-32 xs:pt-1 px-4 lg:px-8 overflow-hidden relative "
+          className="flex flex-column pt-4 mt-7 lg:mt-32 xs:pt-1 px-4 lg:px-8 overflow-hidden relative "
         >
           <div
             className="absolute top-0 left-0 w-full h-full md:block hidden"
@@ -128,7 +141,7 @@ const LandingPage: Page = () => {
                 <span className="font-light block">
                   Mejora el desempeño laboral de tus colaboradores con una
                 </span>
-                <span className="text-blue-500 lg:text-2xl">
+                <span className="text-blue-500 xs:text-2xl">
                   capacitación efectiva
                 </span>
               </h1>
@@ -142,7 +155,7 @@ const LandingPage: Page = () => {
                   type="button"
                   label="Quiero una demo"
                   rounded
-                  className="text-xl border-none mt-3 p-2 lg:p-2 border-blue-500  border-3 font-normal line-height-3 px-3 bg-blue-500 hover:bg-blue-700 hover:shadow-2xl text-white"
+                  className="text-xl border-none mt-3 p-0 lg:p-2 border-blue-500  border-3 font-normal line-height-3 px-1 bg-blue-500 hover:bg-blue-700 hover:shadow-2xl text-white"
                 />
                 <Button
                   type="button"
@@ -153,9 +166,9 @@ const LandingPage: Page = () => {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div id="features" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
+        <section id="features" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
           <div className="grid justify-content-center">
             <div className="col-12 text-center mt-8 mb-4">
               <h2 className="text-900 font-normal mb-2">
@@ -454,9 +467,9 @@ const LandingPage: Page = () => {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div id="pricing" className="py-4 px-4 lg:px-8 my-2 md:my-4">
+        <section id="pricing" className="py-4 px-4 lg:px-8 my-2 md:my-4">
           <div className="text-center">
             <h2 className="text-900 font-normal mb-2">Planes y Precios</h2>
             <span className="text-600 text-2xl">Invierte en tu negocio...</span>
@@ -584,9 +597,9 @@ const LandingPage: Page = () => {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="py-4 px-4 mx-0 bg-slate-100 w-[100%]">
+        <section className="py-4 px-4 mx-0 bg-slate-100 w-[100%]">
           <div className="grid justify-content-between">
             <div className="col-12 md:col-2 m-1">
               <img
@@ -627,7 +640,7 @@ const LandingPage: Page = () => {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );
