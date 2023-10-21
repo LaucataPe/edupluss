@@ -25,6 +25,11 @@ interface testInputs {
 function ActivitySteps() {
   const dispatch = useAppDispatch();
   const { id } = useParams();
+  let idAux : number;
+  if(id){
+    idAux = parseInt(id);
+  }
+
   const steps = useSelector((state: RootState) => state.steps.steps);
   const activities = useSelector(
     (state: RootState) => state.activities.activities
@@ -213,7 +218,7 @@ function ActivitySteps() {
         }
 
         urlsData = {
-          id: id,
+          id: idAux,
           hasTest: true,
           durationTest: duration,
           ...testUrls,
@@ -221,7 +226,7 @@ function ActivitySteps() {
         
       }else {
         urlsData = {
-          id: id,
+          id: idAux,
           hasTest: true,
           ...testUrls,
         };

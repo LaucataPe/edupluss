@@ -21,7 +21,7 @@ import AppMenu from "./components/SideMenu";
 import { useSelector } from "react-redux";
 
 import "./index.css";
-import "../public/tailwind-light/theme.css";
+import "../public/dark/theme.css";
 
 import "primereact/resources/primereact.css";
 import "primeflex/primeflex.css";
@@ -40,7 +40,7 @@ import UserByCompany from "./components/superAdmin/UsersByCompany";
 import { AxiosInterceptor } from "./utils/interceptors/axiosInterceptor";
 import { useState } from "react";
 import EvaluationList from "./pages/EvaluationList";
-import ListEmployeesQualifications from "./pages/ListEmployeesQualifications";
+import ListEmployeesQualifications from "./pages/ListEmployeesQualifications/ListEmployeesQualifications";
 import Sidebar from "./components/Sidebar";
 
 function App() {
