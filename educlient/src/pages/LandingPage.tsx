@@ -3,6 +3,10 @@ import React, { useRef, useState } from "react";
 import logo from "../assets/edupluss.png";
 import admin from "../assets/AdminPre.jpg";
 import activ from "../assets/ActivitiesPre.jpg";
+import work1 from "../assets/work1.jpg";
+import eval1 from "../assets/eval1.jpg";
+import planning1 from "../assets/planning1.png";
+
 import { Link } from "react-router-dom";
 
 import { StyleClass } from "primereact/styleclass";
@@ -210,43 +214,65 @@ const LandingPage: Page = () => {
         </section>
         <section
           id="planCards"
-          className="flex flex-column pt-4 mt-10 lg:mt-12 xs:pt-1 px-4 lg:px-4 overflow-hidden relative "
+          className="flex flex-column pt-4 mt-10 lg:mt-12 xs:pt-1 px-4 lg:px-4 overflow-hidden relative"
         >
-          <div className="grid justify-content-center">
-            <div className="flex flex-column-reverse lg:flex-row col-12 text-center mt-8 mb-28 lg:max-w-7xl max-w-xl ">
-              <div className="card mx-5 px-5 py-12 lg:py-0">
-                <h2 className="text-900 font-semibold mb-2">
-                  Desarrolla las habilidades y aptitudes de tus empleados
-                </h2>
-                <span className="text-600 text-2xl">
-                  Capacita a tu equipo de trabajo creando rutas de aprendizaje
-                  para cada uno de ellos, llevando el control de su progreso y
-                  evaluando sus conocimientos
-                </span>
+          <div className="grid justify-content-center lg:mx-8">
+            <div className="flex flex-column lg:flex-row col-12 text-center mt-8 mb-28 lg:max-w-7xl max-w-lg ">
+              <div className="shadow-2xl m-2 flex card-container">
+                <div className="card flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
+                  <h2 className="font-semibold flex">
+                    <img
+                      src={work1}
+                      alt="Admin Image"
+                      className="w-120 md:w-120"
+                    />
+                  </h2>
+                  <span className="text-xl flex-column">
+                    <h3 className="font-bold">1. Planea</h3>
+                    Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                    para cada uno de ellos, llevando el control de su progreso y
+                    evaluando sus conocimientos
+                  </span>
+                </div>
               </div>
-              <div className="card mx-5 px-5 py-12 lg:py-0">
-                <h2 className="text-900 font-semibold mb-2">
-                  Desarrolla las habilidades y aptitudes de tus empleados
-                </h2>
-                <span className="text-600 text-2xl">
-                  Capacita a tu equipo de trabajo creando rutas de aprendizaje
-                  para cada uno de ellos, llevando el control de su progreso y
-                  evaluando sus conocimientos
-                </span>
+              <div className="shadow-2xl m-2 flex card-container">
+                <div className="card flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
+                  <h2 className="text-900 font-semibold flex ">
+                    <img
+                      src={eval1}
+                      alt="Admin Image"
+                      className="w-120 md:w-120"
+                    />
+                  </h2>
+                  <span className="text-xl flex-column">
+                    <h3 className="font-bold">2. Ejecuta</h3>
+                    Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                    para cada uno de ellos, llevando el control de su progreso y
+                    evaluando sus conocimientos
+                  </span>
+                </div>
               </div>
-              <div className="card mx-5 px-5 py-12 lg:py-0">
-                <h2 className="text-900 font-semibold mb-2">
-                  Desarrolla las habilidades y aptitudes de tus empleados
-                </h2>
-                <span className="text-600 text-2xl">
-                  Capacita a tu equipo de trabajo creando rutas de aprendizaje
-                  para cada uno de ellos, llevando el control de su progreso y
-                  evaluando sus conocimientos
-                </span>
+              <div className="shadow-2xl m-2 flex card-container">
+                <div className="card flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
+                  <h2 className=" font-semibold flex">
+                    <img
+                      src={planning1}
+                      alt="Admin Image"
+                      className="w-120 md:w-120"
+                    />
+                  </h2>
+                  <span className="text-xl flex-column">
+                    <h3 className="font-bold">3. Evalúa</h3>
+                    Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                    para cada uno de ellos, llevando el control de su progreso y
+                    evaluando sus conocimientos
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </section>
+
         <section id="features" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
           <div className="grid justify-content-center">
             <div className="col-12 text-center mt-8 mb-4">
