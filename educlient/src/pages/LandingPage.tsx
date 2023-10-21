@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useRef, useState } from "react";
 import logo from "../assets/edupluss.png";
-import admin from "../assets/admin.jpg";
+import admin from "../assets/AdminPre.jpg";
+import activ from "../assets/ActivitiesPre.jpg";
 import { Link } from "react-router-dom";
 
 import { StyleClass } from "primereact/styleclass";
@@ -22,9 +23,8 @@ const LandingPage: Page = () => {
   return (
     <div className="surface-0 flex justify-content-center">
       <div id="home" className="landing-wrapper overflow-hidden">
-        <div className="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static">
+        <div className="py-2 px-4 mx-0 bg-white z-10 lg:px-8 w-12 flex align-items-center justify-content-between fixed lg:fixed">
           <img src={logo} alt="Sakai Logo" className="mr-0 lg:mr-2 h-[80px]" />
-
           <StyleClass
             nodeRef={menuRef as NodeRef}
             selector="@next"
@@ -81,39 +81,77 @@ const LandingPage: Page = () => {
                 <Button
                   label="Ingresar"
                   rounded
-                  className="border-none ml-5 font-light line-height-2 bg-blue-500 text-white"
+                  className="border-none ml-5 font-light line-height-2 bg-blue-500 hover:bg-blue-700  text-white"
                 ></Button>
               </Link>
             </div>
           </div>
         </div>
-
         <div
           id="hero"
-          className="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden"
-          style={{
-            background:
-              "linear-gradient(0deg, #3b83f697, #665fe89d), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #EEEFAF 0%, #C3E3FA 100%)",
-            clipPath: "ellipse(150% 87% at 93% 13%)",
-          }}
+          className="flex flex-column pt-4 mt-20 lg:mt-32 xs:pt-1 px-4 lg:px-8 overflow-hidden relative "
         >
-          <div className="mx-4 md:mx-8 mt-0 md:mt-4">
-            <h1 className="text-6xl font-bold text-gray-900 line-height-2">
-              <span className="font-light block">La capacitación</span>nunca fue
-              tan fácil
-            </h1>
-            <p className="font-normal text-2xl line-height-3 md:mt-3 text-gray-700">
-              Entrena a tus empleados con metodologías claras y estables
-            </p>
-            <Button
-              type="button"
-              label="Empezar Ahora!"
-              rounded
-              className="text-xl border-none mt-3 bg-blue-500 font-normal line-height-3 px-3 text-white"
-            ></Button>
+          <div
+            className="absolute top-0 left-0 w-full h-full md:block hidden"
+            style={{
+              background: "linear-gradient(20deg, #5f9ae8 0%, #665fe8 20%)",
+              clipPath: "ellipse(36.5% 85% at 100% 50%)",
+            }}
+          ></div>
+          <div
+            className="absolute right-0 top-0 md:block hidden"
+            style={{
+              transform: "translate(52%, 40px)", // Centra la imagen
+            }}
+          >
+            <img
+              src={admin}
+              alt="Admin Image"
+              className="w-3 md:w-5 shadow-2xl"
+            />
           </div>
-          <div className="flex justify-content-center md:justify-content-end">
-            <img src={admin} alt="Admin Image" className="w-3 md:w-5" />
+          <div
+            className="absolute right-0 top-0 md:block hidden"
+            style={{
+              transform: "translate(58%, 150px)", // Centra la imagen
+            }}
+          >
+            <img
+              src={activ}
+              alt="Admin Image"
+              className="w-1 md:w-5 shadow-2xl"
+            />
+          </div>
+          <div className="mx-2 md:mx-2 mt-0 md:mt-4 relative">
+            <div className="xl:max-w-xl lg:max-w-md md:max-w-sm">
+              <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 line-height-2">
+                <span className="font-light block">
+                  Mejora el desempeño laboral de tus colaboradores con una
+                </span>
+                <span className="text-blue-500 lg:text-2xl">
+                  capacitación efectiva
+                </span>
+              </h1>
+              <p className="font-normal lg:text-2xl line-height-3 mt-5 md:mt-3 text-gray-700">
+                Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                para cada uno de ellos, llevando el control de su progreso y
+                evaluando sus conocimientos.
+              </p>
+              <div className="flex max-w-md justify-content-between">
+                <Button
+                  type="button"
+                  label="Quiero una demo"
+                  rounded
+                  className="text-xl border-none mt-3 p-2 lg:p-2 border-blue-500  border-3 font-normal line-height-3 px-3 bg-blue-500 hover:bg-blue-700 hover:shadow-2xl text-white"
+                />
+                <Button
+                  type="button"
+                  label="Contáctanos"
+                  rounded
+                  className="text-xl border-none mt-3 border-blue-500 border-3 font-normal line-height-3 px-3 text-blue-500 hover:bg-blue-700 hover:shadow-2xl hover:text-white"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
