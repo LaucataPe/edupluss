@@ -21,7 +21,7 @@ import AppMenu from "./components/SideMenu";
 import { useSelector } from "react-redux";
 
 import "./index.css";
-import "../public/dark/theme.css";
+
 
 import "primereact/resources/primereact.css";
 import "primeflex/primeflex.css";
@@ -47,6 +47,21 @@ function App() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [isDarkMode, setDarkMode] = useState(true);
+  const toggleDarkMode = () => {
+    setDarkMode(!isDarkMode);
+
+    // Obtén el elemento <link> de la hoja de estilo
+    const themeLink = document.getElementById("theme-css");
+
+    if (themeLink) {
+      // Cambia la ruta del archivo CSS en función del modo seleccionado
+      const themePath = isDarkMode
+        ? "/public/dark/theme.css"
+        : "/public/tailwind-light/theme.css";
+      themeLink.setAttribute("href", themePath);
+    }
+  };
 
   const logUser = useSelector((state: RootState) => state.user.logUser);
   const currentEmpresa = useSelector(
@@ -113,9 +128,11 @@ function App() {
   AxiosInterceptor();
 
   return (
-    <>
-      {pathAvailable && <NavBar />}
-      <div className="flex  w-[100%] ">
+    <div className={isDarkMode ? "dark" : "light"}>
+      {pathAvailable && (
+        <NavBar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+      )}
+      <div className="flex w-[100%]">
         {pathAvailable && logUser.tipo === "admin" && <Sidebar />}
 
         <div className={`w-full ${pathAvailable ? "mt-16" : ""}`}>
@@ -159,7 +176,7 @@ function App() {
           </Routes>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

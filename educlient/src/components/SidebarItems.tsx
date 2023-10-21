@@ -15,7 +15,7 @@ export default function SidebarWrapper({ children }) {
         expanded ? "w-24" : "w-0"
       }`}
     >
-      <nav className="h-full flex flex-col bg-white border-r shadow-sm">
+      <nav className="h-full flex flex-col border-r-[#0b213f] shadow-sm">
         <ul className="flex flex-col justify-center items-center px-1">
           {children}
         </ul>
@@ -39,8 +39,8 @@ export function SidebarItem({ icon, text, active, url }) {
         ${expanded ? "right-0" : "right-24"}
         ${
           currentUrl.pathname === url
-            ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-            : "hover:bg-indigo-50 text-gray-600"
+            ? "bg-gradient-to-tr dark:text-black opacity-100"
+            : "hover:bg-[#122236] dark:hover:bg-[#d7d7d7] text-gray-600 opacity-80 dark:opacity-100"
         }
     `}
       >

@@ -1,7 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useRef, useState } from "react";
 import logo from "../assets/edupluss.png";
-import admin from "../assets/admin.jpg";
+import admin from "../assets/AdminPre.jpg";
+import activ from "../assets/ActivitiesPre.jpg";
+import work1 from "../assets/work1.jpg";
+import eval1 from "../assets/eval1.jpg";
+import planning1 from "../assets/planning1.png";
+
 import { Link } from "react-router-dom";
 
 import { StyleClass } from "primereact/styleclass";
@@ -19,12 +24,24 @@ const LandingPage: Page = () => {
     setIsHidden((prevState) => !prevState);
   };
 
+  const videoRef: any = useRef(null);
+
+  const handleVideoClick = () => {
+    const video: any = videoRef.current;
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  };
   return (
     <div className="surface-0 flex justify-content-center">
       <div id="home" className="landing-wrapper overflow-hidden">
-        <div className="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static">
+        <header
+          id="navbar"
+          className="py-2 cursor-auto px-4 mx-0 bg-[#ffffffa1] hover:bg-[#ffffff] z-10 lg:px-8 w-12 flex align-items-center justify-content-between fixed lg:fixed transition-transform duration-700 ease-in-out translate-y-[-90px] hover:-translate-y-0 over:-translate-y-0 hover:shadow-xl hover:transition-shadow-duration-700-ease-in-out"
+        >
           <img src={logo} alt="Sakai Logo" className="mr-0 lg:mr-2 h-[80px]" />
-
           <StyleClass
             nodeRef={menuRef as NodeRef}
             selector="@next"
@@ -39,7 +56,7 @@ const LandingPage: Page = () => {
           </StyleClass>
           <div
             className={classNames(
-              "align-items-center surface-0 flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2",
+              "align-items-center surface-0 flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2 bg-[#ffffff]",
               { hidden: isHidden }
             )}
             style={{ top: "100%" }}
@@ -81,43 +98,182 @@ const LandingPage: Page = () => {
                 <Button
                   label="Ingresar"
                   rounded
-                  className="border-none ml-5 font-light line-height-2 bg-blue-500 text-white"
+                  className="border-none ml-5 font-light line-height-2 bg-blue-500 hover:bg-blue-700  text-white"
                 ></Button>
               </Link>
             </div>
           </div>
-        </div>
-
-        <div
+          <div
+            style={{
+              position: "absolute",
+              top: "50px",
+              right: "0px",
+              height: "105px",
+              width: "100%",
+              background: "transparent",
+            }}
+          ></div>
+        </header>
+        <section
           id="hero"
-          className="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden"
-          style={{
-            background:
-              "linear-gradient(0deg, #3b83f697, #665fe89d), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #EEEFAF 0%, #C3E3FA 100%)",
-            clipPath: "ellipse(150% 87% at 93% 13%)",
-          }}
+          className="flex flex-column pt-4 mt-7 lg:mt-32 xs:pt-1 px-4 lg:px-8 overflow-hidden relative "
         >
-          <div className="mx-4 md:mx-8 mt-0 md:mt-4">
-            <h1 className="text-6xl font-bold text-gray-900 line-height-2">
-              <span className="font-light block">La capacitación</span>nunca fue
-              tan fácil
-            </h1>
-            <p className="font-normal text-2xl line-height-3 md:mt-3 text-gray-700">
-              Entrena a tus empleados con metodologías claras y estables
-            </p>
-            <Button
-              type="button"
-              label="Empezar Ahora!"
-              rounded
-              className="text-xl border-none mt-3 bg-blue-500 font-normal line-height-3 px-3 text-white"
-            ></Button>
+          <div
+            className="absolute top-0 left-0 w-full h-full md:block hidden"
+            style={{
+              background: "linear-gradient(20deg, #5f9ae8 0%, #665fe8 20%)",
+              clipPath: "ellipse(36.5% 85% at 100% 50%)",
+            }}
+          ></div>
+          <div
+            className="absolute right-0 top-0 md:block hidden"
+            style={{
+              transform: "translate(52%, 40px)", // Centra la imagen
+            }}
+          >
+            <img
+              src={admin}
+              alt="Admin Image"
+              className="w-3 md:w-5 shadow-2xl"
+            />
           </div>
-          <div className="flex justify-content-center md:justify-content-end">
-            <img src={admin} alt="Admin Image" className="w-3 md:w-5" />
+          <div
+            className="absolute right-0 top-0 md:block hidden"
+            style={{
+              transform: "translate(58%, 150px)", // Centra la imagen
+            }}
+          >
+            <img
+              src={activ}
+              alt="Admin Image"
+              className="w-1 md:w-5 shadow-2xl"
+            />
           </div>
-        </div>
+          <div className="mx-2 md:mx-2 mt-0 md:mt-4 relative">
+            <div className="xl:max-w-xl lg:max-w-md md:max-w-sm">
+              <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 line-height-2">
+                <span className="font-light block">
+                  Mejora el desempeño laboral de tus colaboradores con una
+                </span>
+                <span className="text-blue-500 xs:text-2xl">
+                  capacitación efectiva
+                </span>
+              </h1>
+              <p className="font-normal lg:text-2xl line-height-3 mt-5 md:mt-3 text-gray-700">
+                Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                para cada uno de ellos, llevando el control de su progreso y
+                evaluando sus conocimientos.
+              </p>
+              <div className="flex max-w-md justify-content-between">
+                <Button
+                  type="button"
+                  label="Quiero una demo"
+                  rounded
+                  className="text-xl border-none mt-3 p-0 lg:p-2 border-blue-500  border-3 font-normal line-height-3 px-1 bg-blue-500 hover:bg-blue-700 hover:shadow-2xl text-white"
+                />
+                <Button
+                  type="button"
+                  label="Contáctanos"
+                  rounded
+                  className="text-xl border-none mt-3 border-blue-500 border-3 font-normal line-height-3 px-3 text-blue-500 hover:bg-blue-700 hover:shadow-2xl hover:text-white"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          id="presentation"
+          className="flex flex-column pt-4 mt-10 lg:mt-48 xs:pt-1 px-4 lg:px-4 overflow-hidden relative "
+        >
+          <div className="grid justify-content-center">
+            <div className="flex flex-column-reverse lg:flex-row col-12 text-center mt-8 mb-28 lg:max-w-7xl max-w-xl ">
+              <div
+                className="flex bg-black border-2 border-blue-100 rounded-lg overflow-hidden shadow-2xl transform scale-100 xl:hover:scale-125 lg:hover:scale-110 transition-transform duration-500 ease-in-out"
+                onClick={handleVideoClick}
+              >
+                <video
+                  ref={videoRef}
+                  src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                  autoPlay
+                  controls
+                ></video>
+              </div>
 
-        <div id="features" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
+              <div className="mx-5 px-5 py-12 lg:py-0">
+                <h2 className="text-900 font-semibold mb-2">
+                  Desarrolla las habilidades y aptitudes de tus empleados
+                </h2>
+                <span className="text-600 text-2xl">
+                  Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                  para cada uno de ellos, llevando el control de su progreso y
+                  evaluando sus conocimientos
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          id="planCards"
+          className="flex flex-column pt-4 mt-10 lg:mt-12 xs:pt-1 px-4 lg:px-4 overflow-hidden relative"
+        >
+          <div className="grid justify-content-center lg:mx-8 ">
+            <div className="flex flex-column lg:flex-row col-12 text-center mt-8 mb-28 lg:max-w-7xl max-w-md ">
+              <div className="shadow-2xl m-4 flex card-container ">
+                <div className="card p-5 flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
+                  <h2 className="font-semibold flex ">
+                    <img
+                      src={planning1}
+                      alt="Admin Image"
+                      className="w-120 md:w-120"
+                    />
+                  </h2>
+                  <span className="text-xl flex-column">
+                    <h3 className="font-bold">1. Planea</h3>
+                    Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                    para cada uno de ellos, llevando el control de su progreso y
+                    evaluando sus conocimientos
+                  </span>
+                </div>
+              </div>
+              <div className="shadow-2xl m-4 flex card-container">
+                <div className="card p-5 flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
+                  <h2 className=" font-semibold flex ">
+                    <img
+                      src={work1}
+                      alt="Admin Image"
+                      className="w-120 md:w-120"
+                    />
+                  </h2>
+                  <span className="text-xl flex-column">
+                    <h3 className="font-bold">2. Ejecuta</h3>
+                    Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                    para cada uno de ellos, llevando el control de su progreso y
+                    evaluando sus conocimientos
+                  </span>
+                </div>
+              </div>
+              <div className="shadow-2xl m-4 flex card-container">
+                <div className="card p-5 flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
+                  <h2 className=" font-semibold flex">
+                    <img
+                      src={eval1}
+                      alt="Admin Image"
+                      className="w-120 md:w-120"
+                    />
+                  </h2>
+                  <span className="text-xl flex-column">
+                    <h3 className="font-bold">3. Evalúa</h3>
+                    Capacita a tu equipo de trabajo creando rutas de aprendizaje
+                    para cada uno de ellos, llevando el control de su progreso y
+                    evaluando sus conocimientos
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="features" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
           <div className="grid justify-content-center">
             <div className="col-12 text-center mt-8 mb-4">
               <h2 className="text-900 font-normal mb-2">
@@ -416,9 +572,8 @@ const LandingPage: Page = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        <div id="pricing" className="py-4 px-4 lg:px-8 my-2 md:my-4">
+        </section>
+        <section id="pricing" className="py-4 px-4 lg:px-8 my-2 md:my-4">
           <div className="text-center">
             <h2 className="text-900 font-normal mb-2">Planes y Precios</h2>
             <span className="text-600 text-2xl">Invierte en tu negocio...</span>
@@ -546,9 +701,8 @@ const LandingPage: Page = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="py-4 px-4 mx-0 bg-slate-100 w-[100%]">
+        </section>
+        <section className="py-4 px-4 mx-0 bg-slate-100 w-[100%]">
           <div className="grid justify-content-between">
             <div className="col-12 md:col-2 m-1">
               <img
@@ -589,7 +743,7 @@ const LandingPage: Page = () => {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

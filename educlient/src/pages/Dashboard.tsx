@@ -440,24 +440,49 @@ function Dashboard() {
       const user = totalUsers?.find((user) => user.id === userId);
       const activityInfo = activitiesInfo[index];
       const activityName = activityInfo
-        ? activityInfo.title
+        ? activityInfo?.title
         : "Actividad no encontrada";
 
-      let message;
+      const hoursDifference = timeParts.hours;
+      const minutesDifference = timeParts.minutes;
+      const daysDifference = timeParts.days;
+      let timeAgo = "";
 
-      if (step.finished) {
-        message = `El usuario ${
-          user?.username || "Usuario desconocido"
-        } completó la actividad ${activityName}`;
-      } else {
-        message = `El usuario ${
-          user?.username || "Usuario desconocido"
-        } realizó el paso ${index + 1}: hace${
-          timeParts.days > 0 ? ` ${timeParts.days} día(s)` : ""
-        }${timeParts.hours > 0 ? ` ${timeParts.hours} hora(s)` : ""}${
-          timeParts.minutes > 0 ? ` ${timeParts.minutes} minuto(s)` : ""
-        }${timeParts.seconds > 0 ? ` ${timeParts.seconds} segundo(s)` : ""}`;
+      switch (true) {
+        case hoursDifference === 0:
+          timeAgo =
+            timeParts.days !== 0
+              ? timeParts.days === 1
+                ? `hace 1 día`
+                : `hace ${daysDifference} días`
+              : minutesDifference === 1
+              ? `hace 1 minuto`
+              : `hace ${minutesDifference} minutos`;
+          break;
+        case hoursDifference === 1:
+          timeAgo = `hace 1 hora`;
+          if (minutesDifference !== 0) {
+            timeAgo += `, ${minutesDifference} minutos`;
+          }
+          break;
+        default:
+          timeAgo =
+            timeParts.days !== 0
+              ? timeParts.days === 1
+                ? `hace 1 día`
+                : `hace ${daysDifference} días`
+              : minutesDifference === 1
+              ? `hace 1 minuto`
+              : `hace ${minutesDifference} minutos`;
+          if (hoursDifference !== 0) {
+            timeAgo += `, ${hoursDifference} horas`;
+          }
       }
+
+      console.log(timeParts.hours, timeParts.days);
+      const message = `El usuario ${
+        user?.username || "Usuario desconocido"
+      } completó la actividad "${activityName}" ${timeAgo}.`;
 
       if (Object.values(timeParts).some((part) => part > 0)) {
         totalChanges[index + 1] = {

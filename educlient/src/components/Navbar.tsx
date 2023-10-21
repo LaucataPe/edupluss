@@ -4,7 +4,6 @@ import { RootState } from "../redux/store";
 import { useLocation, Link } from "react-router-dom";
 import { resetActivities } from "../redux/features/activitiesSlice";
 import { Avatar } from "primereact/avatar";
-
 import { InputSwitch } from "primereact/inputswitch";
 
 import { Menu } from "primereact/menu";

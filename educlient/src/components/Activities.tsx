@@ -30,11 +30,11 @@ const Activities = () => {
     (state: RootState) => state.activities.activities
   );
   const [testGrades, setTestGrades] = useState<EmployeeGrades[]>([]);
-  
+
   const currentProgress = userSteps.filter(
     //@ts-ignore
     (entrada) => entrada.UserId === currentUser.id
-    );
+  );
 
   const sortOptions = [
     { label: "All", value: "all", color: "#4F46E5" },
@@ -140,7 +140,7 @@ const Activities = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:3001/userStep");
-        console.log(response.data)
+        console.log(response.data);
         setUserSteps(response.data);
       } catch (error) {
         console.error("Error al obtener datos de UserSteps:", error);
@@ -162,13 +162,15 @@ const Activities = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/tests/${currentUser.id}`);
-        setTestGrades(response.data)
+        const response = await axios.get(
+          `http://localhost:3001/tests/${currentUser.id}`
+        );
+        setTestGrades(response.data);
       } catch (error) {
         console.error("Error al obtener datos de 'testGrades':", error);
       }
     };
-    if(currentUser.id !== 0){
+    if (currentUser.id !== 0) {
       fetchData();
     }
   }, [currentUser.id]);
@@ -283,18 +285,17 @@ const Activities = () => {
       finishedActivityInfo[activityId] && //@ts-ignore
       finishedActivityInfo[activityId].count > 0; // Verifica si hay pasos finalizados
 
-
     //Filtro los pasos de la actividad actual y luego comparo con currentProgress para encontrar pasos terminados
     const stepsForActivity = //@ts-ignore
-    totalSteps.filter(step => step.activityId === filteredValue.id);
+      totalSteps.filter((step) => step.activityId === filteredValue.id);
 
-    const completedSteps = stepsForActivity.filter(step => {
+    const completedSteps = stepsForActivity.filter((step) => {
       const progress = //@ts-ignore
-        currentProgress.find(progressStep => progressStep.StepId === step.id);
-        //@ts-ignore
+        currentProgress.find((progressStep) => progressStep.StepId === step.id);
+      //@ts-ignore
       return progress && progress;
     });
-    
+
     return (
       <div className={`col-12 border-none`}>
         <Link to={`/activity/${filteredValue.id}`}>
@@ -304,36 +305,28 @@ const Activities = () => {
             } hover:bg-slate-00 ${notStarted ? "text-red-500" : ""}`}
           >
             <div className="flex justify-between text-2xl font-bold">
-              <div className=" flex flex-col">
-                <h3 className="m-0 flex align-items-center">
-                  {filteredValue.title}
-                  {notStarted ? (
-                    <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
-                  ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
-                    <i className="pi pi-check-circle text-4xl ml-2"></i>
-                  ) : (
-                    <i className="pi pi-lock-open text-4xl ml-2"></i>
-                  )}
-                </h3>
-                <h6 className=" m-0">{completedSteps.length} / {filteredValue.numberSteps}</h6>
-              </div>
-              <h4 className="m-0 flex align-items-center">
+              <h3 className="m-0 flex align-items-center text-[#0b1522]">
+                {filteredValue.title}
+                {notStarted ? (
+                  <i className="pi pi-exclamation-circle text-4xl ml-2 text-[#0b1522]"></i>
+                ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
+                  <i className="pi pi-check-circle text-4xl ml-2 text-[#0b1522]"></i>
+                ) : (
+                  <i className="pi pi-lock-open text-4xl ml-2 text-[#0b1522]"></i>
+                )}
+              </h3>
+              <h3 className="m-0 flex align-items-center">
                 {testGrades.length > 0 && (
-                <span>
-                  {testGrades?.map((grade) => {
-                    if (grade.Activity.id === filteredValue.id) {
-                      if( (grade.gradeValue === null && grade.maximunGradeValue === null) || (grade.gradeValue === 0 && grade.maximunGradeValue === 0)){
-                        return null;
-                        //!si retorno `Calificación: 0 / 0`; y el empleado no realizó el test verá esta nota (no creo que sea correcto)
-                      } else {
+                  <span>
+                    {testGrades?.map((grade) => {
+                      if (grade.Activity.id === filteredValue.id) {
                         return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
                       }
-                    }
-                  return null;
-                  })}
-                </span>
+                      return null;
+                    })}
+                  </span>
                 )}
-              </h4>
+              </h3>
             </div>
           </div>
         </Link>
@@ -357,12 +350,12 @@ const Activities = () => {
 
     //Filtro los pasos de la actividad actual y luego comparo con currentProgress para encontrar pasos terminados
     const stepsForActivity = //@ts-ignore
-    totalSteps.filter(step => step.activityId === activityId);
+      totalSteps.filter((step) => step.activityId === activityId);
 
-    const completedSteps = stepsForActivity.filter(step => {
+    const completedSteps = stepsForActivity.filter((step) => {
       const progress = //@ts-ignore
-        currentProgress.find(progressStep => progressStep.StepId === step.id);
-        //@ts-ignore
+        currentProgress.find((progressStep) => progressStep.StepId === step.id);
+      //@ts-ignore
       return progress && progress;
     });
 
@@ -376,35 +369,30 @@ const Activities = () => {
           >
             <div className="flex items-center justify-between text-center">
               <div className="text-2xl font-bold w-[90%]">
-                <div className=" flex flex-col">
-                  <h3 className="m-0 flex-row align-items-center">
-                    {data.title}
-                  </h3>
-                  <div className=" flex justify-start">
-                    <h6 className=" m-0 pt-2 ml-6" >{completedSteps.length} / {data.numberSteps}</h6>  
-                  </div>
-                </div>
+                <h3 className="m-0 flex-row align-items-center text-[#0b1522]">
+                  {data.title}
+                </h3>
                 <h3 className="m-0 flex-row align-items-center">
                   {testGrades.length > 0 && (
-                  <span>
-                    {testGrades?.map((grade) => {
-                      if (grade.Activity.id === data.id) {
-                        return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
-                      }
-                      return null;
-                    })}
-                  </span>
+                    <span>
+                      {testGrades?.map((grade) => {
+                        if (grade.Activity.id === data.id) {
+                          return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
+                        }
+                        return null;
+                      })}
+                    </span>
                   )}
                 </h3>
               </div>
               <div className="pt-3">
                 <h3>
-                {notStarted ? (
-                    <i className="pi pi-exclamation-circle text-4xl ml-2"></i>
+                  {notStarted ? (
+                    <i className="pi pi-exclamation-circle text-4xl ml-2 text-[#0b1522]"></i>
                   ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
-                    <i className="pi pi-check-circle text-4xl ml-2"></i>
+                    <i className="pi pi-check-circle text-4xl ml-2 text-[#0b1522]"></i>
                   ) : (
-                    <i className="pi pi-lock-open text-4xl ml-2"></i>
+                    <i className="pi pi-lock-open text-4xl ml-2 text-[#0b1522]"></i>
                   )}
                 </h3>
               </div>

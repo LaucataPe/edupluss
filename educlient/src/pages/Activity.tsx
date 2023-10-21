@@ -210,72 +210,76 @@ function Activity() {
 
   return (
     <>
-      <Link to={`/home`}>
-        <Button
-          icon="pi pi-angle-double-left"
-          label="Atrás"
-          className="m-2 absolute"
-          rounded
-          severity="secondary"
-        />
-      </Link>
       <h1 className="my-4 text-center text-4xl font-semibold">
         {findActivityName()}
       </h1>
       <div className="grid p-fluid mx-5">
         <div className="col-12">
-          <div className="card w-[100%] relative">
-            <Steps
-              model={steps.map((step) => ({
-                label: `Paso ${step.number}`,
-                command: () => {},
-              }))}
-              activeIndex={activeIndex}
-              onSelect={handleStepChange}
-              readOnly={true}
-            />
-            {id && (
-              <CurrentStep
-                step={steps[activeIndex]}
-                activityId={id}
-                activeIndex={activeIndex}
-              />
-            )}
-
-            {activeIndex > 0 && (
-              <Button
-                label="Anterior"
-                icon="pi pi-arrow-left"
-                severity="warning"
-                outlined
-                onClick={() => setActiveIndex(activeIndex - 1)}
-                className="absolute w-auto bottom-4 left-4"
-              />
-            )}
-            {activeIndex < steps.length - 1 ? (
-              <Button
-                label="Siguiente"
-                icon="pi pi-arrow-right"
-                severity="success"
-                outlined
-                onClick={handleNextClick}
-                className="absolute w-auto bottom-4 right-4"
-              />
-            ) : (
-              <>
-                {/* <Link to="/home"> */}
+          <div className="card">
+            <div className="p-2">
+              <Link to={`/home`}>
                 <Button
-                  label="Finalizar"
-                  icon="pi pi-home"
-                  severity="info"
+                  icon="pi pi-angle-double-left"
+                  label="Atrás"
+                  className="m-2 max-w-fit"
+                  rounded
+                  severity="secondary"
+                />
+              </Link>
+            </div>
+            <div className="card w-[100%] relative">
+              <Steps
+                model={steps.map((step) => ({
+                  label: `Paso ${step.number}`,
+                  command: () => {},
+                }))}
+                activeIndex={activeIndex}
+                onSelect={handleStepChange}
+                readOnly={true}
+              />
+              {id && (
+                <CurrentStep
+                  step={steps[activeIndex]}
+                  activityId={id}
+                  activeIndex={activeIndex}
+                />
+              )}
+
+              {activeIndex > 0 && (
+                <Button
+                  label="Anterior"
+                  icon="pi pi-arrow-left"
+                  severity="warning"
                   outlined
-                  onClick={showDialog}
-                  disabled={testGrade.testWatched ? true : false}
+                  onClick={() => setActiveIndex(activeIndex - 1)}
+                  className="absolute w-auto bottom-4 left-4"
+                />
+              )}
+              {activeIndex < steps.length - 1 ? (
+                <Button
+                  label="Siguiente"
+                  icon="pi pi-arrow-right"
+                  severity="success"
+                  outlined
+                  onClick={handleNextClick}
                   className="absolute w-auto bottom-4 right-4"
                 />
-                {/* </Link> */}
-              </>
-            )}
+              ) : (
+                <>
+                  {/* <Link to="/home"> */}
+                  <Button
+                    label="Finalizar"
+                    icon="pi pi-home"
+                    severity="info"
+                    outlined
+                    onClick={showDialog}
+                    disabled={testGrade.testWatched ? true : false}
+                    className="absolute w-auto bottom-4 right-4"
+                  />
+                  {/* </Link> */}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

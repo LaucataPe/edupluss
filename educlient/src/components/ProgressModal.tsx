@@ -188,7 +188,7 @@ function ProgressModal({
       >
         <label
           htmlFor={`checkOption${index}`}
-          className="flex align-items-center justify-content-between col-12 border-2 shadow-sm p-2 my-2 rounded-2xl gap-4"
+          className="flex align-items-center justify-content-between col-12 shadow-sm p-2 my-2 rounded-2xl gap-4"
         >
           <strong className="text-xl">{activityName}</strong>
           <div
@@ -215,7 +215,7 @@ function ProgressModal({
   });
   return (
     <>
-      <header className="bg-1 p-2 max-w-md rounded-t-md lg:max-w-lg flex justify-between">
+      <header className="dark:bg-[#3B82F6] bg-[#040d19] p-2 max-w-md rounded-t-md lg:max-w-lg flex justify-between">
         <h3 className="mb-0 text-white text-base flex justify-center items-center p-2">
           Progreso de actividad
         </h3>
@@ -238,7 +238,7 @@ function ProgressModal({
           </svg>
         </div>
       </header>
-      <div className="rounded-b-md max-w-xl px-4 py-6 border-x-2 border-b-2 lg:max-w-lg">
+      <div className="rounded-b-md max-w-xl px-4 py-6 dark:border-x-2 dark:border-b-2 border-b-0 lg:max-w-lg">
         {matchingStepTitles.length === 0 ? (
           <div className="flex justify-between mt-4 p-10 text-2xl">
             No se ha realizado ningun paso, ni empezado una actividad.
