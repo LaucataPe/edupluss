@@ -92,8 +92,12 @@ Activity.hasMany(Step, {
   foreignKey: "activityId",
 });
 
-Role.hasOne(User, {
+Role.hasMany(User, {
   foreignKey: "roleId",
+});
+
+User.belongsTo(Role, {
+  foreignKey: 'roleId',
 });
 
 User.belongsToMany(Step, {
