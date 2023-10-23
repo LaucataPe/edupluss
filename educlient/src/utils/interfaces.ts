@@ -11,6 +11,20 @@ export interface User {
   email: string;
   password: string;
   companyId: number;
+  avatarImage?: string;
+  tipo?: string;
+  areas?: Area[];
+  active?: boolean;
+}
+
+export interface UserEdit {
+  id?: number;
+  username?: string;
+  email?: string;
+  password?: string;
+  newPassword?: string;
+  avatarImage?: string;
+  companyId?: number;
   tipo?: string;
   areas?: Area[];
   active?: boolean;

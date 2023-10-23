@@ -110,6 +110,7 @@ declare namespace Demo {
         password: string
         companyId: number
         tipo: string
+        avatarImage?: string;
         roleId?: number
         active: boolean
     }

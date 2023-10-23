@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { resetActivities } from "../redux/features/activitiesSlice";
 import { Avatar } from "primereact/avatar";
 import { InputSwitch } from "primereact/inputswitch";
@@ -14,6 +14,8 @@ import logo from "../assets/edupluss2.png";
 function NavBar({ isDarkMode, toggleDarkMode }) {
   const [active, setActive] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const logUser = useSelector((state: RootState) => state.user.logUser);
+  const navigate = useNavigate();
 
   const enableSideBar = useSelector(
     (state: RootState) => state.utils.handleSideBar
@@ -34,8 +36,16 @@ function NavBar({ isDarkMode, toggleDarkMode }) {
     window.localStorage.removeItem("token");
     window.location.replace("/");
   };
+  const handleClick = () => {
+    navigate("/user/profile");
+  };
 
   const overlayMenuItems = [
+    {
+      label: 'Mi perfil',
+      icon: 'pi pi-user-edit',
+      command: handleClick,
+    },
     {
       label: "Cerrar Sesión",
       icon: "pi pi-sign-out",
@@ -99,7 +109,12 @@ function NavBar({ isDarkMode, toggleDarkMode }) {
             shape="circle"
             onClick={toggleMenu}
             className="animation"
-            image={profile}
+            image={
+              logUser?.avatarImage ?
+              logUser.avatarImage
+              :
+              profile
+            }
           ></Avatar>
 
           <Menu ref={menu} model={overlayMenuItems} popup />
