@@ -14,7 +14,7 @@ const logUser = async (req, res) => {
     });
     if (!logUser || !logUser.email) {
       throw new Error(
-        'El correo electrónico que ingresaste no se encuentra registrado.'
+        'El correo no se encuentra registrado.'
       );
     }
 
