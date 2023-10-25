@@ -42,8 +42,6 @@ function AddStep() {
   const [videoOrigin, setVideoOrigin] = useState<boolean>(false);
   const [videoURL, setVideoURL] = useState<string>("");
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [formOrigin, setFormOrigin] = useState<boolean>(false);
-  const [formURL, setFormURL] = useState<string>("");
   //Loader
   const [isLoading, setIsLoading] = useState(false);
 
@@ -102,16 +100,6 @@ function AddStep() {
     setVideoURL("");
 
     setVideoFile(null);
-  };
-
-  const handleFormOrigin = (checked: boolean) => {
-    setFormOrigin(checked);
-    // Resetear los valores al cambiar el origen del video
-    setFormURL("");
-  };
-  const handleFormURL = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormURL(event.target.value);
-    setStep({ ...step, [event.target.name]: event.target.value });
   };
 
   const handleVideoURL = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -415,49 +403,12 @@ function AddStep() {
               disabled={stepId ? !changeFile : false}
               accept=".pdf,.doc,.docx,.xls,.xlsx,image/jpeg,image/png,image/gif"
             />
-            <div className="flex my-3">
-              <label className="m-0">
-                {stepId ? "Cambiar Formulario:" : "Agregar Formulario:"}
-              </label>
-              {stepId && (
-                <input
-                  type="checkbox"
-                  checked={formOrigin}
-                  onChange={() => setFormOrigin(!formOrigin)}
-                  className="mx-2"
-                />
-              )}
-            </div>
-            <div className="flex items-center my-2 gap-5">
-              <InputSwitch
-                checked={formOrigin}
-                className="mx-2"
-                disabled={stepId ? !formOrigin : false}
-              />
-              <a href="https://docs.google.com/forms/u/0/" target="_blank">
-                Necesitas una URL?
-              </a>
-              <div
-                className="flex items-center my-2"
-                style={{ marginLeft: "auto" }}
-              ></div>
-            </div>
-            {formOrigin && (
-              <>
-                <InputText
-                  name="video"
-                  type="text"
-                  placeholder="Ingrese una url"
-                  value={formURL}
-                  onChange={(e) => handleFormURL(e)}
-                />
-              </>
-            )}
             <Button
               label={stepId ? "Editar" : "Crear Paso"}
               severity="info"
               outlined
               type="submit"
+              className=" mt-4"
               onClick={(e) => {
                 !stepId ? handleSubmit(e) : handleEdit(e);
               }}
