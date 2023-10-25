@@ -128,25 +128,27 @@ function UserProfile() {
   return (
     <div className="flex">
       <Toast ref={toast} />
-      <div className="flex justify-center ml-2 sm:ml-0 sm:h-[90vh] w-[100%]">
+      <div className="flex justify-center ml-2 sm:ml-0 sm:pb-2 2xl:pb-0 w-[100%]">
         <div
-          className={`card flex flex-col mt-4 mb-4 sm:mb-0 mr-2 sm:mr-0 px-4 py-3 sm:px-5 sm:py-5 overflow-hidden ${
-            logUser.tipo === "empleado" ? "sm:h-[70%] md:h-[70%]" : "sm:h-[82%] md:h-[82%]"
+          className={`card flex flex-col mt-4 mb-4 lg:mb-0 mr-2 sm:mr-0 px-4 py-3 sm:px-5 sm:py-5 overflow-hidden ${
+            logUser.tipo === "empleado" ? "sm:h-[600px] lg:h-[620px]" : "sm:h-[700px] lg:h-[720px]"
           } w-[100%] sm:w-[98%]`}
         >
-          <Link to={`/home`}>
-            <Button
-              icon="hidden pi pi-angle-double-left md:flex "
-              label="Atrás"
-              className="m-2 absolute mt-3 sm:mt-2 ml-2 w-[60px] h-[40px] text-xs sm:w-[84px] md:w-[100px] md:h-[50px] md:text-base"
-              rounded
-              severity="secondary"
-            />
-          </Link>
-          <h3 className=" text-center text-2xl md:text-2xl lg:text-4xl">Editar Perfil</h3>
+          <div className=" h-[56px]">          
+            <Link to={`/home`}>
+              <Button
+                icon="hidden pi pi-angle-double-left md:flex "
+                label="Atrás"
+                className="m-2 absolute mt-3 sm:mt-2 ml-2 w-[60px] h-[40px] text-xs sm:w-[84px] md:w-[100px] md:h-[50px] md:text-base"
+                rounded
+                severity="secondary"
+              />
+            </Link>
+            <h3 className=" text-center text-2xl md:text-2xl lg:text-4xl">Editar Perfil</h3>
+          </div>
           <div className=" flex flex-col sm:flex-row">
-            <div className="  sm:h-[100%] sm:w-[50%] text-center">
-              <h4 className=" sm:h-[10%] pt-3 text-xl sm:text-2xl">Seleccione un Avatar</h4>
+            <div className=" h-full sm:w-[50%] text-center">
+              <h4 className=" h-[44px] pt-3 text-xl sm:text-2xl">Seleccione un Avatar</h4>
               <div className=" bg-gray-200 rounded-xl grid grid-cols-2 grid-rows-2 h-[300px] sm:h-[84%] w-[100%] sm ml-0 justify-items-center items-center">
                 <div className=" sm:h-[50%] w-[100%] flex pl-4 lg:pl-0 pr-4 lg:pr-0 justify-center items-center gap-6">
                   <div
@@ -246,7 +248,7 @@ function UserProfile() {
                 </div>
               </div>
             </div>
-            <div className=" h-[100%] sm:w-[50%] flex flex-col px-4 py-4">
+            <div className=" h-full sm:w-[50%] flex flex-col px-4 py-4">
               <div className=" flex flex-col text-xl gap-4 pt-3">
                 <div className=" flex flex-col gap-1">
                   <label className=" text-base sm:text-xl">Nombre</label>

@@ -22,7 +22,7 @@ const Activities = () => {
 
   const [dataViewValue, setDataViewValue] = useState<Activity[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-  const [filteredValue, setFilteredValue] = useState<Activity[]>([]);
+  const [filteredValue, setFilteredValue] = useState<Activity[] | null>(null);
   const [layout, setLayout] = useState<LayoutType>("list");
   const [sortKey, setSortKey] = useState("all");
   const [sortOrder] = useState<SortOrderType>(0);
@@ -172,7 +172,12 @@ const Activities = () => {
         const response = await axios.get(
           `http://localhost:3001/tests/${currentUser.id}`
         );
-        setTestGrades(response.data);
+        if(response){
+          setTestGrades(response.data);
+        } else {
+          console.error("No hay notas cargadas aún.")
+        }
+
       } catch (error) {
         console.error("Error al obtener datos de 'testGrades':", error);
       }
@@ -261,6 +266,23 @@ const Activities = () => {
   const activityIdsWithNoStepsFinished = Object.keys(activityIds).filter(
     (activityId) => !(activityId in finishedActivityInfo)
   );
+  const onFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    
+    setGlobalFilterValue(value);
+    if (value.length === 0) {
+        setFilteredValue(null);
+    } else {
+        const filtered = dataViewValue?.filter((activity) => {
+            const productNameLowercase = activity.title.toLowerCase();
+            const searchValueLowercase = value.toLowerCase();
+            return productNameLowercase.includes(searchValueLowercase);
+        });
+
+        setFilteredValue(filtered);
+    }
+  };
+
 
   const dataViewHeader = (
     <div className="flex flex-column md:flex-row md:justify-content-between gap-2 rounded-lg">
@@ -286,7 +308,13 @@ const Activities = () => {
       </div>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
-        <InputText value={globalFilterValue} placeholder="Buscar" />
+        <InputText 
+          value={globalFilterValue} 
+          onChange={onFilter}
+          placeholder="Buscar"
+          //onInput={(e) => setGlobalFilterValue(e.currentTarget.value)}
+          //onChange={onFilter}
+          />
       </span>
       <DataViewLayoutOptions
         layout={layout}
@@ -332,7 +360,7 @@ const Activities = () => {
           >
             <div className="flex justify-between text-2xl font-bold">
               <section className=" flex gap-4">
-                <div className="w-[48px] h-[48px] mt-1 rounded-full bg-[#6836cc] text-white relative flex items-center justify-center">
+                <div className="w-[48px] h-[48px] mt-[2px] rounded-full bg-[#6836cc] text-white relative flex items-center justify-center">
                   {filteredValue.orderId}   
                 </div>
                 <div className=" flex flex-col">
@@ -535,11 +563,12 @@ const Activities = () => {
         </div>
           <DataView
             value={
-              filteredValue.length > 0
-                ? filteredValue
-                : sortKey === "all"
-                ? dataViewValue
-                : []
+              filteredValue || dataViewValue
+              // filteredValue.length > 0
+              //   ? filteredValue
+              //   : sortKey === "all"
+              //   ? dataViewValue
+              //   : []
             }
             layout={layout}
             paginator

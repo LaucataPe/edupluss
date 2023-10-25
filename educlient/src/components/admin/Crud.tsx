@@ -36,6 +36,7 @@ const Crud = () => {
     password: "",
     active: false,
     tipo: "",
+    avatarImage: "",
     companyId: currentEmpresa,
     roleId: 0,
   };
@@ -49,7 +50,7 @@ const Crud = () => {
   const [ready, setReady] = useState<boolean>(false);
   const [deleteUserDialog, setDeleteUserDialog] = useState(false);
   const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
-  const [user, setUser] = useState<Demo.User>(emptyUser);
+  let [user, setUser] = useState<Demo.User>(emptyUser);
   const [selectedUsers, setSelectedUsers] = useState<Demo.User[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -101,9 +102,13 @@ const Crud = () => {
 
     if (user.username.trim() && user.email.trim() && user.tipo.trim()) {
       if (user.id !== 0) {
+        // Filtra las propiedades con cadenas no vacías o null
+        user = Object.fromEntries(
+          Object.entries(user).filter(([_, value]) => value !== "" && value !== null)
+        ) as Demo.User;
         try {
-          const { data } = await axios.put(
-            "http://localhost:3001/user/update",
+          const { data } = await axios.patch(
+            "http://localhost:3001/user/patch",
             user
           );
           if (data) {

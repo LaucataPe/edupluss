@@ -11,14 +11,16 @@ import { Calendar } from 'primereact/calendar';
 import { Nullable } from "primereact/ts-helpers";
 import { LayoutType } from "../../utils/types/types";
 import { Step } from "../../utils/interfaces";
+import { setActivity } from "../../redux/features/activitiesSlice";
 import axios from "axios";
+
 import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 
 interface testInputs {
-  formURL: string;
-  excelURL: string;
+  formURL?: string;
+  excelURL?: string;
 }
 
 
@@ -35,39 +37,49 @@ function ActivitySteps() {
     (state: RootState) => state.activities.activities
   );
   const role = useSelector((state: RootState) => state.roles.currentRole);
-
+  const toast = useRef<Toast>(null);
   const [layout, setLayout] = useState<LayoutType>("list");
   const [displayConfirmation, setDisplayConfirmation] = useState(false);
   const [stepId, setStepId] = useState(0);
-  const [checked, setChecked] = useState<boolean>(false);
-  const [testUrls, setTestUrls] = useState<testInputs | Object>({});
   const [showAddTestModal, setShowAddTestModal] = useState<boolean>(false);
   const initialTime = new Date();
   initialTime.setHours(0);
   initialTime.setMinutes(0);
-  const [time, setTime] = useState<Nullable<string | Date | Date[]>>(initialTime);
   
-  const toast = useRef<Toast>(null);
+  useEffect(() => {
+    dispatch(getStepsActivity(Number(id)));
+  }, []);
+  
+  const currentActivity = activities.find((activity) => activity.id === Number(id));
+  //console.log(currentActivity);
+  
+  const [checked, setChecked] = useState<boolean>(false);
+  const [time, setTime] = useState<Nullable<string | Date | Date[]>>(currentActivity?.durationTest ? currentActivity.durationTest : initialTime);
+  
+  const [testUrls, setTestUrls] = useState<testInputs>({
+    formURL: currentActivity?.formURL,
+    excelURL: currentActivity?.excelURL
+  });
+
+  useEffect(() => {
+    setTestUrls({
+      formURL: currentActivity?.formURL,
+      excelURL: currentActivity?.excelURL
+    });
+  }, [showAddTestModal]);
 
   const handleChangeTestUrls = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     setTestUrls({
       ...testUrls,
       [name]: value,
     });
   };
 
-  useEffect(() => {
-    dispatch(getStepsActivity(Number(id)));
-  }, []);
-
-  const name = activities.find((activity) => activity.id === Number(id));
-
   const dataViewHeader = (
     <div className="flex md:flex-row md:justify-content-between items-center">
       <p className="text-5xl m-0">
-        {name ? name.title : "No se encontró la actividad"}
+        {currentActivity ? currentActivity.title : "No se encontró la actividad"}
       </p>
       <DataViewLayoutOptions
         layout={layout}
@@ -243,6 +255,8 @@ function ActivitySteps() {
       );
 
       if (response) {
+        //console.log(response.data);
+        dispatch(setActivity(response.data))
         toast.current?.show({
           severity: "success",
           summary: "Agregado!",
@@ -280,6 +294,8 @@ function ActivitySteps() {
         type="button"
         label="Guardar"
         icon="pi pi-check"
+        //! Solo controlo que se ingrese 1 disabled={ time && (testUrls.excelURL === null || testUrls.excelURL === "") && (testUrls.formURL === null || testUrls.formURL === "") ? true : false}
+        disabled={ time && (testUrls.excelURL === null || testUrls.excelURL === "" || testUrls.formURL === null || testUrls.formURL === "") ? true : false}
         onClick={handleAddTest}
         text
         autoFocus
@@ -322,7 +338,7 @@ function ActivitySteps() {
           />
         </Link>
         <Button
-          label="+ Agregar test"
+          label={ currentActivity?.formURL && currentActivity.excelURL ? "+ Editar Test" : "+ Agregar Test"}
           severity="info"
           rounded
           className="absolute left-4 bottom-4"
@@ -348,7 +364,7 @@ function ActivitySteps() {
       </Dialog>
 
       <Dialog
-        header="Agregar test"
+        header={ currentActivity?.excelURL || currentActivity?.formURL ? "Editar Test" : "Agregar Test"}
         visible={showAddTestModal}
         onHide={() => setShowAddTestModal(false)}
         style={{ width: "450px" }}
@@ -361,9 +377,9 @@ function ActivitySteps() {
             <InputText
               type="text"
               name="formURL"
-              // value={testUrls.formURL}
+              value={testUrls?.formURL}
               placeholder="URL"
-              onChange={handleChangeTestUrls}
+              onChange={(e) => handleChangeTestUrls(e)}
             />
           </div>
           <div className="field flex flex-col">
@@ -371,18 +387,19 @@ function ActivitySteps() {
             <InputText
               type="text"
               name="excelURL"
-              // value={testUrls.excelURL}
+              value={testUrls?.excelURL}
               placeholder="URL"
-              onChange={handleChangeTestUrls}
+              onChange={(e) => handleChangeTestUrls(e)}
             />
           </div>
           <div className="field flex gap-2">
             <InputSwitch checked={checked} onChange={(e: InputSwitchChangeEvent) => setChecked(e.value ?? false)} />
-            <label>Agregar tiempo al Test</label>
+            <label>{currentActivity?.durationTest ? "Modificar duración del Test" : "Agregar duración al Test"}</label>
           </div>
             {
               checked ?
               <div className="flex-auto">
+                <p className=" text-red-600">Duración actual: {currentActivity?.durationTest}</p>
                 <label htmlFor="calendar-timeonly" className=" block mb-2">
                     Duración - Horas : Minutos
                 </label>
@@ -390,6 +407,11 @@ function ActivitySteps() {
             </div>
             : null
             }
+            <div className=" min-h-[30px]">
+            {confirmationModalFooter.props.children[1].props.disabled ? (
+              <p className="p-error">Ingrese la URL del formulario y excel.</p>
+            ) : null}
+            </div>
         </div>
       </Dialog>
     </>
