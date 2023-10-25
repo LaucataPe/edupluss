@@ -148,10 +148,10 @@ function ProgressModal({
       labels: ["Progreso", "Restante"],
       datasets: [
         {
-          data: [activityProgress, 100 - activityProgress], // Cambia el valor 41 al valor de progreso que desees
+          data: [activityProgress, 100 - activityProgress],
           backgroundColor: ["rgb(99, 195, 255)", "rgba(200, 200, 200, 0.500)"],
           borderColor: ["#639aff", "#c8c8c8"],
-          borderWidth: 1,
+          borderWidth: 0,
         },
       ],
     };
@@ -180,6 +180,7 @@ function ProgressModal({
           },
         },
       },
+      cutout: 25,
     };
     return (
       <div
@@ -195,6 +196,7 @@ function ProgressModal({
             style={{
               width: "100px",
               position: "relative",
+              padding: "12px"
             }}
           >
             <Doughnut options={options} data={data} />
