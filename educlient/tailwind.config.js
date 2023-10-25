@@ -6,7 +6,7 @@ export default {
       colors: {
         1: "#349cfc",
         4: "#071426",
-      },
+      },  
     },
   },
   darkMode: "class",

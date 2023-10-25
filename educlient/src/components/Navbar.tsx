@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
-import { useLocation } from "react-router-dom";
 import { resetActivities } from "../redux/features/activitiesSlice";
 import { Avatar } from "primereact/avatar";
 import { InputSwitch } from "primereact/inputswitch";
@@ -11,10 +10,9 @@ import { handleSideBar } from "../redux/features/utilsSlice";
 import profile from "../assets/profile.png";
 import logo from "../assets/edupluss2.png";
 
-function NavBar({ isDarkMode, toggleDarkMode }) {
+function NavBar({ isDarkMode, toggleDarkMode }: any) {
   const [active, setActive] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { pathname } = useLocation();
   const enableSideBar = useSelector(
     (state: RootState) => state.utils.handleSideBar
   );
@@ -99,10 +97,8 @@ function NavBar({ isDarkMode, toggleDarkMode }) {
             image={profile}
           ></Avatar>
 
-
           <Menu ref={menu} model={overlayMenuItems} popup />
         </div>
-
       </nav>
     </>
   );

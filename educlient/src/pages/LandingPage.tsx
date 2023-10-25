@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import logo from "../assets/edupluss.png";
 import admin from "../assets/AdminPre.jpg";
 import activ from "../assets/ActivitiesPre.jpg";
@@ -20,6 +20,25 @@ const LandingPage: Page = () => {
   const [isHidden, setIsHidden] = useState(false);
   const menuRef = useRef<HTMLElement | null>(null);
 
+  const [isAtTop, setIsAtTop] = useState(true);
+
+  useEffect(() => {
+    // Agrega un event listener para detectar el scroll
+    const handleScroll = () => {
+      if (window.scrollY === 0) {
+        setIsAtTop(true);
+      } else {
+        setIsAtTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Limpia el event listener cuando el componente se desmonta
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const toggleMenuItemClick = () => {
     setIsHidden((prevState) => !prevState);
   };
@@ -34,12 +53,19 @@ const LandingPage: Page = () => {
       video.pause();
     }
   };
+
   return (
     <div className="surface-0 flex justify-content-center">
       <div id="home" className="landing-wrapper overflow-hidden">
         <header
           id="navbar"
-          className="py-2 cursor-auto px-4 mx-0 bg-[#ffffffa1] hover:bg-[#ffffff] z-10 lg:px-8 w-12 flex align-items-center justify-content-between fixed lg:fixed transition-transform duration-700 ease-in-out translate-y-[-90px] hover:-translate-y-0 over:-translate-y-0 hover:shadow-xl hover:transition-shadow-duration-700-ease-in-out"
+          className={`py-2 cursor-auto px-4 mx-0 ${
+            isAtTop ? "bg-[#ffffff]" : "bg-[#ffffffa1]"
+          } hover:bg-[#ffffff] z-10 lg:px-8 w-12 flex items-center justify-between fixed lg:fixed transition-transform duration-700 ease-in-out ${
+            isAtTop
+              ? "translate-y-0"
+              : "translate-y-[-95px] hover:translate-y-0"
+          } hover:shadow-xl hover:transition-shadow-duration-700-ease-in-out`}
         >
           <img src={logo} alt="Sakai Logo" className="mr-0 lg:mr-2 h-[80px]" />
           <StyleClass
@@ -56,7 +82,7 @@ const LandingPage: Page = () => {
           </StyleClass>
           <div
             className={classNames(
-              "align-items-center surface-0 flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full left-0 px-6 lg:px-0 z-2 bg-[#ffffff]",
+              "surface-0 flex-grow-1 justify-end gap-2 hidden lg:flex absolute lg:static w-full px-6 lg:px-0 z-2 bg-[#ffffff]",
               { hidden: isHidden }
             )}
             style={{ top: "100%" }}
@@ -93,12 +119,12 @@ const LandingPage: Page = () => {
                 </a>
               </li>
             </ul>
-            <div className="flex justify-content-between lg:block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
+            <div className="lg:flex justify-content-between block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
               <Link to={"/login"}>
                 <Button
                   label="Ingresar"
                   rounded
-                  className="border-none ml-5 font-light line-height-2 bg-blue-500 hover:bg-blue-700  text-white"
+                  className="border-none ml-5 font-light  line-height-2 bg-blue-500 hover:bg-blue-700  text-white"
                 ></Button>
               </Link>
             </div>
@@ -272,7 +298,6 @@ const LandingPage: Page = () => {
             </div>
           </div>
         </section>
-
         <section id="features" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
           <div className="grid justify-content-center">
             <div className="col-12 text-center mt-8 mb-4">
@@ -702,48 +727,102 @@ const LandingPage: Page = () => {
             </div>
           </div>
         </section>
-        <section className="py-4 px-4 mx-0 bg-slate-100 w-[100%]">
-          <div className="grid justify-content-between">
-            <div className="col-12 md:col-2 m-1">
-              <img
-                src={logo}
-                alt="footer sections"
-                width="50"
-                height="50"
-                className="mr-2"
-              />
-              <span className="font-medium text-3xl text-900">Edupluss</span>
+        <footer className="py-4 px-4 mx-0 bg-stone-950 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-around gap-4">
+            <div className="md:col-span-1 lg:col-span-2 ">
+              <div className="flex justify-start items-center md:items-center">
+                <img
+                  src={logo}
+                  alt="footer sections"
+                  width="50"
+                  height="50"
+                  className="mr-2"
+                />
+                <span className="text-white font-medium text-3xl text-900  py-6">
+                  Edupluss
+                </span>
+              </div>
+              <p className="text-white font-small text-md text-400 ">
+                Locura es hacer lo mismo, esperando obtener resultados
+                diferentes - "Albert Einstein"
+              </p>
+              <p className="text-white font-medium text-md text-600 py-1">
+                Bogota - Colombia, Carrera 7 113 43 of 1103
+              </p>
+              <p className="text-white font-medium text-md text-600 py-1">
+                3144116769 - 3132462447
+              </p>
+              <p className="text-white font-medium text-md text-600 py-1">
+                admin@contabilidadya.com
+              </p>
+              <div className="text-white py-1">
+                <i>F</i> <i>T</i> <i>G</i> <i>I</i>
+              </div>
             </div>
-
-            <div className="col-12 md:col-10 lg:col-7">
-              <div className="flex text-center items-center justify-center md:text-left">
-                <div className="col-12 md:col-3">
-                  <h4 className="font-medium text-2xl line-height-3 mb-3 text-900">
-                    Inicio
-                  </h4>
-                </div>
-
-                <div className="col-12 md:col-3 mt-4 md:mt-0">
-                  <h4 className="font-medium text-2xl line-height-3 mb-3 text-900">
-                    Características
-                  </h4>
-                </div>
-
-                <div className="col-12 md:col-3 mt-4 md:mt-0">
-                  <h4 className="font-medium text-2xl line-height-3 mb-3 text-900">
-                    Precios
-                  </h4>
-                </div>
-
-                <div className="col-12 md:col-3 mt-4 md:mt-0">
-                  <h4 className="font-medium text-2xl line-height-3 mb-3 text-900">
-                    Ingresar
-                  </h4>
-                </div>
+            <div className="md:col-span-2 lg:col-span-1 py-4">
+              <div className="flex justify-end items-center h-full ">
+                <ul className="space-y-4 text-left py-2 w-full">
+                  <li>
+                    <a
+                      href="#home"
+                      className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
+                    >
+                      {">> "}Inicio
+                    </a>
+                  </li>
+                  <li>
+                    <hr className="my-2" />
+                  </li>
+                  <li>
+                    <a
+                      href="#features"
+                      className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
+                    >
+                      {">> "}Nosotros
+                    </a>
+                  </li>
+                  <li>
+                    <hr className="my-2" />
+                  </li>
+                  <li>
+                    <a
+                      href="#pricing"
+                      className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
+                    >
+                      {">> "}Aplicativos
+                    </a>
+                  </li>
+                  <li>
+                    <hr className="my-2" />
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
+                    >
+                      {">> "}Contactenos
+                    </a>
+                  </li>
+                  <li>
+                    <hr className="my-2" />
+                  </li>
+                  <li>
+                    <Link
+                      to="/login"
+                      className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
+                    >
+                      {">> "}Acceso a clientes
+                    </Link>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-        </section>
+        </footer>
+        <div className="flex justify-center text-white bg-black w-full py-4">
+          PLUSSS100 - es una marca registrada - Copyright 2018. Desarrollado por{" "}
+          <a href="/">&nbsp;Contabilidadya SAS</a>
+        </div>
       </div>
     </div>
   );
