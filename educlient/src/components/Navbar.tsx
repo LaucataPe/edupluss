@@ -11,7 +11,7 @@ import { handleSideBar } from "../redux/features/utilsSlice";
 import profile from "../assets/profile.png";
 import logo from "../assets/edupluss2.png";
 
-function NavBar({ isDarkMode, toggleDarkMode }) {
+function NavBar({ isDarkMode, toggleDarkMode }: any) {
   const [active, setActive] = useState<boolean>(false);
   const dispatch = useDispatch();
   const logUser = useSelector((state: RootState) => state.user.logUser);

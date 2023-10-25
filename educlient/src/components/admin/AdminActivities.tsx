@@ -31,7 +31,6 @@ function AdminActivities() {
   const activityChanges = useSelector((state: RootState) => state.utils);
   const [enableDrag, setEnableDrag] = useState<Boolean>(true);
   const toast = useRef<Toast>(null);
-  console.log("soy message", activityChanges.activityEditedModal);
 
   useEffect(() => {
     if (activityChanges.activityEditedModal) {

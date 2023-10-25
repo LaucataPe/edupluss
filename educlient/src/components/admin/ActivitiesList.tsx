@@ -82,7 +82,7 @@ const ActivitiesList = ({ act, enableDrag }) => {
       {...listeners}
       className="py-1 px-2 border-1 border-[#031a37] rounded m-3 flex items-center hover:bg-[#182d4a] hover:text-white"
     >
-      <div className="col-12">
+      <div className="col-12 ">
         <div className="flex flex-column md:flex-row align-items-center w-full">
           <div className="flex-1 flex flex-row md:text-left items-center gap-2">
             <div className="w-[48px] h-[48px] rounded-full bg-[#6836cc] text-white relative flex items-center justify-center">

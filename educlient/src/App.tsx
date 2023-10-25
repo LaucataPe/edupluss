@@ -139,11 +139,10 @@ function App() {
         <div className={`w-full ${pathAvailable ? "mt-16" : ""}`}>
           <Routes>
             {/* <Route path="/empresa/seleccionar" element={<SelectEmpresa />} /> */}
-            <Route path="/" element={<Landing />} />
+            <Route path="/" element={<Landing />} />{" "}
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/activity/:id" element={<Activity />} />
-
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/progress" element={<Progress />} />
             <Route path="/admin" element={<Admin />} />
@@ -154,7 +153,6 @@ function App() {
               element={<AddActivity />}
             />
             <Route path="/user/profile" element={<UserProfile />} />
-
             <Route
               path="/editActivity/:roleId/:actId"
               element={<AddActivity />}
@@ -166,14 +164,13 @@ function App() {
             <Route path="/addStep/:id" element={<AddStep />} />
             <Route path="/editStep/:id/:stepId" element={<AddStep />} />
             <Route path="/crud" element={<Crud />} />
-
             <Route path="/main" element={<SuperAdminHome />} />
             <Route path="/allusers" element={<UserByCompany />} />
-
-
             <Route path="/evaluationsList" element={<EvaluationList />} />
-            <Route path="/employees/qualifications/:activityId" element={<ListEmployeesQualifications />} />
-
+            <Route
+              path="/employees/qualifications/:activityId"
+              element={<ListEmployeesQualifications />}
+            />
             <Route path="/checkpoint/:id" element={<Checkpoint />} />
           </Routes>
         </div>

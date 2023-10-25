@@ -227,8 +227,7 @@ function Dashboard() {
         anchor: "end",
         align: "end",
         display: "auto",
-        color: "white", // Cambia el color del texto a blanco
-
+        color: "white",
         formatter: (value: any) => {
           return value + "%";
         },
@@ -344,15 +343,15 @@ function Dashboard() {
         anchor: "end",
         align: "end",
         display: "auto",
-        color: "white", // Cambia el color del texto a blanco 
+        color: "white",
       },
     },
     scales: {
       x: {
-        display: true, // Oculta completamente el eje X
+        display: true,
       },
       y: {
-        max: Math.max(...Object.values(employeesByArea)) + 2, // Ajusta el valor máximo del eje X
+        max: Math.max(...Object.values(employeesByArea)) + 2,
         grid: {
           display: true,
         },
@@ -479,7 +478,6 @@ function Dashboard() {
           }
       }
 
-      console.log(timeParts.hours, timeParts.days);
       const message = `El usuario ${
         user?.username || "Usuario desconocido"
       } completó la actividad "${activityName}" ${timeAgo}.`;
@@ -492,8 +490,6 @@ function Dashboard() {
           date: createdAt,
           message: message,
         };
-
-        console.log(`Actividad del paso ${index + 1}: ${activityName}`);
       }
     }
   });
@@ -515,12 +511,10 @@ function Dashboard() {
     }
   }
 
-  console.log(userSteps, totalUsers, todayNotifications, momentNotifications);
-
   return (
     <div className="flex">
       <div className="container">
-        <div className="card my-3">
+        <div className="card my-3 mx-3">
           <div className="w-[100%]">
             <div className="p-5">
               <div className="grid justify-center">
@@ -538,9 +532,7 @@ function Dashboard() {
                           Usuarios activos:
                         </span>
                         <div className="text-900 font-medium text-xl text-center">
-                          {totalActiveUsers
-                            ? totalActiveUsers
-                            : "Esperando usuarios..."}
+                          {totalActiveUsers ? totalActiveUsers : "Buscando..."}
                         </div>
                       </div>
                     </div>
@@ -610,9 +602,7 @@ function Dashboard() {
                           Graduados:{" "}
                         </span>
                         <div className="text-900 font-medium  text-xl text-center">
-                          {graduatedCount
-                            ? graduatedCount
-                            : "Esperando graduados..."}
+                          {graduatedCount ? graduatedCount : "Buscando..."}
                         </div>
                       </div>
                     </div>

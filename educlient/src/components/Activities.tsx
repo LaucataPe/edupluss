@@ -137,7 +137,6 @@ const Activities = () => {
 
     setSortKey(value);
     setFilteredValue(sortedData);
-    console.log(sortedData);
   };    
   
   const getProgressPercentage = (numberStepsByRole : number, numberStepsByUser : number) => {
