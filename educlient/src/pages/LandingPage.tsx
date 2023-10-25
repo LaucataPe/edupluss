@@ -211,7 +211,7 @@ const LandingPage: Page = () => {
           className="flex flex-column pt-4 mt-7 lg:mt-32 xs:pt-1 px-4 lg:px-8 overflow-hidden relative "
         >
           <motion.div
-            initial={{ opacity: 0, y: -100 }}
+            initial={{ opacity: 0, y: 0, x: -100 }}
             animate={heroControls}
             transition={{ duration: 1 }}
           >
