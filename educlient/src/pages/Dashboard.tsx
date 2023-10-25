@@ -343,15 +343,15 @@ function Dashboard() {
         anchor: "end",
         align: "end",
         display: "auto",
-        color: "white", 
+        color: "white",
       },
     },
     scales: {
       x: {
-        display: true, 
+        display: true,
       },
       y: {
-        max: Math.max(...Object.values(employeesByArea)) + 2, 
+        max: Math.max(...Object.values(employeesByArea)) + 2,
         grid: {
           display: true,
         },
@@ -511,7 +511,6 @@ function Dashboard() {
     }
   }
 
-
   return (
     <div className="flex">
       <div className="container">
@@ -533,9 +532,7 @@ function Dashboard() {
                           Usuarios activos:
                         </span>
                         <div className="text-900 font-medium text-xl text-center">
-                          {totalActiveUsers
-                            ? totalActiveUsers
-                            : "Esperando usuarios..."}
+                          {totalActiveUsers ? totalActiveUsers : "Buscando..."}
                         </div>
                       </div>
                     </div>
@@ -605,9 +602,7 @@ function Dashboard() {
                           Graduados:{" "}
                         </span>
                         <div className="text-900 font-medium  text-xl text-center">
-                          {graduatedCount
-                            ? graduatedCount
-                            : "Esperando graduados..."}
+                          {graduatedCount ? graduatedCount : "Buscando..."}
                         </div>
                       </div>
                     </div>
