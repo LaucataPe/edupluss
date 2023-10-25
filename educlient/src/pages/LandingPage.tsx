@@ -74,7 +74,7 @@ const LandingPage: Page = () => {
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const sectionHeight = windowHeight / 1.39; // Usar la variable estática
+      const sectionHeight = windowHeight / 1.49; // Usar la variable estática
 
       for (let i = 0; i < sections.length; i++) {
         const section = sections[i];
@@ -104,6 +104,23 @@ const LandingPage: Page = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [heroControls, presentationControls, planCardsControls]);
+
+  const handleScrollToSection = (sectionId: any) => {
+    const section = document.getElementById(sectionId);
+
+    if (section) {
+      const yOffset = -50; // Ajusta el desplazamiento vertical según tus necesidades
+      const elementPosition =
+        section.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition + yOffset;
+
+      // Realiza el desplazamiento suave con Framer Motion
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
   return (
     <div className="surface-0 flex justify-content-center">
       <div id="home" className="landing-wrapper overflow-hidden">
@@ -139,34 +156,33 @@ const LandingPage: Page = () => {
           >
             <ul className="list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row cursor-pointer">
               <li>
-                <a
-                  href="#home"
-                  onClick={toggleMenuItemClick}
+                <Link
+                  to="/#home"
+                  onClick={() => handleScrollToSection("home")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <span>Inicio</span>
-                  <Ripple />
-                </a>
+                  <motion.div whileTap={{ scale: 0.85 }}>Inicio</motion.div>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#features"
-                  onClick={toggleMenuItemClick}
+                <Link
+                  to="/#features"
+                  onClick={() => handleScrollToSection("features")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <span>Características</span>
-                  <Ripple />
-                </a>
+                  <motion.div whileTap={{ scale: 0.85 }}>
+                    Características
+                  </motion.div>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#pricing"
-                  onClick={toggleMenuItemClick}
+                <Link
+                  to="/#pricing"
+                  onClick={() => handleScrollToSection("pricing")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <span>Precios</span>
-                  <Ripple />
-                </a>
+                  <motion.div whileTap={{ scale: 0.85 }}>Precios</motion.div>
+                </Link>
               </li>
             </ul>
             <div className="lg:flex justify-content-between block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
@@ -690,7 +706,7 @@ const LandingPage: Page = () => {
             </div>
           </motion.div>
         </section>
-        <section id="pricing" className="py-4 px-4 lg:px-8 my-2 md:my-4">
+        <section id="pricing" className="py-12 px-4 lg:px-8 my-2 md:my-4">
           <motion.div
             initial={{ opacity: 0, x: -100 }}
             animate={pricing}
