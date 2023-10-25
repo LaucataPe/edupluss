@@ -60,7 +60,7 @@ const LandingPage: Page = () => {
         <header
           id="navbar"
           className={`py-2 cursor-auto px-4 mx-0 ${
-            isAtTop ? "bg-[#ffffff]" : "bg-[#ffffffa1]"
+            isAtTop ? "bg-[#ffffff]" : "bg-[#ffffff]"
           } hover:bg-[#ffffff] z-10 lg:px-8 w-12 flex items-center justify-between fixed lg:fixed transition-transform duration-700 ease-in-out ${
             isAtTop
               ? "translate-y-0"
