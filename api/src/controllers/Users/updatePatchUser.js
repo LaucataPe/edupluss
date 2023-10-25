@@ -3,8 +3,6 @@ const { catchedAsync } = require('../../utils');
 const patchUser = require('./patchUser');
 const { validateUpdateUser } = require('./userSchema');
 
-
-
 const updatePatchUser = async (req, res) => {
 
     try {

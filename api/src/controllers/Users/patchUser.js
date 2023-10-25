@@ -21,7 +21,7 @@ const patchUser = async(data) => {
           }
         }
     
-        if (data.password?.length !== 0) {
+        if (data.password && data.password.length !== 0) {
           if (data.newPassword) {
             //!Caso: Usuario (cualquiera) quiere cambiar su contraseña
             const isCorrect = await verified(data.password, getUser.password);
@@ -40,10 +40,12 @@ const patchUser = async(data) => {
             return dataReturned;
           }
           //!Caso: Admin que cambiar la contraseña a un usuario empleado
+          let passwordHash = await encrypt(data.password);
+          data.password = passwordHash;
           getUser.set(data).save();
           return getUser;
         } else {
-          //!No hay contraseña, recibe solo nombre, avatar (o correo en el caso del admin)
+          //!Caso: No hay contraseña, recibe solo nombre, avatar (o correo en el caso del admin)
           getUser.set(data).save();
           return getUser;
         }
