@@ -19,7 +19,7 @@ const Sidebar = () => {
         text={"Evaluaciones"}
         url={"/evaluationsList"}
       />
-      <SidebarItem icon={<FolderTree />} text={"Áreas"} url={"/admin"} />
+      <SidebarItem icon={<FolderTree />} text={"Áreas"} url={"/areas"} />
     </SidebarWrapper>
   );
 };

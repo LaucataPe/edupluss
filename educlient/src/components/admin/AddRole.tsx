@@ -140,7 +140,7 @@ function AddRole() {
         if(response){
           toast.current?.show({ severity: 'success', summary: 'Eliminado!', detail: 'Cargo creado', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          navigate('/admin')
+          navigate(`/areas/${currentArea.id}`)
           setRole({
             name: '',
             hardSkills: [],
@@ -165,7 +165,7 @@ function AddRole() {
           toast.current?.show({ severity: 'success', summary: 'Editado!', detail: 'Cargo editado', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
           dispatch(getRolesByArea(currentArea.id ?? 0))
-          navigate('/admin')
+          navigate(`/areas/${currentArea.id}`)
           setRole({
             name: '',
             hardSkills: [],

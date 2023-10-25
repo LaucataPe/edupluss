@@ -104,9 +104,12 @@ function AdminActivities() {
   return (
     <>
       <Toast className="top-0 left-1/3 " ref={toast} />
-      <div className="card p-fluid my-3 h-[720px] overflow-auto">
-        <div className="flex justify-between items-center">
-          <h3 className="text-blue-500 text-bol m-0">Actividades:</h3>
+      <div className="card p-fluid h-[720px] overflow-auto relative m-3">
+        <Link to={`/areas`}>
+          <Button icon="pi pi-angle-double-left" className="z-50 absolute top-1 left-1" rounded severity="secondary"/>
+        </Link>
+        <div className="flex justify-between items-center my-2 mx-3">
+          <h2 className="text-blue-500 text-bol m-0">Actividades:</h2>
           <div className="h-[50px] flex flex-row-reverse mx-4 gap-2">
             <div>
               <Button
@@ -130,7 +133,7 @@ function AdminActivities() {
               <Button
                 disabled={!enableDrag}
                 className="hover:bg-blue-500 hover:text-white focus:shadow-none"
-                label="Crear Actividad"
+                label="+ Crear Actividad"
                 severity="info"
                 rounded
                 outlined
@@ -153,7 +156,7 @@ function AdminActivities() {
         </DndContext>
 
         {activities.length === 0 ? (
-          <h3>No hay actividades para este cargo</h3>
+          <h4 className="m-3">No hay actividades para este cargo</h4>
         ) : (
           ""
         )}

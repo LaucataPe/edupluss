@@ -33,7 +33,7 @@ function AddArea() {
         if(areas.length === 0){
           dispatch(fetchCompanyAreas(currentEmpresa.id))
         }
-        const findArea = areas.find((area) => area.id === Number(areaId))
+        const findArea = areas.find((area: Area) => area.id === Number(areaId))
         if(findArea?.id){  
           dispatch(setCurrentArea(findArea))
           setArea({...area, name: findArea.name})
@@ -86,7 +86,7 @@ function AddArea() {
           toast.current?.show({ severity: 'success', summary: 'Eliminado!', detail: 'Área eliminada', life: 1000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
           dispatch(fetchCompanyAreas(currentEmpresa.id))
-          navigate('/admin')
+          navigate('/areas')
         }
         setArea({
           name: '',

@@ -1,6 +1,6 @@
 import { Button } from "primereact/button";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../hooks/typedSelectors";
 import { useNavigate, useParams } from "react-router-dom";
 import { getActivitiesByRole } from "../../redux/features/activitiesSlice";
 import { Dialog } from "primereact/dialog";
@@ -12,7 +12,7 @@ import axios from "axios";
 const ActivitiesList = ({ act, enableDrag }) => {
   const navigate = useNavigate();
   const { roleId } = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [displayConfirmation, setDisplayConfirmation] = useState(false);
   const [actId, setActId] = useState(0);
 
@@ -80,12 +80,12 @@ const ActivitiesList = ({ act, enableDrag }) => {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className="py-1 px-2 border-1 border-[#031a37] rounded m-3 flex items-center hover:bg-[#182d4a] hover:text-white"
+      className="py-1 px-2 rounded m-3 flex items-center hover:bg-[#182d4a] hover:text-white border"
     >
       <div className="col-12 ">
         <div className="flex flex-column md:flex-row align-items-center w-full">
           <div className="flex-1 flex flex-row md:text-left items-center gap-2">
-            <div className="w-[48px] h-[48px] rounded-full bg-[#6836cc] text-white relative flex items-center justify-center">
+            <div className="w-[48px] h-[48px] rounded-full bg-blue-500 text-white relative flex items-center justify-center">
               <div>{act.orderId + 1}</div>
             </div>
             <div className="font-bold text-2xl">{act.title}</div>
