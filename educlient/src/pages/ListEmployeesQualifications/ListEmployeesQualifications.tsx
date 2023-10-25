@@ -11,14 +11,19 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
-import { TestGrade, GradePercentage, EmployeeQualification } from "../../utils/interfaces";
+import {
+  TestGrade,
+  GradePercentage,
+  EmployeeQualification,
+} from "../../utils/interfaces";
 import styles from "./ListEmployeesQuealifications.module.css";
-
 
 function ListEmployeesQualifications() {
   const { activityId } = useParams();
   const logUser = useSelector((state: RootState) => state.user.logUser);
-  const [employeesQualifications, setEmployeesQualifications] = useState<EmployeeQualification[]>([]);
+  const [employeesQualifications, setEmployeesQualifications] = useState<
+    EmployeeQualification[]
+  >([]);
   const [percentageGrades, setPercentageGrades] = useState<number>(0);
   const [activityTitle, setActivityTitle] = useState<string>("");
   let remainingPercentage: number = 100 - percentageGrades;
@@ -29,14 +34,17 @@ function ListEmployeesQualifications() {
   const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState<EmployeeQualification[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<EmployeeQualification[]>(
+    []
+  );
   const emptyUserTestGrade: EmployeeQualification = {
     idTestGrade: 0,
     gradeValue: "0",
     maximunGradeValue: "0",
   };
-  
-  const [testGrade, setTestGrade] = useState<EmployeeQualification>(emptyUserTestGrade);
+
+  const [testGrade, setTestGrade] =
+    useState<EmployeeQualification>(emptyUserTestGrade);
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<EmployeeQualification[]>>(null);
 
@@ -61,11 +69,11 @@ function ListEmployeesQualifications() {
         console.error("Error al obtener datos de las calificaciones:", error);
       }
     };
-    if(logUser.id !== 0){
+    if (logUser.id !== 0) {
       getEmployeesQualifications();
     }
   }, [isUpdated, logUser.id]);
-  
+
   const hideDialog = () => {
     setSubmitted(false);
     setUserDialog(false);
@@ -182,17 +190,16 @@ function ListEmployeesQualifications() {
           await axios.delete(
             `http://localhost:3001/test/${logUser.id}/${testGradeId}`
           );
-          return testGradeId; 
+          return testGradeId;
         } catch (error) {
           console.error("Error al eliminar la Evaluación:", error);
-          return null; 
+          return null;
         }
       });
 
       // Espera a que se completen todas las solicitudes de eliminación, luego filtra los resultados para eliminar testGrades nulos (errores)
       Promise.all(deletePromises)
         .then((deletedTestGrades) => {
-          
           const successfullyDeletedTestGrades = deletedTestGrades.filter(
             (id) => id !== null
           );
@@ -246,14 +253,13 @@ function ListEmployeesQualifications() {
   const punctuationBodyTemplate = (rowData: EmployeeQualification) => {
     return (
       <div className=" pl-4">
-        {
-          rowData.gradeValue === null && rowData.maximunGradeValue === null ?
+        {rowData.gradeValue === null && rowData.maximunGradeValue === null ? (
           <p>0/0</p>
-          :
+        ) : (
           <p>
             {rowData.gradeValue}/{rowData.maximunGradeValue}
           </p>
-        }
+        )}
       </div>
     );
   };
@@ -281,14 +287,14 @@ function ListEmployeesQualifications() {
   const statusBodyTemplate = (rowData: EmployeeQualification) => {
     return (
       <div className="">
-      <span
-        key={rowData.idTestGrade}
-        className={`p-badge p-mr-1 h-auto ${
-          rowData.errorTest ? "bg-red-700" : "bg-green-700"
-        }`}
-      >
-        {rowData.errorTest ? "Error Test" : "Completado"}
-      </span>
+        <span
+          key={rowData.idTestGrade}
+          className={`p-badge p-mr-1 h-auto ${
+            rowData.errorTest ? "bg-red-700" : "bg-green-700"
+          }`}
+        >
+          {rowData.errorTest ? "Error Test" : "Completado"}
+        </span>
       </div>
     );
   };
@@ -318,13 +324,10 @@ function ListEmployeesQualifications() {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-        <div className=" flex gap-2 items-center">
-          <Button
-            onClick={() => setInfoVisible(true)}
-            severity="info"
-          >
+      <div className=" flex gap-2 items-center">
+        <Button onClick={() => setInfoVisible(true)} severity="info">
           <i className="pi pi-exclamation-circle w-[30px] md:w-[26px] text-md md:text-2xl"></i>
-          </Button>
+        </Button>
         <h5 className="m-0 text-base lg:text-2xl">Gestionar Evaluados</h5>
       </div>
       <div className="  sm:flex flex-col-reverse  md:flex-row gap-2 hidden ">
@@ -382,15 +385,15 @@ function ListEmployeesQualifications() {
     </>
   );
 
-   // Config. Donuts
-   const data = {
+  // Config. Donuts
+  const data = {
     labels: ["Porcentaje Completado", "Porcentaje Restante"],
     datasets: [
       {
         data: [percentageGrades, remainingPercentage],
         backgroundColor: ["#28A5D7", "#C4C4C4"],
         borderWidth: 0,
-        cutout: "70%" 
+        cutout: "70%",
       },
     ],
   };
@@ -400,13 +403,13 @@ function ListEmployeesQualifications() {
         display: false,
       },
       datalabels: {
-        display: false, 
+        display: false,
       },
     },
   };
 
   return (
-    <div className="flex mt-2 ml-3 sm:ml-0">
+    <div className="flex ml-2">
       <Toast ref={toast} />
       <div className="col-12 align-items-center lg:h-full lg:py-2">
         <section className="card justify-content-center overflow-hidden py-0 gird grid-cols-3 md:h-full w-[100%] lg:pb-4 lg:mt-2">
@@ -417,12 +420,12 @@ function ListEmployeesQualifications() {
                 style={{  color: "grey" }}
               ></i> */}
               <Button
-              icon=" pi pi-angle-double-left md:flex "
-              label="Atrás"
-              className="m-2  mt-3 sm:mt-2 ml-2  h-[40px] text-xs w-[84px] md:w-[100px] md:h-[50px] md:text-base"
-              rounded
-              severity="secondary"
-            />
+                icon=" pi pi-angle-double-left md:flex "
+                label="Atrás"
+                className="m-2  mt-3 sm:mt-2 ml-2  h-[40px] text-xs w-[84px] md:w-[100px] md:h-[50px] md:text-base"
+                rounded
+                severity="secondary"
+              />
             </Link>
             <p className=" text-xl md:text-2xl lg:text-4xl text-cyan-800  text-center md:flex-grow">
               Evaluación de: {activityTitle}
@@ -431,7 +434,9 @@ function ListEmployeesQualifications() {
 
           <div className="flex flex-col justify-center items-center gap-4 my-3 sm:my-0 md:flex-row md:justify-between md:gap-0 md:my-4 md:h-[210px] w-[100%]">
             <div className=" flex flex-col items-center w-[277px] h-[200px] md:max-w-[230px] bg-slate-200 rounded-2xl text-center lg:max-w-[240px]">
-              <p className=" text-xl lg:text-2xl text-cyan-800 mt-2"># Respuestas</p>
+              <p className=" text-xl lg:text-2xl text-cyan-800 mt-2">
+                # Respuestas
+              </p>
               <p className=" text-6xl h-[160px] md:text-7xl text-black sm:h-[133px] py-6 sm:py-5">
                 {employeesQualifications.length}
               </p>
@@ -450,9 +455,15 @@ function ListEmployeesQualifications() {
               </div>
             </div>
             <div className=" flex flex-col items-center w-[277px] h-[200px] md:max-w-[230px] bg-slate-200  rounded-2xl lg:max-w-[240px]">
-              <p className=" text-xl lg:text-2xl text-cyan-800 mt-2"># Errores Tests</p>
+              <p className=" text-xl lg:text-2xl text-cyan-800 mt-2">
+                # Errores Tests
+              </p>
               <p className=" text-6xl md:text-7xl text-black h-[160px] sm:h-[133px] py-6 sm:py-5">
-                {employeesQualifications.filter(employee => employee.errorTest).length}
+                {
+                  employeesQualifications.filter(
+                    (employee) => employee.errorTest
+                  ).length
+                }
               </p>
             </div>
           </div>
@@ -481,13 +492,13 @@ function ListEmployeesQualifications() {
                   flexDirection: "column",
                   alignSelf: "center",
                   height: "100%",
-                  width: "100%"
+                  width: "100%",
                 }}
               >
                 <Column
                   selectionMode="multiple"
                   headerStyle={{ width: "4rem" }}
-                  frozen 
+                  frozen
                   className={styles.hiddenSmall}
                 ></Column>
                 <Column
@@ -592,14 +603,17 @@ function ListEmployeesQualifications() {
                         ¿Estás seguro que deseas eliminar el registro de
                         evaluación del usuario <b>{testGrade?.username}</b>?
                       </span>
-                      <b> En este caso, el Test correspondiente se habilitará.</b>
+                      <b>
+                        {" "}
+                        En este caso, el Test correspondiente se habilitará.
+                      </b>
                     </div>
                   )}
                 </div>
               </Dialog>
 
               <Dialog
-                visible={deleteUsersDialog}   
+                visible={deleteUsersDialog}
                 header="Confirmar"
                 className="w-[30vw]"
                 modal
@@ -614,9 +628,13 @@ function ListEmployeesQualifications() {
                   {selectedUsers.length > 1 && (
                     <div className=" flex flex-col gap-1">
                       <span>
-                        ¿Estás seguro que deseas eliminar los registros de evualuación de los usuarios seleccionados?
+                        ¿Estás seguro que deseas eliminar los registros de
+                        evualuación de los usuarios seleccionados?
                       </span>
-                      <b> En este caso, los Tests correspondientes se habilitarán.</b>
+                      <b>
+                        {" "}
+                        En este caso, los Tests correspondientes se habilitarán.
+                      </b>
                     </div>
                   )}
                 </div>
@@ -630,29 +648,34 @@ function ListEmployeesQualifications() {
               >
                 <div className="flex align-items-center justify-content-center">
                   <ul className="m-0 gap-4 text-lg text-slate-950">
-                  <li className=" pb-4 sm:hidden text-center">
+                    <li className=" pb-4 sm:hidden text-center">
                       <b className=" text-red-700 ">
-                        Para una mejor experiencia le recomendamos utilizar un dispositivo de mayor tamaño.
+                        Para una mejor experiencia le recomendamos utilizar un
+                        dispositivo de mayor tamaño.
                       </b>
                     </li>
                     <li className=" py-1">
                       Posibles casos del estado "Error Test":
                     </li>
                     <li className=" py-1">
-                      Si el empleado sale del Test y no lo realizó o no lo envió.
+                      Si el empleado sale del Test y no lo realizó o no lo
+                      envió.
                     </li>
                     <li className=" py-1">
                       Si el empleado recarga la página y no envió el Test.
                     </li>
                     <li className=" py-1">
-                      Si el empleado realiza el test, lo envia y luego recarga la pagina.
+                      Si el empleado realiza el test, lo envia y luego recarga
+                      la pagina.
                     </li>
                     <li className=" py-1">
-                      Si el empleado ingresa un correo electrónico en el Test que no coincide con el ingresado en Edupluss.
+                      Si el empleado ingresa un correo electrónico en el Test
+                      que no coincide con el ingresado en Edupluss.
                     </li>
                     <li className=" py-1">
                       <b>
-                        Cualquiera sea el caso, puede verificar los datos en el excel correspondiente.
+                        Cualquiera sea el caso, puede verificar los datos en el
+                        excel correspondiente.
                       </b>
                     </li>
                   </ul>
