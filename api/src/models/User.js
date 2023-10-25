@@ -22,6 +22,10 @@ module.exports = (database) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    avatarImage: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

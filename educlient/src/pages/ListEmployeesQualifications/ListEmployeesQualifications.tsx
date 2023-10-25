@@ -388,7 +388,9 @@ function ListEmployeesQualifications() {
     datasets: [
       {
         data: [percentageGrades, remainingPercentage],
-        backgroundColor: ["#28A5D7", "#C4C4C4"], 
+        backgroundColor: ["#28A5D7", "#C4C4C4"],
+        borderWidth: 0,
+        cutout: "70%" 
       },
     ],
   };
@@ -397,38 +399,48 @@ function ListEmployeesQualifications() {
       legend: {
         display: false,
       },
+      datalabels: {
+        display: false, 
+      },
     },
   };
 
   return (
     <div className="flex mt-2 ml-3 sm:ml-0">
       <Toast ref={toast} />
-      <div className="col-12 align-items-center ">
-        <section className="card justify-content-center overflow-hidden py-0 gird grid-cols-3 md:h-[88vh] w-[100%]">
-          <div className=" h-[100px]  gap-2  w-[100%] flex items-center justify-evenly md:px-6 md:h-[10%] md:gap-0">
-            <Link to={"/activitiesList"} className="no-underline">
-              <i
+      <div className="col-12 align-items-center lg:h-full lg:py-2">
+        <section className="card justify-content-center overflow-hidden py-0 gird grid-cols-3 md:h-full w-[100%] lg:pb-4 lg:mt-2">
+          <div className=" h-[140px] sm:h-[100px]  gap-2  w-[100%] flex flex-col-reverse  sm:items-center sm:flex-row sm:justify-evenly md:px-6 md:gap-0 md:h-[84px]">
+            <Link to={"/evaluationsList"} className="no-underline">
+              {/* <i
                 className="pi pi-arrow-left text-xl sm:text-2xl lg:text-3xl xl:text-4xl"
                 style={{  color: "grey" }}
-              ></i>
+              ></i> */}
+              <Button
+              icon=" pi pi-angle-double-left md:flex "
+              label="Atrás"
+              className="m-2  mt-3 sm:mt-2 ml-2  h-[40px] text-xs w-[84px] md:w-[100px] md:h-[50px] md:text-base"
+              rounded
+              severity="secondary"
+            />
             </Link>
             <p className=" text-xl md:text-2xl lg:text-4xl text-cyan-800  text-center md:flex-grow">
               Evaluación de: {activityTitle}
             </p>
           </div>
 
-          <div className="flex flex-col justify-center items-center gap-4 md:flex-row md:justify-between md:gap-0 md:h-[25%] w-[100%]">
-            <div className=" flex flex-col items-center w-[100%] h-[220px] md:w-[22%] lg:md:h-[200px] bg-slate-200 rounded-2xl text-center">
+          <div className="flex flex-col justify-center items-center gap-4 my-3 sm:my-0 md:flex-row md:justify-between md:gap-0 md:my-4 md:h-[210px] w-[100%]">
+            <div className=" flex flex-col items-center w-[277px] h-[200px] md:max-w-[230px] bg-slate-200 rounded-2xl text-center lg:max-w-[240px]">
               <p className=" text-xl lg:text-2xl text-cyan-800 mt-2"># Respuestas</p>
               <p className=" text-6xl h-[160px] md:text-7xl text-black sm:h-[133px] py-6 sm:py-5">
                 {employeesQualifications.length}
               </p>
             </div>
-            <div className=" flex flex-col items-center text-center w-[100%] h-[220px] md:w-[38%] lg:w-[20vw] lg:md:h-[200px] bg-slate-200 rounded-2xl">
+            <div className=" flex flex-col items-center text-center w-[277px] h-[200px] md:max-w-[320px] md:mx-2 bg-slate-200 rounded-2xl lg:w-[340px]">
               <p className=" text-xl lg:text-2xl text-cyan-800 mt-2">
                 Porcentaje de Aprobación
               </p>
-              <div className="relative w-[54%] sm:w-[70%] md:w-[56%] lg:w-[34%]">
+              <div className="relative w-[48%] sm:w-[48%] md:w-[50%] lg:w-[40%]">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <p className="text-md font-semibold text-gray-800">
                     {percentageGrades}%
@@ -437,7 +449,7 @@ function ListEmployeesQualifications() {
                 <Doughnut data={data} options={options} />
               </div>
             </div>
-            <div className=" flex flex-col items-center w-[100%] h-[220px] md:w-[22%] lg:h-[200px] bg-slate-200  rounded-2xl">
+            <div className=" flex flex-col items-center w-[277px] h-[200px] md:max-w-[230px] bg-slate-200  rounded-2xl lg:max-w-[240px]">
               <p className=" text-xl lg:text-2xl text-cyan-800 mt-2"># Errores Tests</p>
               <p className=" text-6xl md:text-7xl text-black h-[160px] sm:h-[133px] py-6 sm:py-5">
                 {employeesQualifications.filter(employee => employee.errorTest).length}
@@ -445,7 +457,7 @@ function ListEmployeesQualifications() {
             </div>
           </div>
 
-          <div className=" h-[65%] flex items-center justify-center">
+          <div className=" h-[584px] flex items-center justify-center md:h-[526px]">
             <div className=" card h-[96%] w-full mb-4 mt-4 md:mt-0 md:mb-0">
               <DataTable
                 ref={dt}

@@ -19,6 +19,7 @@ const initialState:initState = {
         password: '',
         companyId: 0,
 		tipo: '',
+		avatarImage: '',
 		roleId: 0,
 		active: false
     },

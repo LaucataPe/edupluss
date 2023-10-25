@@ -16,7 +16,8 @@ const initialState:initState = {
     selectEmpresa: {
 		id: 0,
 		name: '',
-		nit: 0
+		nit: 0,
+		active: false
 	},
 	status: 'idle'
 };
@@ -60,7 +61,15 @@ const activitiesSlice = createSlice({
 		},
 		setEmpresa: (state, action: PayloadAction<Empresa>) =>{
 			state.selectEmpresa = action.payload;
-		}
+		},
+		setActivity: (state, action) => {
+			const updatedActivity = action.payload;
+			const index = state.activities.findIndex((activity) => activity.id === updatedActivity.id);
+		
+			if (index !== -1) {
+				state.activities[index] = updatedActivity;
+			}
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchActivities.pending, (state) => {
@@ -100,7 +109,8 @@ const activitiesSlice = createSlice({
 
 export const {
 	resetActivities,
-	setEmpresa
+	setEmpresa,
+	setActivity
 } = activitiesSlice.actions;
 export default activitiesSlice.reducer;
 export const allActivities = (state: RootState) =>	state.activities;

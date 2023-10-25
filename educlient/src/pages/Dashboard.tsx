@@ -227,7 +227,7 @@ function Dashboard() {
         anchor: "end",
         align: "end",
         display: "auto",
-        color: "black",
+        color: "white",
         formatter: (value: any) => {
           return value + "%";
         },
@@ -343,15 +343,15 @@ function Dashboard() {
         anchor: "end",
         align: "end",
         display: "auto",
-        color: "black",
+        color: "white", 
       },
     },
     scales: {
       x: {
-        display: true, // Oculta completamente el eje X
+        display: true, 
       },
       y: {
-        max: Math.max(...Object.values(employeesByArea)) + 2, // Ajusta el valor máximo del eje X
+        max: Math.max(...Object.values(employeesByArea)) + 2, 
         grid: {
           display: true,
         },
@@ -478,7 +478,6 @@ function Dashboard() {
           }
       }
 
-      console.log(timeParts.hours, timeParts.days);
       const message = `El usuario ${
         user?.username || "Usuario desconocido"
       } completó la actividad "${activityName}" ${timeAgo}.`;
@@ -491,8 +490,6 @@ function Dashboard() {
           date: createdAt,
           message: message,
         };
-
-        console.log(`Actividad del paso ${index + 1}: ${activityName}`);
       }
     }
   });
@@ -514,7 +511,6 @@ function Dashboard() {
     }
   }
 
-  console.log(userSteps, totalUsers, todayNotifications, momentNotifications);
 
   return (
     <div className="flex">

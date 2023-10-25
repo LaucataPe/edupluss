@@ -10,6 +10,7 @@ const {
 } = require("../controllers/Activities/getAllActivities");
 const { getStepsActivity } = require("../controllers/Steps/getStepsActivity");
 const { getAllSteps } = require("../controllers/Steps/getStep");
+const { getStepsByRoleUser } = require("../controllers/Steps/getStepsByRoleUser");
 
 const { SearchActivity } = require("../controllers/Activities/SearchActivity");
 const { getAllCompanies } = require("../controllers/Company/getAllEmpresas");
@@ -70,6 +71,7 @@ router.get("/roles/:areaId", getRolesByArea);
 router.get("/steps/:id", getStepsActivity);
 router.get("/search", SearchActivity);
 router.get("/steps", getAllSteps);
+router.get("/roleSteps/:id", getStepsByRoleUser);
 router.get("/users", getAllUsers);
 router.get("/users/:companyId", getUserByCompany);
 router.get("/user/areas/:id", getUserAreas);
@@ -136,14 +138,16 @@ const updateEmpresa = require("../controllers/Company/updateEmpresa");
 const {
   setOrderActivities,
 } = require("../controllers/Activities/setOrderActivities");
+const { updatePatchUser } = require("../controllers/Users/updatePatchUser");
 
 //PUT
 router.put("/activity/state", ActivityState);
 router.put("/area/state", AreaState);
-router.put("/user/update", updateUser);
 router.put("/role/update", updateRole);
 router.put("/area/update", updateArea);
 router.put("/step/update", updateStep);
+router.put("/user/update", updateUser);
+router.patch("/user/patch", updatePatchUser);
 router.patch("/test/update", updateTestGrade);
 router.patch("/activity/update", updateActivity);
 router.patch("/empresa/update", updateEmpresa);

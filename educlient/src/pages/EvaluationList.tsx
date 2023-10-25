@@ -75,18 +75,22 @@ function EvaluationList() {
         )
         }
     return (
-      <div className="flex mt-2 my-3 mx-3">
-        <div className="col-12 align-items-center ml-2 sm:ml-0">
-          <div className="card grid grid-cols-2 overflow-hidden h-[88vh]">
-            <p className=" text-xl md:text-4xl  text-cyan-800">Evaluaciones:</p>
-            <DataScroller
-              value={evaluationsList}
-              itemTemplate={itemTemplate}
-              className="h-[100%] w-[100%]"
-              rows={1}
-              inline
-              scrollHeight="100%"
-            />
+      <div className="m-3">
+        <div className="flex">
+          <div className="col-12 align-items-center ml-2 sm:ml-0">
+            <div className="card grid grid-cols-2 overflow-hidden h-[700px] md:h-[900px]">
+              <p className=" text-xl md:text-4xl  text-cyan-800">
+                Evaluaciones:
+              </p>
+              <DataScroller
+                value={evaluationsList}
+                itemTemplate={itemTemplate}
+                className="h-[100%] w-[100%]"
+                rows={1}
+                inline
+                scrollHeight="100%"
+              />
+            </div>
           </div>
         </div>
       </div>

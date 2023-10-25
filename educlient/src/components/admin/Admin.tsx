@@ -24,16 +24,18 @@ function Admin() {
   return (
     <>
       <div className="container">
-        <div className="card my-3">
-          {/* {currentArea.id === 0 ? <h3 className="text-center my-2 text-indigo-500">{firstArea.name}</h3>: ''} */}
-          {areas.length > 0 ? (
-            <Roles />
-          ) : (
-            <h1 className="text-center mt-5">
-              Aún no existen áreas en esta empresa - Crea una para comenzar tu
-              experiencia
-            </h1>
-          )}
+        <div className="m-3">
+          <div className="card">
+            {/* {currentArea.id === 0 ? <h3 className="text-center my-2 text-indigo-500">{firstArea.name}</h3>: ''} */}
+            {areas.length > 0 ? (
+              <Roles />
+            ) : (
+              <h1 className="text-center mt-2">
+                Aún no existen áreas en esta empresa - Crea una para comenzar tu
+                experiencia
+              </h1>
+            )}
+          </div>
         </div>
       </div>
     </>

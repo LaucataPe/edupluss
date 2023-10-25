@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DataView, DataViewLayoutOptions } from "primereact/dataview";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { ProgressBar } from 'primereact/progressbar';
 import { InputText } from "primereact/inputtext";
 import { useSelector } from "react-redux";
 import { LayoutType, SortOrderType } from "../utils/types/types";
@@ -8,7 +9,6 @@ import { Link } from "react-router-dom";
 import { RootState } from "../redux/store";
 import { Activity, EmployeeGrades } from "../utils/interfaces";
 import axios from "axios";
-import { log } from "console";
 
 const Activities = () => {
   const activities = useSelector(
@@ -16,9 +16,13 @@ const Activities = () => {
   );
   const activeActivities = activities.filter((act) => act.active === true);
 
+
+  const [numberStepsByRole, setNumberStepsByRole] = useState<number>(0);
+  const [value, setValue] = useState<number>(0);
+
   const [dataViewValue, setDataViewValue] = useState<Activity[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-  const [filteredValue, setFilteredValue] = useState<Activity[]>([]);
+  const [filteredValue, setFilteredValue] = useState<Activity[] | null>(null);
   const [layout, setLayout] = useState<LayoutType>("list");
   const [sortKey, setSortKey] = useState("all");
   const [sortOrder] = useState<SortOrderType>(0);
@@ -133,14 +137,16 @@ const Activities = () => {
 
     setSortKey(value);
     setFilteredValue(sortedData);
-    console.log(sortedData);
-  };
+  };    
+  
+  const getProgressPercentage = (numberStepsByRole : number, numberStepsByUser : number) => {
+    return  parseFloat(((numberStepsByUser / numberStepsByRole) * 100).toFixed(2))
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:3001/userStep");
-        console.log(response.data);
         setUserSteps(response.data);
       } catch (error) {
         console.error("Error al obtener datos de UserSteps:", error);
@@ -165,7 +171,12 @@ const Activities = () => {
         const response = await axios.get(
           `http://localhost:3001/tests/${currentUser.id}`
         );
-        setTestGrades(response.data);
+        if(response){
+          setTestGrades(response.data);
+        } else {
+          console.error("No hay notas cargadas aún.")
+        }
+
       } catch (error) {
         console.error("Error al obtener datos de 'testGrades':", error);
       }
@@ -174,6 +185,25 @@ const Activities = () => {
       fetchData();
     }
   }, [currentUser.id]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/roleSteps/${currentUser.id}`);
+        setNumberStepsByRole(response.data)
+      } catch (error) {
+        console.error("Error al obtener datos de 'testGrades':", error);
+      }
+    };
+    if(currentUser.id !== 0){
+      fetchData();
+    }
+  }, [currentUser.id]);
+  
+  useEffect(() => {
+    const progress = getProgressPercentage(numberStepsByRole, currentProgress.length);
+    setValue(progress);
+  }, [currentProgress]);
 
   const finishedActivityInfo = {};
 
@@ -235,6 +265,23 @@ const Activities = () => {
   const activityIdsWithNoStepsFinished = Object.keys(activityIds).filter(
     (activityId) => !(activityId in finishedActivityInfo)
   );
+  const onFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    
+    setGlobalFilterValue(value);
+    if (value.length === 0) {
+        setFilteredValue(null);
+    } else {
+        const filtered = dataViewValue?.filter((activity) => {
+            const productNameLowercase = activity.title.toLowerCase();
+            const searchValueLowercase = value.toLowerCase();
+            return productNameLowercase.includes(searchValueLowercase);
+        });
+
+        setFilteredValue(filtered);
+    }
+  };
+
 
   const dataViewHeader = (
     <div className="flex flex-column md:flex-row md:justify-content-between gap-2 rounded-lg">
@@ -260,7 +307,13 @@ const Activities = () => {
       </div>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
-        <InputText value={globalFilterValue} placeholder="Buscar" />
+        <InputText 
+          value={globalFilterValue} 
+          onChange={onFilter}
+          placeholder="Buscar"
+          //onInput={(e) => setGlobalFilterValue(e.currentTarget.value)}
+          //onChange={onFilter}
+          />
       </span>
       <DataViewLayoutOptions
         layout={layout}
@@ -305,17 +358,25 @@ const Activities = () => {
             } hover:bg-slate-00 ${notStarted ? "text-red-500" : ""}`}
           >
             <div className="flex justify-between text-2xl font-bold">
-              <h3 className="m-0 flex align-items-center text-[#0b1522]">
-                {filteredValue.title}
-                {notStarted ? (
-                  <i className="pi pi-exclamation-circle text-4xl ml-2 text-[#0b1522]"></i>
-                ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
-                  <i className="pi pi-check-circle text-4xl ml-2 text-[#0b1522]"></i>
-                ) : (
-                  <i className="pi pi-lock-open text-4xl ml-2 text-[#0b1522]"></i>
-                )}
-              </h3>
-              <h3 className="m-0 flex align-items-center">
+              <section className=" flex gap-4">
+                <div className="w-[48px] h-[48px] mt-[2px] rounded-full bg-[#6836cc] text-white relative flex items-center justify-center">
+                  {filteredValue.orderId}   
+                </div>
+                <div className=" flex flex-col">
+                  <h3 className="m-0 flex align-items-center">
+                  {filteredValue.title}
+                  {notStarted ? (
+                    <i className="pi pi-exclamation-circle text-4xl ml-2 text-[#0b1522]"></i>
+                  ) : isFinished ? ( // Agrega la verificación para mostrar "ACTIVIDAD FINALIZADA"
+                    <i className="pi pi-check-circle text-4xl ml-2 text-[#0b1522]"></i>
+                  ) : (
+                    <i className="pi pi-lock-open text-4xl ml-2 text-[#0b1522]"></i>
+                  )}
+                  </h3>
+                  <h6 className=" m-0">{completedSteps.length} / {filteredValue.numberSteps}</h6>
+                </div>
+              </section>
+              <h4 className="m-0 flex align-items-center">
                 {testGrades.length > 0 && (
                   <span>
                     {testGrades?.map((grade) => {
@@ -326,7 +387,7 @@ const Activities = () => {
                     })}
                   </span>
                 )}
-              </h3>
+              </h4>
             </div>
           </div>
         </Link>
@@ -369,21 +430,31 @@ const Activities = () => {
           >
             <div className="flex items-center justify-between text-center">
               <div className="text-2xl font-bold w-[90%]">
-                <h3 className="m-0 flex-row align-items-center text-[#0b1522]">
-                  {data.title}
-                </h3>
-                <h3 className="m-0 flex-row align-items-center">
+                <div className=" flex flex-col">
+                <div className=" flex justify-start gap-2">
+                  <div className=" flex[10%] w-[30px] h-[30px] mt-1 rounded-full bg-[#6836cc] text-white flex items-center justify-center">
+                    {data.orderId}   
+                  </div>
+                    <h3 className=" flex-[90%] m-0 flex-row align-items-center">
+                      {data.title}
+                    </h3>
+                </div>
+                  <div className=" flex justify-start">
+                    <h6 className=" m-0 pt-2" >{completedSteps.length} / {data.numberSteps}</h6>  
+                  </div>
+                </div>
+                <h4 className="m-0 flex-row align-items-center">
                   {testGrades.length > 0 && (
-                    <span>
-                      {testGrades?.map((grade) => {
-                        if (grade.Activity.id === data.id) {
-                          return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
-                        }
-                        return null;
-                      })}
-                    </span>
+                  <span>
+                    {testGrades?.map((grade) => {
+                      if (grade.Activity.id === data.id) {
+                        return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
+                      }
+                      return null;
+                    })}
+                  </span>
                   )}
-                </h3>
+                </h4>
               </div>
               <div className="pt-3">
                 <h3>
@@ -480,17 +551,23 @@ const Activities = () => {
             })}
         </div>
         <div className="card mx-[5%]">
+        <div className=" flex justify-between items-center">
           <h3>
             <i className="pi pi-book text-4xl mx-2" />
             Tus actividades:
           </h3>
+          <div className=" w-[500px] pb-3">
+            <ProgressBar value={value}></ProgressBar>
+          </div>
+        </div>
           <DataView
             value={
-              filteredValue.length > 0
-                ? filteredValue
-                : sortKey === "all"
-                ? dataViewValue
-                : []
+              filteredValue || dataViewValue
+              // filteredValue.length > 0
+              //   ? filteredValue
+              //   : sortKey === "all"
+              //   ? dataViewValue
+              //   : []
             }
             layout={layout}
             paginator
