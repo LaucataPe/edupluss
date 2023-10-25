@@ -47,7 +47,7 @@ function Login() {
           dispatch(setEmpresa(data.company));
         }
         if (data.user.tipo === "admin") {
-          navigate("/crud");
+          navigate("/dashboard");
         } else {
           navigate("/home");
         }

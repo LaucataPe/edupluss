@@ -519,7 +519,7 @@ function Dashboard() {
   return (
     <div className="flex">
       <div className="container">
-        <div className="card my-3">
+        <div className="card my-3 mx-3">
           <div className="w-[100%]">
             <div className="p-5">
               <div className="grid justify-center">

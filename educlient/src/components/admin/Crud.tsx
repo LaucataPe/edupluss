@@ -390,7 +390,7 @@ const Crud = () => {
   );
 
   return (
-    <div className="flex crud-demo my-1 ">
+    <div className="flex crud-demo my-2 mx-2">
       <div className="col-12 align-items-center">
         <div
           className=" justify-content-center" //aqui habia card//
