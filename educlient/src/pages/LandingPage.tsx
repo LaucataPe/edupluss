@@ -59,9 +59,14 @@ const LandingPage: Page = () => {
   const planCards = useAnimation();
   const pricing = useAnimation();
   const features = useAnimation();
+
   useEffect(() => {
+    heroControls.start({
+      opacity: 1,
+      y: 0,
+      x: 0,
+    });
     const sections = [
-      { controls: heroControls, opacity: 1, y: 0, x: 0 },
       { controls: presentationControls, opacity: 1, x: 0 },
       { controls: planCardsControls, opacity: 1, x: 0 },
       { controls: planCards, opacity: 1, x: 0 },
@@ -69,32 +74,36 @@ const LandingPage: Page = () => {
       { controls: pricing, opacity: 1, x: 0 },
     ];
 
-    // Almacena la altura de la ventana en una variable estática
-    const windowHeight = window.innerHeight;
+    const tolerance = 10; // Ajusta la tolerancia en píxeles según tus necesidades
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const sectionHeight = windowHeight / 1.49; // Usar la variable estática
+      let activeSection = null;
 
       for (let i = 0; i < sections.length; i++) {
         const section = sections[i];
-        const startScrollY = i * sectionHeight;
-        const endScrollY = (i + 1) * sectionHeight;
+        const sectionElement = document.getElementById(`section${i}`); // Reemplaza con el ID de tus secciones
+        if (!sectionElement) continue; // Salta la sección si no se encuentra
 
-        if (scrollY >= startScrollY && scrollY < endScrollY) {
-          section.controls.start(section);
-        } else {
-          section.controls.start({ opacity: 0.1, x: -100 });
+        const sectionBounds = sectionElement.getBoundingClientRect();
+        const sectionTop = sectionBounds.top + scrollY;
+        const sectionBottom = sectionBounds.bottom + scrollY - tolerance; // Aplicar la tolerancia
+
+        if (scrollY >= sectionTop && scrollY < sectionBottom) {
+          activeSection = section;
+          break;
         }
       }
-      console.log(
-        "Scroll:",
-        scrollY,
-        "Calculo de secciones",
-        sectionHeight,
-        "Tamaño de pantalla",
-        windowHeight
-      );
+
+      if (activeSection) {
+        // Mover la sección actual al principio del arreglo
+        const index = sections.indexOf(activeSection);
+        sections.splice(index, 1);
+        sections.unshift(activeSection);
+
+        // Activar la animación de la sección activa
+        activeSection.controls.start(activeSection);
+      }
     };
 
     handleScroll();
@@ -103,7 +112,14 @@ const LandingPage: Page = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [heroControls, presentationControls, planCardsControls]);
+  }, [
+    heroControls,
+    presentationControls,
+    planCardsControls,
+    planCards,
+    features,
+    pricing,
+  ]);
 
   const handleScrollToSection = (sectionId: any) => {
     const section = document.getElementById(sectionId);
@@ -166,8 +182,17 @@ const LandingPage: Page = () => {
               </li>
               <li>
                 <Link
-                  to="/#features"
-                  onClick={() => handleScrollToSection("features")}
+                  to="/#section2"
+                  onClick={() => handleScrollToSection("section2")}
+                  className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
+                >
+                  <motion.div whileTap={{ scale: 0.65 }}>Demo</motion.div>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/#section3"
+                  onClick={() => handleScrollToSection("section3")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
                   <motion.div whileTap={{ scale: 0.65 }}>
@@ -177,8 +202,19 @@ const LandingPage: Page = () => {
               </li>
               <li>
                 <Link
-                  to="/#pricing"
-                  onClick={() => handleScrollToSection("pricing")}
+                  to="/#section4"
+                  onClick={() => handleScrollToSection("section4")}
+                  className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
+                >
+                  <motion.div whileTap={{ scale: 0.65 }}>
+                    Caracteristicas
+                  </motion.div>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/#section5"
+                  onClick={() => handleScrollToSection("section5")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
                   <motion.div whileTap={{ scale: 0.65 }}>Precios</motion.div>
@@ -207,11 +243,11 @@ const LandingPage: Page = () => {
           ></div>
         </header>
         <section
-          id="hero"
+          id="section1"
           className="flex flex-column pt-4 mt-7 lg:mt-32 xs:pt-1 px-4 lg:px-8 overflow-hidden relative "
         >
           <motion.div
-            initial={{ opacity: 0, y: 0, x: -100 }}
+            initial={{ opacity: 0, y: 0, x: 0 }}
             animate={heroControls}
             transition={{ duration: 1 }}
           >
@@ -280,7 +316,7 @@ const LandingPage: Page = () => {
           </motion.div>
         </section>
         <section
-          id="presentation"
+          id="section2"
           className="flex flex-column pt-4 mt-10 lg:mt-48 xs:pt-1 px-4 lg:px-4 overflow-hidden relative "
         >
           {" "}
@@ -318,7 +354,7 @@ const LandingPage: Page = () => {
           </motion.div>
         </section>
         <section
-          id="planCards"
+          id="section3"
           className="flex flex-column pt-4 mt-10 lg:mt-12 xs:pt-1 px-4 lg:px-4 overflow-hidden relative"
         >
           <motion.div
@@ -383,7 +419,7 @@ const LandingPage: Page = () => {
             </div>
           </motion.div>
         </section>
-        <section id="features" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
+        <section id="section4" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
           <motion.div
             initial={{ opacity: 0, x: -100 }}
             animate={features}
@@ -706,7 +742,7 @@ const LandingPage: Page = () => {
             </div>
           </motion.div>
         </section>
-        <section id="pricing" className="py-12 px-4 lg:px-8 my-2 md:my-4">
+        <section id="section5" className="py-12 px-4 lg:px-8 my-2 md:my-4">
           <motion.div
             initial={{ opacity: 0, x: -100 }}
             animate={pricing}
