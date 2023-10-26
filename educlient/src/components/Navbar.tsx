@@ -42,8 +42,8 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
 
   const overlayMenuItems = [
     {
-      label: 'Mi perfil',
-      icon: 'pi pi-user-edit',
+      label: "Mi perfil",
+      icon: "pi pi-user-edit",
       command: handleClick,
     },
     {
@@ -57,7 +57,7 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
     setActive(!active);
     dispatch(handleSideBar(!enableSideBar));
   };
-
+  console.log(logUser);
   return (
     <>
       <nav className="dark:bg-[whitesmoke] bg-[#040d19] fixed py-3 top-0 px-3 w-full h-16  flex  justify-between items-center z-10">
@@ -75,7 +75,10 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
               onClick={() => setShowSideBar()}
               className={`animation cursor-pointer transition-transform duration-500 overflow-hidden relative w-[3rem] h-12 bg-none  ease-in-out  hover:scale-105 rounded-full border-0 ${
                 active ? "active" : ""
-              } `}
+              }
+              :
+              profile
+              } ${logUser.tipo === "admin" ? "block" : "hidden"}`}
             >
               <span className="rounded-md w-7 bg-[#3b82f6] absolute h-1 top-3.5 left-3.5 transition-transform duration-500"></span>
               <span className="rounded-md w-4 bg-[#3b82f6] absolute h-1 left-3.5  top-[24px] transition-transform duration-500"></span>
@@ -87,19 +90,13 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
             {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
           </h2>
 
-
           <Avatar
             icon="pi pi-user"
             size="large"
             shape="circle"
             onClick={toggleMenu}
             className="animation"
-            image={
-              logUser?.avatarImage ?
-              logUser.avatarImage
-              :
-              profile
-            }
+            image={logUser?.avatarImage ? logUser.avatarImage : profile}
           ></Avatar>
 
           <Menu ref={menu} model={overlayMenuItems} popup />
