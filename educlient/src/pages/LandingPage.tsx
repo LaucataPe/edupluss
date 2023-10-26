@@ -710,16 +710,22 @@ const LandingPage: Page = () => {
                 diferentes - "Albert Einstein"
               </p>
               <p className="text-white font-medium text-md text-600 py-1">
+                <i className="pi pi-map pr-2 text-md "></i>
                 Bogota - Colombia, Carrera 7 113 43 of 1103
               </p>
               <p className="text-white font-medium text-md text-600 py-1">
+                <i className="pi pi-phone pr-2 text-md "></i>
                 3144116769 - 3132462447
               </p>
               <p className="text-white font-medium text-md text-600 py-1">
+                <i className="pi pi-inbox pr-2 text-md "></i>
                 admin@contabilidadya.com
               </p>
               <div className="text-white py-1">
-                <i>F</i> <i>T</i> <i>G</i> <i>I</i>
+                <i className="pi pi-facebook pr-6 text-2xl "></i>
+                <i className="pi pi-twitter pr-6 text-2xl"></i>
+                <i className="pi pi-google pr-6 text-2xl"></i>
+                <i className="pi pi-linkedin pr-6 text-2xl"></i>
               </div>
             </div>
             <div className="md:col-span-2 lg:col-span-1 py-4">
@@ -733,7 +739,7 @@ const LandingPage: Page = () => {
                     >
                       <motion.div whileTap={{ scale: 0.65 }}>
                         <i className="pi pi-angle-double-right pr-2" />
-                        inicio
+                        Inicio
                       </motion.div>
                     </Link>
                   </li>
