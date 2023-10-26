@@ -86,22 +86,7 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
           <h2 className="font-normal m-0">
             {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
           </h2>
-          <div className="flex justify-center align-items-center">
-            <span>
-              {isDarkMode ? (
-                <i className="pi pi-sun text-4xl" />
-              ) : (
-                <i className="pi pi-moon text-3xl" />
-              )}
-            </span>
-            <div className="ml-4">
-              <InputSwitch
-                checked={isDarkMode}
-                onChange={toggleDarkMode}
-                style={{ marginRight: "8px" }}
-              />
-            </div>
-          </div>
+
 
           <Avatar
             icon="pi pi-user"
