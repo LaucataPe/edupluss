@@ -1,5 +1,5 @@
+//@ts-nocheck
 import {
-  Activity,
   BarChart3,
   FolderTree,
   ListChecks,

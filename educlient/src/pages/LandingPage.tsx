@@ -223,7 +223,7 @@ const LandingPage: Page = () => {
           id="navbar"
           className={`py-2  cursor-auto px-4 max-w-[1505px] mx-0 ${
             isAtTop ? "bg-[#ffffff]" : "bg-[#ffffff]"
-          } hover:bg-[#ffffff] z-10 lg:px-8 flex items-center justify-between fixed lg:fixed transition-transform duration-700 ease-in-out ${
+          } hover:bg-[#ffffff] z-10 lg:px-8 flex items-center justify-between fixed lg:fixed transition-all duration-700 ease-in-out ${
             isAtTop
               ? "translate-y-0"
               : "translate-y-[-95px] hover:translate-y-0"
@@ -726,45 +726,67 @@ const LandingPage: Page = () => {
               <div className="flex justify-end items-center h-full ">
                 <ul className="space-y-4 text-left py-2 w-full">
                   <li>
-                    <a
-                      href="#home"
+                    <Link
+                      to="/#section1"
+                      onClick={() => handleScrollToSection("section1")}
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
-                      {">> "}Inicio
-                    </a>
+                      <motion.div whileTap={{ scale: 0.65 }}>
+                        {">> "}inicio
+                      </motion.div>
+                    </Link>
+                  </li>
+                  <li>
+                    <hr className="my-2" />
+                  </li>
+                  <Link
+                    to="/#section2"
+                    onClick={() => handleScrollToSection("section2")}
+                    className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
+                  >
+                    <motion.div whileTap={{ scale: 0.65 }}>
+                      {">> "}Demo
+                    </motion.div>
+                  </Link>
+                  <li>
+                    <hr className="my-2" />
+                  </li>
+                  <li>
+                    <Link
+                      to="/#section3"
+                      onClick={() => handleScrollToSection("section3")}
+                      className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
+                    >
+                      <motion.div whileTap={{ scale: 0.65 }}>
+                        {">> "}Pasos
+                      </motion.div>
+                    </Link>
                   </li>
                   <li>
                     <hr className="my-2" />
                   </li>
                   <li>
-                    <a
-                      href="#features"
+                    <Link
+                      to="/#section4"
+                      onClick={() => handleScrollToSection("section4")}
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
-                      {">> "}Nosotros
-                    </a>
+                      <motion.div whileTap={{ scale: 0.65 }}>
+                        {">> "}Caracteristicas
+                      </motion.div>
+                    </Link>
                   </li>
+                  <hr className="my-2" />
                   <li>
-                    <hr className="my-2" />
-                  </li>
-                  <li>
-                    <a
-                      href="#pricing"
+                    <Link
+                      to="/#section5"
+                      onClick={() => handleScrollToSection("section5")}
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
-                      {">> "}Aplicativos
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="my-2" />
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
-                    >
-                      {">> "}Contactenos
-                    </a>
+                      <motion.div whileTap={{ scale: 0.65 }}>
+                        {">> "}Precios
+                      </motion.div>
+                    </Link>
                   </li>
                   <li>
                     <hr className="my-2" />
