@@ -7,6 +7,12 @@ import work1 from "../assets/work1.jpg";
 import eval1 from "../assets/eval1.jpg";
 import planning1 from "../assets/planning1.png";
 import { motion, useAnimation } from "framer-motion";
+//@ts-ignore
+import {
+  VerticalTimeline,
+  VerticalTimelineElement, //@ts-ignore
+} from "react-vertical-timeline-component";
+import "react-vertical-timeline-component/style.min.css";
 
 import { Link } from "react-router-dom";
 
@@ -74,7 +80,7 @@ const LandingPage: Page = () => {
       { controls: pricing, opacity: 1, x: 0 },
     ];
 
-    const tolerance = 10; // Ajusta la tolerancia en píxeles según tus necesidades
+    const tolerance = 10;
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -87,7 +93,7 @@ const LandingPage: Page = () => {
 
         const sectionBounds = sectionElement.getBoundingClientRect();
         const sectionTop = sectionBounds.top + scrollY;
-        const sectionBottom = sectionBounds.bottom + scrollY - tolerance; // Aplicar la tolerancia
+        const sectionBottom = sectionBounds.bottom + scrollY - tolerance;
 
         if (scrollY >= sectionTop && scrollY < sectionBottom) {
           activeSection = section;
@@ -96,12 +102,9 @@ const LandingPage: Page = () => {
       }
 
       if (activeSection) {
-        // Mover la sección actual al principio del arreglo
         const index = sections.indexOf(activeSection);
         sections.splice(index, 1);
         sections.unshift(activeSection);
-
-        // Activar la animación de la sección activa
         activeSection.controls.start(activeSection);
       }
     };
@@ -125,30 +128,106 @@ const LandingPage: Page = () => {
     const section = document.getElementById(sectionId);
 
     if (section) {
-      const yOffset = -50; // Ajusta el desplazamiento vertical según tus necesidades
+      const yOffset = -50;
       const elementPosition =
         section.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition + yOffset;
 
-      // Realiza el desplazamiento suave con Framer Motion
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
     }
   };
+  const pageFeatures = [
+    {
+      title: "Enfoque Específico",
+      location: "Ubicación (si es aplicable)",
+      description: "Diseñado para la capacitación de personal",
+      icon: "pi pi-flag flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(253, 228, 165, 1), rgba(187, 199, 205, 1)), linear-gradient(180deg, rgba(253, 228, 165, 1), rgba(187, 199, 205, 1))",
+      iconColor: "black",
+    },
+    {
+      title: "Procesos",
+      location: "Ubicación (si es aplicable)",
+      description: "Personaliza los procesos de tu empresa",
+      icon: "pi pi-list flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(145, 226, 237, 1), rgba(251, 199, 145, 1)), linear-gradient(180deg, rgba(253, 228, 165, 1), rgba(172, 180, 223, 1))",
+      iconColor: "#036d16",
+    },
+    {
+      title: "Cargos",
+      location: "Ubicación (si es aplicable)",
+      description: "Establece los cargos específicos de tu empresa",
+      iconColor: "#6d3f03",
+      icon: "pi pi-users flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(145, 226, 237, 1), rgba(172, 180, 223, 1)), linear-gradient(180deg, rgba(172, 180, 223, 1), rgba(246, 158, 188, 1))",
+    },
+    {
+      title: "Gestión de usuarios",
+      location: "Ubicación (si es aplicable)",
+      description: "Ten control sobre tus empleados en la plataforma",
+      icon: "pi pi-id-card flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(187, 199, 205, 1), rgba(251, 199, 145, 1)), linear-gradient(180deg, rgba(253, 228, 165, 1), rgba(145, 210, 204, 1))",
+      iconColor: "#034a6d",
+    },
+    {
+      title: "Interfaz Intuitiva",
+      location: "Ubicación (si es aplicable)",
+      description: "Será muy sencillo hacer uso de Edupluss",
+      icon: "pi pi-star flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(187, 199, 205, 1), rgba(246, 158, 188, 1)), linear-gradient(180deg, rgba(145, 226, 237, 1), rgba(160, 210, 250, 1))",
+      iconColor: "#8b9500",
+    },
+    {
+      title: "Dark Mode",
+      location: "Ubicación (si es aplicable)",
+      description: "Podrás hacer uso del modo oscuro",
+      icon: "pi pi-moon flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(251, 199, 145, 1), rgba(246, 158, 188, 1)), linear-gradient(180deg, rgba(172, 180, 223, 1), rgba(212, 162, 221, 1))",
+      iconColor: "#022b7e",
+    },
+    {
+      title: "Youtube",
+      location: "Ubicación (si es aplicable)",
+      description: "Incluye videos de Youtube o sube los tuyos",
+      icon: "pi pi-youtube flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(145, 210, 204, 1), rgba(160, 210, 250, 1)), linear-gradient(180deg, rgba(187, 199, 205, 1), rgba(145, 210, 204, 1))",
+      iconColor: "#c20202",
+    },
+    {
+      title: "Privacidad",
+      location: "Ubicación (si es aplicable)",
+      description: "Tu información será solo para ti",
+      icon: "pi pi-lock flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(160, 210, 250, 1), rgba(212, 162, 221, 1)), linear-gradient(180deg, rgba(246, 158, 188, 1), rgba(212, 162, 221, 1))",
+      iconColor: "#7b7b4e",
+    },
+  ];
+
+  // Ahora cada elemento de pageFeatures tiene su fondo con opacidad 1.
+
   return (
     <div className="surface-0 flex justify-content-center">
       <div id="home" className="landing-wrapper overflow-hidden">
         <header
           id="navbar"
-          className={`py-2 cursor-auto px-4 mx-0 ${
+          className={`py-2  cursor-auto px-4 max-w-[1505px] mx-0 ${
             isAtTop ? "bg-[#ffffff]" : "bg-[#ffffff]"
-          } hover:bg-[#ffffff] z-10 lg:px-8 w-12 flex items-center justify-between fixed lg:fixed transition-transform duration-700 ease-in-out ${
+          } hover:bg-[#ffffff] z-10 lg:px-8 flex items-center justify-between fixed lg:fixed transition-transform duration-700 ease-in-out ${
             isAtTop
               ? "translate-y-0"
               : "translate-y-[-95px] hover:translate-y-0"
-          } hover:shadow-xl hover:transition-shadow-duration-700-ease-in-out`}
+          } hover:shadow-xl hover:transition-shadow-duration-700-ease-in-out w-screen`}
         >
           <img src={logo} alt="Sakai Logo" className="mr-0 lg:mr-2 h-[80px]" />
           <StyleClass
@@ -195,9 +274,7 @@ const LandingPage: Page = () => {
                   onClick={() => handleScrollToSection("section3")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <motion.div whileTap={{ scale: 0.65 }}>
-                    Características
-                  </motion.div>
+                  <motion.div whileTap={{ scale: 0.65 }}>Pasos</motion.div>
                 </Link>
               </li>
               <li>
@@ -419,328 +496,56 @@ const LandingPage: Page = () => {
             </div>
           </motion.div>
         </section>
-        <section id="section4" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
-          <motion.div
-            initial={{ opacity: 0, x: -100 }}
-            animate={features}
-            transition={{ duration: 1 }}
-          >
-            <div className="grid justify-content-center">
-              <div className="col-12 text-center mt-8 mb-4">
-                <h2 className="text-900 font-normal mb-2">
-                  Características principales
-                </h2>
-                <span className="text-600 text-2xl">
-                  Tus empleados más eficientes que nunca...
-                </span>
-              </div>
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-yellow-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-flag text-2xl text-yellow-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Enfoque Específico</h5>
-                    <span className="text-600">
-                      Diseñado para la capacitación de personal
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(145,226,237,0.2),rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(172, 180, 223, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-cyan-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-list text-2xl text-cyan-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Procesos</h5>
-                    <span className="text-600">
-                      Personaliza los procesos de tu empresa
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(172, 180, 223, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(246, 158, 188, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-indigo-200"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-users text-2xl text-indigo-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Cargos</h5>
-                    <span className="text-600">
-                      Establece los cargos específicos de tu empresa
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(187, 199, 205, 0.2),rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2),rgba(145, 210, 204, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-bluegray-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-id-card text-2xl text-bluegray-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Gestión de usuarios</h5>
-                    <span className="text-600">
-                      Ten control sobre tus empleados en la plataforma
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(187, 199, 205, 0.2),rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(145, 226, 237, 0.2),rgba(160, 210, 250, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-orange-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-star text-2xl text-orange-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Interfaz Intuitiva</h5>
-                    <span className="text-600">
-                      Será muy sencillo hacer uso de Edupluss
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(251, 199, 145, 0.2), rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(212, 162, 221, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-pink-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-moon text-2xl text-pink-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Dark Mode</h5>
-                    <span className="text-600">
-                      Podrás hacer uso del modo oscuro
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(160, 210, 250, 0.2)), linear-gradient(180deg, rgba(187, 199, 205, 0.2), rgba(145, 210, 204, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-teal-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-youtube text-2xl text-teal-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Youtube</h5>
-                    <span className="text-600">
-                      Incluye videos de Youtube o sube los tuyos
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(251, 199, 145, 0.2), rgba(160, 210, 250, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-blue-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-book text-2xl text-blue-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Metodología</h5>
-                    <span className="text-600">
-                      Tus empleados tendrán claras sus funciones
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg-4 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(160, 210, 250, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(246, 158, 188, 0.2), rgba(212, 162, 221, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-purple-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-lock text-2xl text-purple-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Privacidad</h5>
-                    <span className="text-600">
-                      Tu información será solo para tí
-                    </span>
-                  </div>
-                </div>
-              </div>
+        <section
+          id="section4"
+          className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8  text-center"
+        >
+          <div className="grid justify-center">
+            <div className="col-12 text-center mt-8 mb-4">
+              <h2 className="text-900 font-normal mb-2">
+                Características principales
+              </h2>
+              <span className="text-600 text-2xl">
+                Tus empleados más eficientes que nunca...
+              </span>
             </div>
-          </motion.div>
+          </div>
+
+          <VerticalTimeline lineColor="#e3e3e3">
+            {pageFeatures.map((item: any, index) => (
+              <React.Fragment key={index}>
+                <VerticalTimelineElement
+                  className="group hover:scale-105 hover:cursor-pointer transform transition-transform"
+                  contentStyle={{
+                    background: "#f6f6f6",
+                    boxShadow:
+                      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                    border: "1px solid rgba(0, 0, 0, 0.05)",
+                    textAlign: "left",
+                    padding: "1.3rem 2rem",
+                  }}
+                  contentArrowStyle={{
+                    borderRight: "0.4rem solid #9ca3af",
+                  }}
+                  date={item.date}
+                  iconClassName={item.icon}
+                  iconStyle={{
+                    boxShadow:
+                      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                    background: item.background,
+                    fontSize: "1.5rem",
+                    color: item.iconColor,
+                  }}
+                >
+                  <h3 className="font-semibold capitalize">{item.title}</h3>
+                  <p className="font-normal !mt-0">{item.location}</p>
+                  <p className="!mt-1 !font-normal text-gray-700 dark:text-white/75">
+                    {item.description}
+                  </p>
+                </VerticalTimelineElement>
+              </React.Fragment>
+            ))}
+          </VerticalTimeline>
         </section>
         <section id="section5" className="py-12 px-4 lg:px-8 my-2 md:my-4">
           <motion.div
@@ -774,11 +579,11 @@ const LandingPage: Page = () => {
                   <Divider className="w-full bg-surface-200"></Divider>
                   <ul className="my-5 list-none p-0 flex text-900 flex-column">
                     <li className="py-2">
-                      <i className="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
+                      <i className="pi pi-check text-xl text-cyan-500 mr-2"></i>
                       <span className="text-xl line-height-3">2 Usuarios</span>
                     </li>
                     <li className="py-2">
-                      <i className="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
+                      <i className="pi pi-check text-xl text-cyan-500 mr-2"></i>
                       <span className="text-xl line-height-3">
                         Acceso a Dashboard
                       </span>
