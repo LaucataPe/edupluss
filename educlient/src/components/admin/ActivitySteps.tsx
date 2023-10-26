@@ -7,7 +7,7 @@ import { getStepsActivity } from "../../redux/features/stepsSlider";
 import { Button } from "primereact/button";
 import { DataView, DataViewLayoutOptions } from "primereact/dataview";
 import { Dialog } from "primereact/dialog";
-import { Calendar } from 'primereact/calendar';
+import { Calendar } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import { LayoutType } from "../../utils/types/types";
 import { Step } from "../../utils/interfaces";
@@ -23,12 +23,11 @@ interface testInputs {
   excelURL?: string;
 }
 
-
 function ActivitySteps() {
   const dispatch = useAppDispatch();
   const { id } = useParams();
-  let idAux : number;
-  if(id){
+  let idAux: number;
+  if (id) {
     idAux = parseInt(id);
   }
 
@@ -45,26 +44,30 @@ function ActivitySteps() {
   const initialTime = new Date();
   initialTime.setHours(0);
   initialTime.setMinutes(0);
-  
+
   useEffect(() => {
     dispatch(getStepsActivity(Number(id)));
   }, []);
-  
-  const currentActivity = activities.find((activity) => activity.id === Number(id));
+
+  const currentActivity = activities.find(
+    (activity) => activity.id === Number(id)
+  );
   //console.log(currentActivity);
-  
+
   const [checked, setChecked] = useState<boolean>(false);
-  const [time, setTime] = useState<Nullable<string | Date | Date[]>>(currentActivity?.durationTest ? currentActivity.durationTest : initialTime);
-  
+  const [time, setTime] = useState<Nullable<string | Date | Date[]>>(
+    currentActivity?.durationTest ? currentActivity.durationTest : initialTime
+  );
+
   const [testUrls, setTestUrls] = useState<testInputs>({
     formURL: currentActivity?.formURL,
-    excelURL: currentActivity?.excelURL
+    excelURL: currentActivity?.excelURL,
   });
 
   useEffect(() => {
     setTestUrls({
       formURL: currentActivity?.formURL,
-      excelURL: currentActivity?.excelURL
+      excelURL: currentActivity?.excelURL,
     });
   }, [showAddTestModal]);
 
@@ -79,7 +82,9 @@ function ActivitySteps() {
   const dataViewHeader = (
     <div className="flex md:flex-row md:justify-content-between items-center">
       <p className="text-5xl m-0">
-        {currentActivity ? currentActivity.title : "No se encontró la actividad"}
+        {currentActivity
+          ? currentActivity.title
+          : "No se encontró la actividad"}
       </p>
       <DataViewLayoutOptions
         layout={layout}
@@ -213,19 +218,19 @@ function ActivitySteps() {
 
       //Format data to send
       let urlsData;
-      if(time) {
+      if (time) {
         let duration;
 
         if (time instanceof Date) {
           // Get hours, minutes y seconds
-          const hours = time.getHours().toString().padStart(2, '0');
-          const minutes = time.getMinutes().toString().padStart(2, '0');
+          const hours = time.getHours().toString().padStart(2, "0");
+          const minutes = time.getMinutes().toString().padStart(2, "0");
           //const seconds = time.getSeconds().toString().padStart(2, '0');
-          const seconds = "00"
+          const seconds = "00";
           duration = `${hours}:${minutes}:${seconds}`;
         }
-        
-        if (duration === "00:00:00"){
+
+        if (duration === "00:00:00") {
           duration = null;
         }
 
@@ -235,15 +240,14 @@ function ActivitySteps() {
           durationTest: duration,
           ...testUrls,
         };
-        
-      }else {
+      } else {
         urlsData = {
           id: idAux,
           hasTest: true,
           ...testUrls,
         };
       }
-      
+
       const response = await axios.patch(
         "http://localhost:3001/activity/update",
         urlsData,
@@ -256,7 +260,7 @@ function ActivitySteps() {
 
       if (response) {
         //console.log(response.data);
-        dispatch(setActivity(response.data))
+        dispatch(setActivity(response.data));
         toast.current?.show({
           severity: "success",
           summary: "Agregado!",
@@ -295,7 +299,15 @@ function ActivitySteps() {
         label="Guardar"
         icon="pi pi-check"
         //! Solo controlo que se ingrese 1 disabled={ time && (testUrls.excelURL === null || testUrls.excelURL === "") && (testUrls.formURL === null || testUrls.formURL === "") ? true : false}
-        disabled={ time && (testUrls.excelURL === null || testUrls.excelURL === "" || testUrls.formURL === null || testUrls.formURL === "") ? true : false}
+        disabled={
+          time &&
+          (testUrls.excelURL === null ||
+            testUrls.excelURL === "" ||
+            testUrls.formURL === null ||
+            testUrls.formURL === "")
+            ? true
+            : false
+        }
         onClick={handleAddTest}
         text
         autoFocus
@@ -307,18 +319,20 @@ function ActivitySteps() {
     <>
       <Toast ref={toast} />
 
-      <Link to={`/activities/${role.id}`}>
-        <Button
-          icon="pi pi-angle-double-left"
-          label="Atrás"
-          className="mt-3 mx-2"
-          rounded
-          severity="secondary"
-        />
-      </Link>
       <div className="list-demo relative">
-        <div className="col-12">
-          <div className="card h-[700px] overflow-auto">
+        <div className="col-12 m-2">
+          <div className="card h-[820px] mb-6 overflow-auto">
+            <div className="py-4">
+              <Link to={`/activities/${role.id}`}>
+                <Button
+                  icon="pi pi-angle-double-left"
+                  label="Atrás"
+                  className="mt-3 mx-2"
+                  rounded
+                  severity="secondary"
+                />
+              </Link>
+            </div>
             <DataView
               value={steps}
               emptyMessage="No hay pasos en este actividad"
@@ -334,14 +348,18 @@ function ActivitySteps() {
             label="+ Crear Paso"
             severity="info"
             rounded
-            className="absolute right-4 bottom-4 "
+            className="absolute right-4 my-2 bottom-14"
           />
         </Link>
         <Button
-          label={ currentActivity?.formURL && currentActivity.excelURL ? "+ Editar Test" : "+ Agregar Test"}
+          label={
+            currentActivity?.formURL && currentActivity.excelURL
+              ? "+ Editar Test"
+              : "+ Agregar Test"
+          }
           severity="info"
           rounded
-          className="absolute left-4 bottom-4"
+          className="absolute left-6 my-2 bottom-14"
           onClick={() => setShowAddTestModal(true)}
         />
       </div>
@@ -364,7 +382,11 @@ function ActivitySteps() {
       </Dialog>
 
       <Dialog
-        header={ currentActivity?.excelURL || currentActivity?.formURL ? "Editar Test" : "Agregar Test"}
+        header={
+          currentActivity?.excelURL || currentActivity?.formURL
+            ? "Editar Test"
+            : "Agregar Test"
+        }
         visible={showAddTestModal}
         onHide={() => setShowAddTestModal(false)}
         style={{ width: "450px" }}
@@ -393,25 +415,39 @@ function ActivitySteps() {
             />
           </div>
           <div className="field flex gap-2">
-            <InputSwitch checked={checked} onChange={(e: InputSwitchChangeEvent) => setChecked(e.value ?? false)} />
-            <label>{currentActivity?.durationTest ? "Modificar duración del Test" : "Agregar duración al Test"}</label>
+            <InputSwitch
+              checked={checked}
+              onChange={(e: InputSwitchChangeEvent) =>
+                setChecked(e.value ?? false)
+              }
+            />
+            <label>
+              {currentActivity?.durationTest
+                ? "Modificar duración del Test"
+                : "Agregar duración al Test"}
+            </label>
           </div>
-            {
-              checked ?
-              <div className="flex-auto">
-                <p className=" text-red-600">Duración actual: {currentActivity?.durationTest}</p>
-                <label htmlFor="calendar-timeonly" className=" block mb-2">
-                    Duración - Horas : Minutos
-                </label>
-                <Calendar id="calendar-timeonly" value={time} onChange={(e) => setTime(e.value)} timeOnly />
+          {checked ? (
+            <div className="flex-auto">
+              <p className=" text-red-600">
+                Duración actual: {currentActivity?.durationTest}
+              </p>
+              <label htmlFor="calendar-timeonly" className=" block mb-2">
+                Duración - Horas : Minutos
+              </label>
+              <Calendar
+                id="calendar-timeonly"
+                value={time}
+                onChange={(e) => setTime(e.value)}
+                timeOnly
+              />
             </div>
-            : null
-            }
-            <div className=" min-h-[30px]">
+          ) : null}
+          <div className=" min-h-[30px]">
             {confirmationModalFooter.props.children[1].props.disabled ? (
               <p className="p-error">Ingrese la URL del formulario y excel.</p>
             ) : null}
-            </div>
+          </div>
         </div>
       </Dialog>
     </>
