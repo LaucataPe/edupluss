@@ -161,7 +161,7 @@ const LandingPage: Page = () => {
                   onClick={() => handleScrollToSection("home")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <motion.div whileTap={{ scale: 0.85 }}>Inicio</motion.div>
+                  <motion.div whileTap={{ scale: 0.65 }}>Inicio</motion.div>
                 </Link>
               </li>
               <li>
@@ -170,7 +170,7 @@ const LandingPage: Page = () => {
                   onClick={() => handleScrollToSection("features")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <motion.div whileTap={{ scale: 0.85 }}>
+                  <motion.div whileTap={{ scale: 0.65 }}>
                     Características
                   </motion.div>
                 </Link>
@@ -181,7 +181,7 @@ const LandingPage: Page = () => {
                   onClick={() => handleScrollToSection("pricing")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <motion.div whileTap={{ scale: 0.85 }}>Precios</motion.div>
+                  <motion.div whileTap={{ scale: 0.65 }}>Precios</motion.div>
                 </Link>
               </li>
             </ul>
