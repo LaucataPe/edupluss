@@ -22,7 +22,6 @@ import { useSelector } from "react-redux";
 
 import "./index.css";
 
-
 import "primereact/resources/primereact.css";
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
@@ -131,11 +130,11 @@ function App() {
 
   return (
     <div className={isDarkMode ? "dark" : "light"}>
-      {pathAvailable && (
-        <NavBar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-      )}
+      {pathAvailable && <NavBar />}
       <div className="flex w-[100%]">
-        {pathAvailable && logUser.tipo === "admin" && <Sidebar />}
+        {pathAvailable && logUser.tipo === "admin" && (
+          <Sidebar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+        )}
 
         <div className={`w-full ${pathAvailable ? "mt-16" : ""}`}>
           <Routes>

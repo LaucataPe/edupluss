@@ -7,6 +7,12 @@ import work1 from "../assets/work1.jpg";
 import eval1 from "../assets/eval1.jpg";
 import planning1 from "../assets/planning1.png";
 import { motion, useAnimation } from "framer-motion";
+//@ts-ignore
+import {
+  VerticalTimeline,
+  VerticalTimelineElement, //@ts-ignore
+} from "react-vertical-timeline-component";
+import "react-vertical-timeline-component/style.min.css";
 
 import { Link } from "react-router-dom";
 
@@ -59,9 +65,14 @@ const LandingPage: Page = () => {
   const planCards = useAnimation();
   const pricing = useAnimation();
   const features = useAnimation();
+
   useEffect(() => {
+    heroControls.start({
+      opacity: 1,
+      y: 0,
+      x: 0,
+    });
     const sections = [
-      { controls: heroControls, opacity: 1, y: 0, x: 0 },
       { controls: presentationControls, opacity: 1, x: 0 },
       { controls: planCardsControls, opacity: 1, x: 0 },
       { controls: planCards, opacity: 1, x: 0 },
@@ -69,32 +80,33 @@ const LandingPage: Page = () => {
       { controls: pricing, opacity: 1, x: 0 },
     ];
 
-    // Almacena la altura de la ventana en una variable estática
-    const windowHeight = window.innerHeight;
+    const tolerance = 10;
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const sectionHeight = windowHeight / 1.49; // Usar la variable estática
+      let activeSection = null;
 
       for (let i = 0; i < sections.length; i++) {
         const section = sections[i];
-        const startScrollY = i * sectionHeight;
-        const endScrollY = (i + 1) * sectionHeight;
+        const sectionElement = document.getElementById(`section${i}`); // Reemplaza con el ID de tus secciones
+        if (!sectionElement) continue; // Salta la sección si no se encuentra
 
-        if (scrollY >= startScrollY && scrollY < endScrollY) {
-          section.controls.start(section);
-        } else {
-          section.controls.start({ opacity: 0.1, x: -100 });
+        const sectionBounds = sectionElement.getBoundingClientRect();
+        const sectionTop = sectionBounds.top + scrollY;
+        const sectionBottom = sectionBounds.bottom + scrollY - tolerance;
+
+        if (scrollY >= sectionTop && scrollY < sectionBottom) {
+          activeSection = section;
+          break;
         }
       }
-      console.log(
-        "Scroll:",
-        scrollY,
-        "Calculo de secciones",
-        sectionHeight,
-        "Tamaño de pantalla",
-        windowHeight
-      );
+
+      if (activeSection) {
+        const index = sections.indexOf(activeSection);
+        sections.splice(index, 1);
+        sections.unshift(activeSection);
+        activeSection.controls.start(activeSection);
+      }
     };
 
     handleScroll();
@@ -103,36 +115,119 @@ const LandingPage: Page = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [heroControls, presentationControls, planCardsControls]);
+  }, [
+    heroControls,
+    presentationControls,
+    planCardsControls,
+    planCards,
+    features,
+    pricing,
+  ]);
 
   const handleScrollToSection = (sectionId: any) => {
     const section = document.getElementById(sectionId);
 
     if (section) {
-      const yOffset = -50; // Ajusta el desplazamiento vertical según tus necesidades
+      const yOffset = -50;
       const elementPosition =
         section.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition + yOffset;
 
-      // Realiza el desplazamiento suave con Framer Motion
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
     }
   };
+  const pageFeatures = [
+    {
+      title: "Enfoque Específico",
+      location: "Ubicación (si es aplicable)",
+      description: "Diseñado para la capacitación de personal",
+      icon: "pi pi-flag flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(253, 228, 165, 1), rgba(187, 199, 205, 1)), linear-gradient(180deg, rgba(253, 228, 165, 1), rgba(187, 199, 205, 1))",
+      iconColor: "black",
+    },
+    {
+      title: "Procesos",
+      location: "Ubicación (si es aplicable)",
+      description: "Personaliza los procesos de tu empresa",
+      icon: "pi pi-list flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(145, 226, 237, 1), rgba(251, 199, 145, 1)), linear-gradient(180deg, rgba(253, 228, 165, 1), rgba(172, 180, 223, 1))",
+      iconColor: "#036d16",
+    },
+    {
+      title: "Cargos",
+      location: "Ubicación (si es aplicable)",
+      description: "Establece los cargos específicos de tu empresa",
+      iconColor: "#6d3f03",
+      icon: "pi pi-users flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(145, 226, 237, 1), rgba(172, 180, 223, 1)), linear-gradient(180deg, rgba(172, 180, 223, 1), rgba(246, 158, 188, 1))",
+    },
+    {
+      title: "Gestión de usuarios",
+      location: "Ubicación (si es aplicable)",
+      description: "Ten control sobre tus empleados en la plataforma",
+      icon: "pi pi-id-card flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(187, 199, 205, 1), rgba(251, 199, 145, 1)), linear-gradient(180deg, rgba(253, 228, 165, 1), rgba(145, 210, 204, 1))",
+      iconColor: "#034a6d",
+    },
+    {
+      title: "Interfaz Intuitiva",
+      location: "Ubicación (si es aplicable)",
+      description: "Será muy sencillo hacer uso de Edupluss",
+      icon: "pi pi-star flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(187, 199, 205, 1), rgba(246, 158, 188, 1)), linear-gradient(180deg, rgba(145, 226, 237, 1), rgba(160, 210, 250, 1))",
+      iconColor: "#8b9500",
+    },
+    {
+      title: "Dark Mode",
+      location: "Ubicación (si es aplicable)",
+      description: "Podrás hacer uso del modo oscuro",
+      icon: "pi pi-moon flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(251, 199, 145, 1), rgba(246, 158, 188, 1)), linear-gradient(180deg, rgba(172, 180, 223, 1), rgba(212, 162, 221, 1))",
+      iconColor: "#022b7e",
+    },
+    {
+      title: "Youtube",
+      location: "Ubicación (si es aplicable)",
+      description: "Incluye videos de Youtube o sube los tuyos",
+      icon: "pi pi-youtube flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(145, 210, 204, 1), rgba(160, 210, 250, 1)), linear-gradient(180deg, rgba(187, 199, 205, 1), rgba(145, 210, 204, 1))",
+      iconColor: "#c20202",
+    },
+    {
+      title: "Privacidad",
+      location: "Ubicación (si es aplicable)",
+      description: "Tu información será solo para ti",
+      icon: "pi pi-lock flex justify-content-center	align-items-center",
+      background:
+        "linear-gradient(90deg, rgba(160, 210, 250, 1), rgba(212, 162, 221, 1)), linear-gradient(180deg, rgba(246, 158, 188, 1), rgba(212, 162, 221, 1))",
+      iconColor: "#7b7b4e",
+    },
+  ];
+
+  // Ahora cada elemento de pageFeatures tiene su fondo con opacidad 1.
+
   return (
     <div className="surface-0 flex justify-content-center">
       <div id="home" className="landing-wrapper overflow-hidden">
         <header
           id="navbar"
-          className={`py-2 cursor-auto px-4 mx-0 ${
+          className={`py-2  cursor-auto px-4 max-w-[1505px] mx-0 ${
             isAtTop ? "bg-[#ffffff]" : "bg-[#ffffff]"
-          } hover:bg-[#ffffff] z-10 lg:px-8 w-12 flex items-center justify-between fixed lg:fixed transition-transform duration-700 ease-in-out ${
+          } hover:bg-[#ffffff] z-10 lg:px-8 flex items-center justify-between fixed lg:fixed transition-all duration-700 ease-in-out ${
             isAtTop
               ? "translate-y-0"
               : "translate-y-[-95px] hover:translate-y-0"
-          } hover:shadow-xl hover:transition-shadow-duration-700-ease-in-out`}
+          } hover:shadow-xl hover:transition-shadow-duration-700-ease-in-out w-screen`}
         >
           <img src={logo} alt="Sakai Logo" className="mr-0 lg:mr-2 h-[80px]" />
           <StyleClass
@@ -161,27 +256,45 @@ const LandingPage: Page = () => {
                   onClick={() => handleScrollToSection("home")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <motion.div whileTap={{ scale: 0.85 }}>Inicio</motion.div>
+                  <motion.div whileTap={{ scale: 0.65 }}>Inicio</motion.div>
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/#features"
-                  onClick={() => handleScrollToSection("features")}
+                  to="/#section2"
+                  onClick={() => handleScrollToSection("section2")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <motion.div whileTap={{ scale: 0.85 }}>
-                    Características
+                  <motion.div whileTap={{ scale: 0.65 }}>Demo</motion.div>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/#section3"
+                  onClick={() => handleScrollToSection("section3")}
+                  className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
+                >
+                  <motion.div whileTap={{ scale: 0.65 }}>Pasos</motion.div>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/#section4"
+                  onClick={() => handleScrollToSection("section4")}
+                  className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
+                >
+                  <motion.div whileTap={{ scale: 0.65 }}>
+                    Caracteristicas
                   </motion.div>
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/#pricing"
-                  onClick={() => handleScrollToSection("pricing")}
+                  to="/#section5"
+                  onClick={() => handleScrollToSection("section5")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <motion.div whileTap={{ scale: 0.85 }}>Precios</motion.div>
+                  <motion.div whileTap={{ scale: 0.65 }}>Precios</motion.div>
                 </Link>
               </li>
             </ul>
@@ -207,11 +320,11 @@ const LandingPage: Page = () => {
           ></div>
         </header>
         <section
-          id="hero"
+          id="section1"
           className="flex flex-column pt-4 mt-7 lg:mt-32 xs:pt-1 px-4 lg:px-8 overflow-hidden relative "
         >
           <motion.div
-            initial={{ opacity: 0, y: 0, x: -100 }}
+            initial={{ opacity: 0, y: 0, x: 0 }}
             animate={heroControls}
             transition={{ duration: 1 }}
           >
@@ -280,7 +393,7 @@ const LandingPage: Page = () => {
           </motion.div>
         </section>
         <section
-          id="presentation"
+          id="section2"
           className="flex flex-column pt-4 mt-10 lg:mt-48 xs:pt-1 px-4 lg:px-4 overflow-hidden relative "
         >
           {" "}
@@ -318,7 +431,7 @@ const LandingPage: Page = () => {
           </motion.div>
         </section>
         <section
-          id="planCards"
+          id="section3"
           className="flex flex-column pt-4 mt-10 lg:mt-12 xs:pt-1 px-4 lg:px-4 overflow-hidden relative"
         >
           <motion.div
@@ -383,330 +496,58 @@ const LandingPage: Page = () => {
             </div>
           </motion.div>
         </section>
-        <section id="features" className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8">
-          <motion.div
-            initial={{ opacity: 0, x: -100 }}
-            animate={features}
-            transition={{ duration: 1 }}
-          >
-            <div className="grid justify-content-center">
-              <div className="col-12 text-center mt-8 mb-4">
-                <h2 className="text-900 font-normal mb-2">
-                  Características principales
-                </h2>
-                <span className="text-600 text-2xl">
-                  Tus empleados más eficientes que nunca...
-                </span>
-              </div>
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-yellow-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-flag text-2xl text-yellow-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Enfoque Específico</h5>
-                    <span className="text-600">
-                      Diseñado para la capacitación de personal
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(145,226,237,0.2),rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(172, 180, 223, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-cyan-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-list text-2xl text-cyan-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Procesos</h5>
-                    <span className="text-600">
-                      Personaliza los procesos de tu empresa
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(172, 180, 223, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(246, 158, 188, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-indigo-200"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-users text-2xl text-indigo-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Cargos</h5>
-                    <span className="text-600">
-                      Establece los cargos específicos de tu empresa
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(187, 199, 205, 0.2),rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2),rgba(145, 210, 204, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-bluegray-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-id-card text-2xl text-bluegray-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Gestión de usuarios</h5>
-                    <span className="text-600">
-                      Ten control sobre tus empleados en la plataforma
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(187, 199, 205, 0.2),rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(145, 226, 237, 0.2),rgba(160, 210, 250, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-orange-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-star text-2xl text-orange-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Interfaz Intuitiva</h5>
-                    <span className="text-600">
-                      Será muy sencillo hacer uso de Edupluss
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pb-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(251, 199, 145, 0.2), rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(212, 162, 221, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-pink-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-moon text-2xl text-pink-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Dark Mode</h5>
-                    <span className="text-600">
-                      Podrás hacer uso del modo oscuro
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(160, 210, 250, 0.2)), linear-gradient(180deg, rgba(187, 199, 205, 0.2), rgba(145, 210, 204, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-teal-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-youtube text-2xl text-teal-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Youtube</h5>
-                    <span className="text-600">
-                      Incluye videos de Youtube o sube los tuyos
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg:pr-5 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(251, 199, 145, 0.2), rgba(160, 210, 250, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-blue-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-book text-2xl text-blue-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Metodología</h5>
-                    <span className="text-600">
-                      Tus empleados tendrán claras sus funciones
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-12 lg:col-4 p-0 lg-4 mt-4 lg:mt-0">
-                <div
-                  style={{
-                    minHeight: "160px",
-                    maxHeight: "300px",
-                    overflow: "auto",
-                    padding: "2px",
-                    borderRadius: "10px",
-                    background:
-                      "linear-gradient(90deg, rgba(160, 210, 250, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(246, 158, 188, 0.2), rgba(212, 162, 221, 0.2))",
-                  }}
-                >
-                  <div
-                    className="p-3 surface-card h-full"
-                    style={{ borderRadius: "8px" }}
-                  >
-                    <div
-                      className="flex align-items-center justify-content-center bg-purple-200 mb-3"
-                      style={{
-                        width: "3.5rem",
-                        height: "3.5rem",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <i className="pi pi-fw pi-lock text-2xl text-purple-700"></i>
-                    </div>
-                    <h5 className="mb-2 text-900">Privacidad</h5>
-                    <span className="text-600">
-                      Tu información será solo para tí
-                    </span>
-                  </div>
-                </div>
-              </div>
+        <section
+          id="section4"
+          className="py-4 px-4 lg:px-8 mt-5 mx-0 lg:mx-8  text-center"
+        >
+          <div className="grid justify-center">
+            <div className="col-12 text-center mt-8 mb-4">
+              <h2 className="text-900 font-normal mb-2">
+                Características principales
+              </h2>
+              <span className="text-600 text-2xl">
+                Tus empleados más eficientes que nunca...
+              </span>
             </div>
-          </motion.div>
+          </div>
+
+          <VerticalTimeline lineColor="#e3e3e3">
+            {pageFeatures.map((item: any, index) => (
+              <React.Fragment key={index}>
+                <VerticalTimelineElement
+                  className="group hover:scale-105 hover:cursor-pointer transform transition-transform"
+                  contentStyle={{
+                    background: "#f6f6f6",
+                    boxShadow:
+                      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                    border: "1px solid rgba(0, 0, 0, 0.05)",
+                    textAlign: "left",
+                    padding: "1.3rem 2rem",
+                  }}
+                  contentArrowStyle={{
+                    borderRight: "0.4rem solid #9ca3af",
+                  }}
+                  date={item.date}
+                  iconClassName={item.icon}
+                  iconStyle={{
+                    boxShadow:
+                      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                    background: item.background,
+                    fontSize: "1.5rem",
+                    color: item.iconColor,
+                  }}
+                >
+                  <h3 className="font-semibold capitalize">{item.title}</h3>
+                  <p className="font-normal !mt-0">{item.location}</p>
+                  <p className="!mt-1 !font-normal text-gray-700 dark:text-white/75">
+                    {item.description}
+                  </p>
+                </VerticalTimelineElement>
+              </React.Fragment>
+            ))}
+          </VerticalTimeline>
         </section>
-        <section id="pricing" className="py-12 px-4 lg:px-8 my-2 md:my-4">
+        <section id="section5" className="py-12 px-4 lg:px-8 my-2 md:my-4">
           <motion.div
             initial={{ opacity: 0, x: -100 }}
             animate={pricing}
@@ -738,11 +579,11 @@ const LandingPage: Page = () => {
                   <Divider className="w-full bg-surface-200"></Divider>
                   <ul className="my-5 list-none p-0 flex text-900 flex-column">
                     <li className="py-2">
-                      <i className="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
+                      <i className="pi pi-check text-xl text-cyan-500 mr-2"></i>
                       <span className="text-xl line-height-3">2 Usuarios</span>
                     </li>
                     <li className="py-2">
-                      <i className="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
+                      <i className="pi pi-check text-xl text-cyan-500 mr-2"></i>
                       <span className="text-xl line-height-3">
                         Acceso a Dashboard
                       </span>
@@ -869,61 +710,94 @@ const LandingPage: Page = () => {
                 diferentes - "Albert Einstein"
               </p>
               <p className="text-white font-medium text-md text-600 py-1">
+                <i className="pi pi-map pr-2 text-md "></i>
                 Bogota - Colombia, Carrera 7 113 43 of 1103
               </p>
               <p className="text-white font-medium text-md text-600 py-1">
+                <i className="pi pi-phone pr-2 text-md "></i>
                 3144116769 - 3132462447
               </p>
               <p className="text-white font-medium text-md text-600 py-1">
+                <i className="pi pi-inbox pr-2 text-md "></i>
                 admin@contabilidadya.com
               </p>
               <div className="text-white py-1">
-                <i>F</i> <i>T</i> <i>G</i> <i>I</i>
+                <i className="pi pi-facebook pr-6 text-2xl "></i>
+                <i className="pi pi-twitter pr-6 text-2xl"></i>
+                <i className="pi pi-google pr-6 text-2xl"></i>
+                <i className="pi pi-linkedin pr-6 text-2xl"></i>
               </div>
             </div>
             <div className="md:col-span-2 lg:col-span-1 py-4">
               <div className="flex justify-end items-center h-full ">
                 <ul className="space-y-4 text-left py-2 w-full">
                   <li>
-                    <a
-                      href="#home"
+                    <Link
+                      to="/#section1"
+                      onClick={() => handleScrollToSection("section1")}
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
-                      {">> "}Inicio
-                    </a>
+                      <motion.div whileTap={{ scale: 0.65 }}>
+                        <i className="pi pi-angle-double-right pr-2" />
+                        Inicio
+                      </motion.div>
+                    </Link>
+                  </li>
+                  <li>
+                    <hr className="my-2" />
+                  </li>
+                  <Link
+                    to="/#section2"
+                    onClick={() => handleScrollToSection("section2")}
+                    className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
+                  >
+                    <motion.div whileTap={{ scale: 0.65 }}>
+                      <i className="pi pi-angle-double-right pr-2" />
+                      Demo
+                    </motion.div>
+                  </Link>
+                  <li>
+                    <hr className="my-2" />
+                  </li>
+                  <li>
+                    <Link
+                      to="/#section3"
+                      onClick={() => handleScrollToSection("section3")}
+                      className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
+                    >
+                      <motion.div whileTap={{ scale: 0.65 }}>
+                        <i className="pi pi-angle-double-right pr-2" />
+                        Pasos
+                      </motion.div>
+                    </Link>
                   </li>
                   <li>
                     <hr className="my-2" />
                   </li>
                   <li>
-                    <a
-                      href="#features"
+                    <Link
+                      to="/#section4"
+                      onClick={() => handleScrollToSection("section4")}
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
-                      {">> "}Nosotros
-                    </a>
+                      <motion.div whileTap={{ scale: 0.65 }}>
+                        <i className="pi pi-angle-double-right pr-2" />
+                        Caracteristicas
+                      </motion.div>
+                    </Link>
                   </li>
+                  <hr className="my-2" />
                   <li>
-                    <hr className="my-2" />
-                  </li>
-                  <li>
-                    <a
-                      href="#pricing"
+                    <Link
+                      to="/#section5"
+                      onClick={() => handleScrollToSection("section5")}
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
-                      {">> "}Aplicativos
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="my-2" />
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
-                    >
-                      {">> "}Contactenos
-                    </a>
+                      <motion.div whileTap={{ scale: 0.65 }}>
+                        <i className="pi pi-angle-double-right pr-2" />
+                        Precios
+                      </motion.div>
+                    </Link>
                   </li>
                   <li>
                     <hr className="my-2" />
@@ -933,7 +807,8 @@ const LandingPage: Page = () => {
                       to="/login"
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
-                      {">> "}Acceso a clientes
+                      <i className="pi pi-angle-double-right pr-2" />
+                      Acceso a clientes
                     </Link>
                   </li>
                 </ul>
