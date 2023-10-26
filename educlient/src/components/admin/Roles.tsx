@@ -97,74 +97,68 @@ function Roles() {
   return (
     <>
       {/*Mapea todos los roles*/}
-
-      <div className="w-[90%] relative mx-10">
-        <div className="flex items-center justify-center">
-          <h3 className="m-2 text-indigo-500">{currentArea.name}</h3>
-          <Link to={`/editArea/${currentArea.id}`}>
-            <Button icon="pi pi-pencil" rounded severity="success" text />
-          </Link>
-          <Link to={`/addRole/${currentArea.id}`}>
-            <button className="py-2 px-4 flex bottom-10 right-10 justify-center items-center rounded-full font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-all text-xl dark:focus:ring-offset-gray-800">
-              + Crear Cargo
-            </button>
-          </Link>
-        </div>
-
-        <div className="flex flex-wrap">
-          {roles.map((role) => (
-            <div
-              key={role.id}
-              onClick={() => handleRoleClick(role)}
-              className="relative border-1 surface-border border-round mx-1 my-2 text-center py-5 w-[300px]"
-            >
-              <Button
-                rounded
-                text
-                severity="danger"
-                className="absolute top-0 right-0"
-                icon="pi pi-times"
-                onClick={() => dialogHandler(role.id ?? 0)}
-              ></Button>
-              <div className="mb-3 flex justify-center">
-                <FaUser className="text-8xl text-center" />
-              </div>
-              <div>
-                <h4 className="p-mb-1">{role.name}</h4>
-                <div className="car-buttons mt-5">
-                  <Button
-                    rounded
-                    className="mr-2"
-                    icon="pi pi-eye"
-                    onClick={() => handleLook(role)}
-                  ></Button>
-                  <Link to={`/editRole/${currentArea.id}/${role.id}`}>
-                    <Button
-                      rounded
-                      severity="success"
-                      className="mr-2"
-                      icon="pi pi-pencil"
-                    ></Button>
-                  </Link>
-                  <Link to={`/activities/${role.id}`}>
-                    <Button
-                      rounded
-                      severity="info"
-                      icon="pi pi-arrow-right"
-                    ></Button>
-                  </Link>
+        <div className="w-[90%] relative mx-10">
+            <div className="flex justify-between items-center mb-4 mx-2">
+                <h2 className="text-blue-500 m-0">{currentArea.name}</h2>
+                <div className="h-[50px] flex flex-row-reverse mx-4 gap-2">                      
+                    <Button className="hover:bg-blue-500 hover:text-white focus:shadow-none" label=" + Crear Cargo" severity="info"
+                        rounded outlined onClick={() => navigate(`/addRole/${currentArea.id}`)}></Button>
                 </div>
-              </div>
             </div>
-          ))}
-          {roles.length === 0 ? (
-            <p className="text-2xl text-blue-500 m-10">
-              Aún no hay cargos en esta área{" "}
-            </p>
-          ) : (
-            ""
-          )}
-        </div>
+            <div className="flex flex-wrap">
+                {roles.map((role) => (
+                    <div
+                    key={role.id}
+                    onClick={() => handleRoleClick(role)}
+                    className="relative border-1 surface-border border-round mx-1 my-2 text-center py-5 w-[300px]"
+                    >
+                    <Button
+                        rounded
+                        text
+                        severity="danger"
+                        className="absolute top-0 right-0"
+                        icon="pi pi-times"
+                        onClick={() => dialogHandler(role.id ?? 0)}
+                    ></Button>
+                    <div className="mb-3 flex justify-center">
+                        <FaUser className="text-8xl text-center" />
+                    </div>
+                    <div>
+                        <h4 className="p-mb-1">{role.name}</h4>
+                        <div className="car-buttons mt-5">
+                        <Button
+                            rounded
+                            className="mr-2"
+                            icon="pi pi-eye"
+                            onClick={() => handleLook(role)}
+                        ></Button>
+                        <Link to={`/editRole/${currentArea.id}/${role.id}`}>
+                            <Button
+                            rounded
+                            severity="success"
+                            className="mr-2"
+                            icon="pi pi-pencil"
+                            ></Button>
+                        </Link>
+                        <Link to={`/activities/${role.id}`}>
+                            <Button
+                            rounded
+                            severity="info"
+                            icon="pi pi-arrow-right"
+                            ></Button>
+                        </Link>
+                        </div>
+                    </div>
+                    </div>
+                ))}
+                {roles.length === 0 ? (
+                    <p className="text-2xl text-blue-500 m-10">
+                    Aún no hay cargos en esta área{" "}
+                    </p>
+                ) : (
+                    ""
+                )}
+            </div>
       </div>
 
       <Dialog

@@ -17,7 +17,7 @@ import AdminActivities from "./components/admin/AdminActivities";
 import AddArea from "./components/admin/AddArea";
 import Crud from "./components/admin/Crud";
 import AddRole from "./components/admin/AddRole";
-import AppMenu from "./components/SideMenu";
+//import AppMenu from "./components/SideMenu";
 import { useSelector } from "react-redux";
 
 import "./index.css";
@@ -43,6 +43,7 @@ import UserProfile from "./pages/UserProfile";
 import EvaluationList from "./pages/EvaluationList";
 import ListEmployeesQualifications from "./pages/ListEmployeesQualifications/ListEmployeesQualifications";
 import Sidebar from "./components/Sidebar";
+import AreaRoles from "./components/admin/AreaRoles";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -68,9 +69,9 @@ function App() {
   const currentEmpresa = useSelector(
     (state: RootState) => state.user.logUser.companyId
   );
-  const enableSideBar = useSelector(
+  /*const enableSideBar = useSelector(
     (state: RootState) => state.utils.handleSideBar
-  );
+  );*/
 
   const [tokenValid, setTokenValid] = useState<Boolean>(false);
 
@@ -145,7 +146,8 @@ function App() {
             <Route path="/activity/:id" element={<Activity />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/progress" element={<Progress />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/areas" element={<Admin />} />
+            <Route path="/areas/:areaId" element={<AreaRoles />} />
             <Route path="/activities/:roleId" element={<AdminActivities />} />
             <Route path="/actvitySteps/:id" element={<ActivitySteps />} />
             <Route
