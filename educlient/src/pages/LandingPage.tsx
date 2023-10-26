@@ -732,7 +732,8 @@ const LandingPage: Page = () => {
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
                       <motion.div whileTap={{ scale: 0.65 }}>
-                        {">> "}inicio
+                        <i className="pi pi-angle-double-right pr-2" />
+                        inicio
                       </motion.div>
                     </Link>
                   </li>
@@ -745,7 +746,8 @@ const LandingPage: Page = () => {
                     className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                   >
                     <motion.div whileTap={{ scale: 0.65 }}>
-                      {">> "}Demo
+                      <i className="pi pi-angle-double-right pr-2" />
+                      Demo
                     </motion.div>
                   </Link>
                   <li>
@@ -758,7 +760,8 @@ const LandingPage: Page = () => {
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
                       <motion.div whileTap={{ scale: 0.65 }}>
-                        {">> "}Pasos
+                        <i className="pi pi-angle-double-right pr-2" />
+                        Pasos
                       </motion.div>
                     </Link>
                   </li>
@@ -772,7 +775,8 @@ const LandingPage: Page = () => {
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
                       <motion.div whileTap={{ scale: 0.65 }}>
-                        {">> "}Caracteristicas
+                        <i className="pi pi-angle-double-right pr-2" />
+                        Caracteristicas
                       </motion.div>
                     </Link>
                   </li>
@@ -784,7 +788,8 @@ const LandingPage: Page = () => {
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
                       <motion.div whileTap={{ scale: 0.65 }}>
-                        {">> "}Precios
+                        <i className="pi pi-angle-double-right pr-2" />
+                        Precios
                       </motion.div>
                     </Link>
                   </li>
@@ -796,7 +801,8 @@ const LandingPage: Page = () => {
                       to="/login"
                       className="text-white font-medium text-2xl line-height-3 mb-3 text-900"
                     >
-                      {">> "}Acceso a clientes
+                      <i className="pi pi-angle-double-right pr-2" />
+                      Acceso a clientes
                     </Link>
                   </li>
                 </ul>
