@@ -42,11 +42,18 @@ function Login() {
           });
           const token = data.token;
           window.localStorage.setItem("token", token);
-
-          dispatch(setLogUser(data.user));
-          dispatch(setEmpresa(data.company));
+          
+          if(data.user.tipo === "superadmin"){
+            dispatch(setLogUser(data.user));
+          } else if(data.user.tipo === "admin" || data.user.tipo === "empleado") {
+            dispatch(setLogUser(data.user));
+            dispatch(setEmpresa(data.company));
+          }         
         }
-        if (data.user.tipo === "admin") {
+
+        if (data.user.tipo === "superadmin") {
+          navigate("/main");
+        } else if (data.user.tipo === "admin") {
           navigate("/dashboard");
         } else {
           navigate("/home");

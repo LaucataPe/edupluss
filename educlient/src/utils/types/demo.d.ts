@@ -108,10 +108,10 @@ declare namespace Demo {
         username: string
         email: string
         password: string
-        companyId: number
+        companyId?: number | null
         tipo: string
         avatarImage?: string;
-        roleId?: number
+        roleId?: number | null
         active: boolean
     }
 

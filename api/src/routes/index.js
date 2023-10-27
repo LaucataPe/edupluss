@@ -46,6 +46,7 @@ const {
 } = require("../controllers/TestGrade/getGradePercentageByCompany");
 
 //USER GET
+const { getUser }= require("../controllers/Users/getUser");
 const { getAllUsers } = require("../controllers/Users/getAllUsers");
 const { getUserByCompany } = require("../controllers/Users/getUsersByCompany");
 const { getUserAreas } = require("../controllers/Users/getUserAreas");
@@ -72,6 +73,7 @@ router.get("/steps/:id", getStepsActivity);
 router.get("/search", SearchActivity);
 router.get("/steps", getAllSteps);
 router.get("/roleSteps/:id", getStepsByRoleUser);
+router.get("/user/:id", getUser);
 router.get("/users", getAllUsers);
 router.get("/users/:companyId", getUserByCompany);
 router.get("/user/areas/:id", getUserAreas);
@@ -79,8 +81,8 @@ router.get("/user/areas/:id", getUserAreas);
 router.get("/userStep", getUserSteps);
 
 router.get("/review", getReview);
-router.get("/reviews/activity", getReviewsByActivity);
-router.get("/reviews/user", getReviewsByUser);
+router.get("/reviews/activity", getReviewsByActivity); //!NO SE ESTA USANDO
+router.get("/reviews/user", getReviewsByUser); //!NO SE ESTA USANDO
 
 router.get("/admin/activities/:id", getActivitiesByAdminUser);
 router.get(
@@ -92,8 +94,8 @@ router.get("/tests/:employeeId", getAllTestGradesByUser);
 router.get(
   "/tests/activity/:adminId/:activityId",
   getGradesOfAllEmployeesByActivity
-);
-router.get("/tests/company/:id", getGradePercentageByCompany);
+); //!NO SE ESTA USANDO (retorna un porcentaje) ELIMINAR
+router.get("/tests/company/:id", getGradePercentageByCompany); //!NO SE ESTA USANDO (retorna un porcentaje)
 
 //Session
 router.get("/auth/token", getByToken);
@@ -167,8 +169,8 @@ router.delete("/area/:id", deleteAreaCascade);
 router.delete("/activity/:id", deleteActivity);
 router.delete("/role/:id", deleteRole);
 router.delete("/step/:id", deleteStep);
-router.delete("/user/:companyUsersId", verifyRole("admin"), deleteUser);
-router.delete("/reviews", deleteReview);
+router.delete("/user/:companyUsersId", deleteUser); //!verifyRole("admin") Verificar para el caso de admin y superadmin, 
+router.delete("/reviews", deleteReview); //!NO SE ESTA USANDO
 router.delete("/test/:userId/:id", deleteTestGrade);
 
 module.exports = { router };

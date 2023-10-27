@@ -97,6 +97,9 @@ function App() {
     if (pathname === "/home" && logUser.tipo === "admin") {
       navigate("/crud");
     }
+    if (pathname === "/home" && logUser.tipo === "superadmin") {
+      navigate("/main");
+    }
   }, [pathname]);
 
   useEffect(() => {
@@ -105,9 +108,14 @@ function App() {
         .get(`http://localhost:3001/auth/token`, { headers })
         .then((response) => {
           if (response) {
-            dispatch(setLogUser(response.data.data.user));
-            dispatch(setEmpresa(response.data.findCompany));
-            setTokenValid(true);
+            if (response.data.user.tipo === "superadmin") {
+              dispatch(setLogUser(response.data.user));
+              setTokenValid(true);
+            } else {
+              dispatch(setLogUser(response.data.data.user));
+              dispatch(setEmpresa(response.data.findCompany));
+              setTokenValid(true);
+            }  
           }
         })
 
@@ -132,7 +140,7 @@ function App() {
     <div className={isDarkMode ? "dark" : "light"}>
       {pathAvailable && <NavBar />}
       <div className="flex w-[100%]">
-        {pathAvailable && logUser.tipo === "admin" && (
+        {pathAvailable && (logUser?.tipo === "admin" || logUser?.tipo === "superadmin") && (
           <Sidebar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
         )}
 
