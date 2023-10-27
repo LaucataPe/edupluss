@@ -37,6 +37,7 @@ export interface Step {
   description: string;
   video: string;
   file?: string;
+  design: string;
   activityId: number;
 }
 
@@ -44,6 +45,7 @@ export interface CreateStep {
   id?: number;
   number: number;
   title: string;
+  design: string;
   description: string;
   video: File | string | ArrayBuffer | null;
   file?: File | string | ArrayBuffer | null;
