@@ -13,8 +13,10 @@ const SuperAdminHome = () => {
   const [companies, setCompanies] = useState<Empresa[]>([]);
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [showEdit, setShowEdit] = useState<boolean>(false);
+  const [isActivated, setIsActivated] = useState<boolean>(false);
   const [company, setCompany] = useState<Empresa | object>({});
   const [currentName, setCurrentName] = useState<string>("");
+  const [currentNIT, setCurrentNIT] = useState<number>(0);
   const [switchActiveValue, setSwitchActiveValue] = useState<boolean>(false);
   const [filter, setFilter] = useState<string>("");
   const [currentRow, setCurrentRow] = useState<Empresa>({
@@ -29,12 +31,14 @@ const SuperAdminHome = () => {
     const getCompanies = async () => {
       const res = await axios("http://localhost:3001/empresas");
       const { data } = res;
-
-      setCompanies(data);
+      if(data){
+        setCompanies(data);
+      }else {
+        console.error("Ha ocurrido un error al obtener las empresas.")
+      }
     };
-
     getCompanies();
-  }, []);
+  }, [isActivated]);
 
   const openCreateCompany = () => {
     setShowCreate(true);
@@ -44,6 +48,7 @@ const SuperAdminHome = () => {
     setCurrentRow(row);
     setSwitchActiveValue(row.active);
     setCurrentName(row.name);
+    setCurrentNIT(row.nit);
     setShowEdit(true);
   };
 
@@ -107,21 +112,21 @@ const SuperAdminHome = () => {
         ...company,
         active: switchActiveValue,
       };
-
-      axios.patch("http://localhost:3001/empresa/update", body);
-
-      setShowEdit(false);
-      setCompany({});
-
-      toast.current?.show({
-        severity: "success",
-        summary: "Éxito",
-        detail: "Se ha editado la informacion de la empresa",
-        life: 3000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      const response = await axios.patch("http://localhost:3001/empresa/update", body);
+      if(response){
+        setIsActivated(!isActivated);
+        setCompany({});
+        setShowEdit(false);
+        toast.current?.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Se ha editado la informacion de la empresa",
+          life: 3000,
+        });
+      }else {
+        console.error("Ha ocurrido un error al actualizar la empresa.")
+      }
+      //? Agregar un toast de error?
     } catch (error) {
       console.error(error);
       toast.current?.show({
@@ -135,18 +140,21 @@ const SuperAdminHome = () => {
 
   const handleSubmitCreate = async () => {
     try {
-      axios.post("http://localhost:3001/empresa", company);
-
-      setShowCreate(false);
-      setCompany({});
-
-      toast.current?.show({
-        severity: "success",
-        summary: "Éxito",
-        detail: "Se ha creado la empresa",
-        life: 3000,
-      });
-      window.location.reload();
+      const response = await axios.post("http://localhost:3001/empresa", company);
+      if (response) {
+        setIsActivated(!isActivated);
+        setShowCreate(false);
+        setCompany({});
+        toast.current?.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Se ha creado la empresa",
+          life: 3000,
+        });
+      }else {
+        console.error("Ha ocurrido un error al crear la empresa.")
+      }
+      //? Agregar un mensaje o toast de error
     } catch (error) {
       console.error(error);
       toast.current?.show({
@@ -260,7 +268,7 @@ const SuperAdminHome = () => {
             id="NIT"
             name="nit"
             onChange={handleChangeEditCompany}
-            placeholder="NIT"
+            placeholder={`Actual: ${currentNIT}`}
             required
           />
         </div>
