@@ -429,9 +429,12 @@ function ActivitySteps() {
           </div>
           {checked ? (
             <div className="flex-auto">
-              <p className=" text-red-600">
-                Duración actual: {currentActivity?.durationTest}
-              </p>
+              { 
+                currentActivity?.durationTest ?
+                <p className=" text-red-600">Duración actual: {currentActivity?.durationTest}</p>
+                : 
+                null 
+              }
               <label htmlFor="calendar-timeonly" className=" block mb-2">
                 Duración - Horas : Minutos
               </label>

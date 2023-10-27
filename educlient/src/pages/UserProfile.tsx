@@ -11,10 +11,12 @@ import { setLogUser } from "../redux/features/userSlice";
 import { Link } from "react-router-dom";
 
 function UserProfile() {
-  const logUser = useSelector((state: RootState) => state.user.logUser);
   const dispatch = useDispatch();
   const toast = useRef<Toast>(null);
   const [error, setError] = useState("");
+  const logUser = useSelector((state: RootState) => state.user.logUser);
+  //console.log(logUser);
+  
 
   let [inputs, setInputs] = useState<UserEdit>({
     id: logUser?.id,
@@ -28,15 +30,28 @@ function UserProfile() {
   const [selectedAvatar, setSelectedAvatar] = useState(logUser?.avatarImage);
 
   useEffect(() => {
-    setInputs({
-      ...inputs,
-      id: logUser?.id,
-      username: logUser?.username,
-      email: logUser?.email,
-      avatarImage: logUser?.avatarImage,
-    });
-    setSelectedAvatar(logUser?.avatarImage);
+    const getUsers = async () => {
+      try {
+        const response = await axios(`http://localhost:3001/user/${logUser?.id}`);
+        if(response){
+          setInputs({
+            ...inputs,
+            id: response.data.id,
+            username: response.data.username,
+            email: response.data.email,
+            avatarImage: response.data.avatarImage,
+          });
+          setSelectedAvatar(response.data.avatarImage);
+        } else {
+          console.error("Ha ocurrido un error al obtener al usuario.")
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    };
+    getUsers();
   }, [logUser]);
+
 
   const handleInputs = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -63,7 +78,10 @@ function UserProfile() {
     if (inputs.email) {
       inputs.email.trim();
     }
-
+    if (inputs.avatarImage === null) {
+      inputs.avatarImage = "";
+    }
+    
     if (logUser.id !== 0) {
       // Filtra las propiedades con cadenas no vacías
       inputs = Object.fromEntries(
@@ -135,7 +153,15 @@ function UserProfile() {
           } w-[100%] sm:w-[98%]`}
         >
           <div className=" h-[56px]">          
-            <Link to={`/home`}>
+            <Link to={ 
+              logUser?.tipo === "empleado" ? 
+              `/home`
+              :
+              logUser?.tipo === "admin" ?
+              `/dashboard`
+              :
+              `/main`
+            }>
               <Button
                 icon="hidden pi pi-angle-double-left md:flex "
                 label="Atrás"
@@ -261,7 +287,7 @@ function UserProfile() {
                     onChange={(e) => handleInputs(e)}
                   />
                 </div>
-                {logUser?.tipo === "admin" ? (
+                {logUser?.tipo === "admin" || logUser?.tipo === "superadmin" ? (
                   <div className=" flex flex-col gap-1">
                     <label className=" text-base sm:text-xl">Correo electrónico</label>
                     <InputText
