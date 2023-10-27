@@ -17,6 +17,18 @@ module.exports = (sequelize) => {
     description:{
       type: DataTypes.STRING,
     },
+        description:{
+      type: DataTypes.STRING,
+    },    description:{
+      type: DataTypes.STRING,
+    },
+        description:{
+      type: DataTypes.STRING,
+    },
+    design:{
+      type:DataTypes.STRING,
+      defaultValue: 'row'
+    },
     video: {
       type: DataTypes.TEXT,
       allowNull: false

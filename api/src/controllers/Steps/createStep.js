@@ -1,8 +1,8 @@
-const { Activity, Step } = require("../../db"); // Importa el modelo Activity
+const { Activity, Step } = require("../../db");
 const { catchedAsync } = require("../../utils");
 
 const createStep = async (req, res) => {
-  const { title, description, video, activityId, file } = req.body;
+  const { title, description, video, activityId, file, design } = req.body; 
   try {
     const activitySteps = await Step.findAll({ where: { activityId } });
     const stepsOrder = [...activitySteps].sort((a, b) => b.number - a.number);
@@ -20,15 +20,15 @@ const createStep = async (req, res) => {
       video,
       file,
       activityId,
+      design, 
     });
 
-    // Ahora actualiza el campo numberSteps en la actividad correspondiente
     const activity = await Activity.findByPk(activityId);
     if (activity) {
-      activity.numberSteps += 1; // Aumenta el número de pasos en la actividad
-      await activity.save(); // Guarda los cambios en la actividad
+      activity.numberSteps += 1; 
+      await activity.save(); 
     }
-    console.log(newStep)
+
     res.status(200).json(newStep);
   } catch (error) {
     res.status(404).send(error.message);

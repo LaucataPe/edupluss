@@ -1,8 +1,8 @@
-const { Step } = require('../../db');
-const { catchedAsync } = require('../../utils');
+const { Step } = require("../../db");
+const { catchedAsync } = require("../../utils");
 
 const updateStep = async (req, res) => {
-  const { id, title, description, video, file } = req.body;
+  const { id, title, description, video, file, design } = req.body; 
   try {
     const getStep = await Step.findByPk(id);
 
@@ -10,17 +10,19 @@ const updateStep = async (req, res) => {
     if (video.length === 0 || !video) currentVideo = getStep.video;
 
     if (getStep) {
-      const updateStep = await getStep.update(
-        { title, description, video: currentVideo, file },
-        {
-          where: {
-            id,
-          },
-        }
-      );
-      res.status(200).json(updateStep);
+      const updateData = {
+        title,
+        description,
+        video: currentVideo,
+        file,
+        design, 
+      };
+
+      const updatedStep = await getStep.update(updateData);
+
+      res.status(200).json(updatedStep);
     } else {
-      throw new Error('Este paso no fue encontrado');
+      throw new Error("Este paso no fue encontrado");
     }
   } catch (error) {
     res.status(404).send(error.message);

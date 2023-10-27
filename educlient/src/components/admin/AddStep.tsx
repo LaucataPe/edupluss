@@ -16,6 +16,9 @@ import { Button } from "primereact/button";
 import { StepErrors, validate } from "../../utils/validateSteps";
 import { uploadFile } from "../../firebase/config";
 
+import col from "../../assets/col.png";
+import row from "../../assets/row.png";
+
 function AddStep() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -31,6 +34,7 @@ function AddStep() {
     title: "",
     description: "",
     video: "",
+    design: "",
     file: "",
     activityId: Number(id),
   });
@@ -134,20 +138,6 @@ function AddStep() {
     setStep({ ...step, file: "" });
     setErrors(validate({ ...step }));
   };
-  /*const setFileToBase = (file: Blob) =>{
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () =>{
-          setVideoFile(reader.result);
-          console.log(reader.result);
-          
-          setErrors(validate({
-                ...step,
-                video: reader.result,
-          }))
-      }
-    }*/
-
   const handleVideoUpload = async (file: File) => {
     try {
       const formData = new FormData();
@@ -204,6 +194,7 @@ function AddStep() {
         setStep({
           number: stepNumber,
           title: "",
+          design: "",
           description: "",
           video: "",
           activityId: Number(id),
@@ -258,6 +249,7 @@ function AddStep() {
           number: stepNumber,
           title: "",
           description: "",
+          design: "",
           video: "",
           activityId: Number(id),
         });
@@ -272,7 +264,7 @@ function AddStep() {
       setIsLoading(false);
     }
   };
-
+  console.log(step);
   return (
     <>
       <Link to={`/actvitySteps/${id}`}>
@@ -395,7 +387,39 @@ function AddStep() {
                 ""
               )}
             </div>
-
+            <p>Seleccionar diseño:</p>
+            <div className="flex">
+              <div>
+                <label className="flex justify-content-center">
+                  <input
+                    type="radio"
+                    name="design"
+                    value="col"
+                    checked={step.design === "col"}
+                    onChange={(e) =>
+                      setStep({ ...step, design: e.target.value })
+                    }
+                  />
+                  Columna
+                </label>
+                <img src={col} />
+              </div>
+              <div>
+                <label className="flex justify-content-center">
+                  <input
+                    type="radio"
+                    name="design"
+                    value="row"
+                    checked={step.design === "row"}
+                    onChange={(e) =>
+                      setStep({ ...step, design: e.target.value })
+                    }
+                  />
+                  Fila
+                </label>
+                <img src={row} />
+              </div>
+            </div>
             <InputText
               name="file"
               type="file"

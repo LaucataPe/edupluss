@@ -22,7 +22,7 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
           )
         : null;
     }
-    console.log(activityId, activeIndex, step)
+    console.log(activityId, activeIndex, step);
   }, [activeIndex]);
 
   const getYouTubeEmbedLink = (videoLink: string) => {
@@ -125,11 +125,26 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
     };
   }, []);
 
+  console.log(step);
+
   return (
     <>
       {step ? (
-        <div key={step?.number} className="flex my-[5rem] w-[100%]">
-          <div className="w-6 mx-5">
+        <div
+          key={step?.number}
+          className={`flex ${
+            step?.design === "col"
+              ? "flex-col justify-content-center align-items-center"
+              : ""
+          }  my-[5rem] w-[100%]`}
+        >
+          <div
+            className={`flex-wrap ${
+              step?.design === "col"
+                ? "flex-col justify-content-center align-items-center "
+                : ""
+            } justify-center my-4 w-6 mx-5 break-words`}
+          >
             <h1 className="text-bold">{step?.title}</h1>
             <p>{step?.description}</p>
             {step.file ? (
