@@ -28,7 +28,7 @@ module.exports = (database) => {
     },
     active: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      defaultValue: true,
     },
     tipo: {
       type: DataTypes.ENUM('superadmin', 'admin', 'empleado'),
