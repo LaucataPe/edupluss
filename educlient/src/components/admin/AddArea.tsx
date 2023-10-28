@@ -48,7 +48,7 @@ function AddArea() {
           toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Área creada exitosamente', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
           dispatch(fetchCompanyAreas(currentEmpresa.id))
-          navigate('/admin')
+          navigate('/areas')
         }
         setArea({
           name: '',
@@ -67,7 +67,7 @@ function AddArea() {
           toast.current?.show({ severity: 'success', summary: 'Éxito', detail: 'Área editada', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
           dispatch(fetchCompanyAreas(currentEmpresa.id))
-          navigate('/admin')
+          navigate('/areas')
         }
         setArea({
           name: '',

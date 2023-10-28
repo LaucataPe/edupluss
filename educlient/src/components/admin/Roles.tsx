@@ -66,7 +66,7 @@ function Roles() {
       let response = await axios.delete(`http://localhost:3001/role/${roleId}`);
       let data = response.data;
       if (data) {
-        navigate("/admin");
+        navigate(`/areas/${currentArea.id !== 0 ? currentArea.id : ''}`);
       }
       setDisplayConfirmation(false);
     } catch (error: any) {

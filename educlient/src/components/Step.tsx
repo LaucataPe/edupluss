@@ -125,8 +125,6 @@ function CurrentStep({ step, activityId, activeIndex }: props) {
     };
   }, []);
 
-  console.log(step);
-
   return (
     <>
       {step ? (

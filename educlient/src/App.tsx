@@ -81,16 +81,9 @@ function App() {
   };
 
   useEffect(() => {
-    // if(pathname !== '/' && !session){
-    // 	navigate('/login')
-    // }
-
     if (pathname !== "/" && pathname !== "/login" && !session) {
       navigate("/");
     }
-    // if(pathname === '/login' && session){
-    // 	navigate('/home')
-    // }
     if (pathname === "/login" && tokenValid) {
       navigate("/home");
     }
@@ -107,11 +100,11 @@ function App() {
       axios
         .get(`http://localhost:3001/auth/token`, { headers })
         .then((response) => {
-          if (response) {
-            if (response.data.user.tipo === "superadmin") {
+          if (response.data.data) {            
+            if (response.data.data.user.tipo === "superadmin") {
               dispatch(setLogUser(response.data.user));
               setTokenValid(true);
-            } else {
+            } else {           
               dispatch(setLogUser(response.data.data.user));
               dispatch(setEmpresa(response.data.findCompany));
               setTokenValid(true);
