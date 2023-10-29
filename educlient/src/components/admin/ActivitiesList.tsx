@@ -86,7 +86,7 @@ const ActivitiesList = ({ act, enableDrag }) => {
         <div className="flex flex-column md:flex-row align-items-center w-full">
           <div className="flex-1 flex flex-row md:text-left items-center gap-2">
             <div className="w-[48px] h-[48px] rounded-full bg-blue-500 text-white relative flex items-center justify-center">
-              <div>{act.orderId + 1}</div>
+              <div>{act.orderId}</div>
             </div>
             <div className="font-bold text-2xl">{act.title}</div>
           </div>
