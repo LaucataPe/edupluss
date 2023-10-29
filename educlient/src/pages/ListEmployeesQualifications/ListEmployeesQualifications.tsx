@@ -148,6 +148,7 @@ function ListEmployeesQualifications() {
             `http://localhost:3001/test/${logUser.id}/${testGrade.idTestGrade}`
           );
           if (response.data) {
+            setIsUpdated(!isUpdated);
             toast.current?.show({
               severity: "success",
               summary: "Éxito",
