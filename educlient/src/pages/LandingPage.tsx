@@ -303,7 +303,7 @@ const LandingPage: Page = () => {
                 <Button
                   label="Ingresar"
                   rounded
-                  className="border-none ml-5 font-light  line-height-2 bg-blue-500 hover:bg-blue-700  text-white"
+                  className="border-none ml-5 font-light  line-height-2 bg-blue-500 hover:bg-blue-700  text-white cursor-pointer transform transition-transform duration-400 hover:scale-95"
                 ></Button>
               </Link>
             </div>
