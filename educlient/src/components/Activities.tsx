@@ -18,7 +18,6 @@ const Activities = () => {
 
   const [numberStepsByRole, setNumberStepsByRole] = useState<number>(0);
   const [value, setValue] = useState<number>(0);
-
   const [dataViewValue, setDataViewValue] = useState<Activity[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [filteredValue, setFilteredValue] = useState<Activity[] | null>(null);
@@ -575,9 +574,13 @@ const Activities = () => {
               <i className="pi pi-book text-4xl mx-2" />
               Tus actividades:
             </h3>
+            {
+            value === 0 || isNaN(value) ?
+            null:
             <div className=" w-[500px] pb-3">
               <ProgressBar value={value}></ProgressBar>
             </div>
+          }
           </div>
           <DataView
             value={
