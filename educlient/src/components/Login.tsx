@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setLogUser } from "../redux/features/userSlice";
 import { setEmpresa } from "../redux/features/activitiesSlice";
-
+import rightBackground from "../assets/rightBackground.png";
 //import logo from '../assets/logo.png'
 import edupluss from "../assets/edupluss.png";
 
@@ -67,14 +67,48 @@ function Login() {
 
   return (
     <>
-      <div className="flex flex-column align-items-center justify-content-center">
+      <div className="flex align-items-center xl:justify-content-start justify-content-center  bg-[#FAFAFA]">
         <div
-          className="w-[40rem] my-20 surface-card py-3 px-2 sm:px-8"
+          className="flex flex-col w-[40rem] my-4 xl:my-[100px] p-4 xl:py-8 xl:px-8 sm:px-8 xl:bg-[#FAFAFA] bg-[#ffffff]"
           style={{ borderRadius: "53px" }}
         >
-          <div className="w-[100%] flex items-center justify-center">
-            <img src={edupluss} alt="Logo Edupluss" className="h-[200px]" />
+          <div className="hidden xl:block py-0">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 150 120"
+              className="absolute left-[-70px] top-[-30px] w-80 h-48"
+              transform="rotate(2)"
+            >
+              <rect
+                x="-40"
+                y="-40"
+                width="180"
+                height="120"
+                rx="80"
+                ry="75"
+                fill="#007bff"
+              />
+            </svg>
+
+            <img
+              src={edupluss}
+              alt="Logo Edupluss"
+              className="h-[80px] absolute z-10 top-0 left-10"
+            />
           </div>
+          <div className="py-4 z-40">
+            <i
+              className="pi pi-arrow-left text-black text-4xl cursor-pointer transform transition-transform duration-400 hover:scale-75"
+              onClick={() => {
+                window.location.href = "/home";
+              }}
+            />
+          </div>
+          <img
+            src={edupluss}
+            alt="Logo Edupluss"
+            className="h-[120px] mx-auto my-10 z-10 top-0 left-10 block xl:hidden"
+          />
           <h3>Inicia Sesión</h3>
           <div>
             <label className="block text-900 text-xl font-medium mb-2">
@@ -108,7 +142,7 @@ function Login() {
             <p className="p-error font-bold">{error}</p>
             <Button
               label="Ingresar"
-              className="w-full p-3 text-xl"
+              className="w-full p-3 text-xl shadow-2xl"
               onClick={handleSubmit}
               disabled={
                 inputs.email === "" || inputs.password === "" ? true : false
@@ -116,6 +150,18 @@ function Login() {
             ></Button>
           </div>
         </div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 70 100"
+          className="fixed right-0 top-0 z-0 max-h-screen hidden xl:block"
+        >
+          <circle cx="75" cy="35" r="70" fill="#007bff" />
+        </svg>
+        <img
+          src={rightBackground}
+          alt="rightBackground"
+          className=" h-1/2 fixed right-5 top-1/4  z-10 hidden xl:block"
+        />
       </div>
     </>
   );

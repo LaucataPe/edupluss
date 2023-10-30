@@ -25,14 +25,16 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const response = await axios(`http://localhost:3001/user/${logUser?.id}`);
-        if(response){
+        const response = await axios(
+          `http://localhost:3001/user/${logUser?.id}`
+        );
+        if (response) {
           setCurrentUserAvatar(response.data.avatarImage);
         } else {
-          console.error("Ha ocurrido un error al obtener al usuario.")
+          console.error("Ha ocurrido un error al obtener al usuario.");
         }
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     };
     if (logUser?.id !== 0) {
@@ -77,7 +79,7 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
     setActive(!active);
     dispatch(handleSideBar(!enableSideBar));
   };
-  
+
   return (
     <>
       <nav className="dark:bg-[whitesmoke] bg-[#040d19] fixed py-3 top-0 px-3 w-full h-16  flex  justify-between items-center z-10">
@@ -98,7 +100,11 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
               }
               :
               profile
-              } ${logUser.tipo === "admin" || logUser.tipo === "superadmin" ? "block" : "hidden"}`}
+              } ${
+                logUser.tipo === "admin" || logUser.tipo === "superadmin"
+                  ? "block"
+                  : "hidden"
+              }`}
             >
               <span className="rounded-md w-7 bg-[#3b82f6] absolute h-1 top-3.5 left-3.5 transition-transform duration-500"></span>
               <span className="rounded-md w-4 bg-[#3b82f6] absolute h-1 left-3.5  top-[24px] transition-transform duration-500"></span>
@@ -106,27 +112,28 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
             </button>
           </div>
 
-          {
-            logUser?.tipo === "admin" || logUser?.tipo === "empleado" ?
-            <h2 className="font-normal m-0">
-              {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
-            </h2>
-            :
-            null
-          }
-
+          <h2 className="font-normal m-0">
+            {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
+          </h2>
+          {logUser.tipo === "empleado" ? (
+            <div className="flex flex-row justify-content-center align-items-center gap-2">
+              <span>
+                {isDarkMode ? (
+                  <i className="pi pi-sun text-4xl" />
+                ) : (
+                  <i className="pi pi-moon text-3xl" />
+                )}
+              </span>
+              <InputSwitch checked={isDarkMode} onChange={toggleDarkMode} />
+            </div>
+          ) : null}
           <Avatar
             icon="pi pi-user"
             size="large"
             shape="circle"
             onClick={toggleMenu}
             className="animation"
-            image={
-              currentUserAvatar?.length > 0 ?
-              currentUserAvatar
-              :
-              profile
-            }
+            image={currentUserAvatar?.length > 0 ? currentUserAvatar : profile}
           ></Avatar>
 
           <Menu ref={menu} model={overlayMenuItems} popup />
