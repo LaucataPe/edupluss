@@ -39,9 +39,6 @@ const {
   getAllTestGradesByUser,
 } = require("../controllers/TestGrade/getAllTestGradesByUser");
 const {
-  getGradesOfAllEmployeesByActivity,
-} = require("../controllers/TestGrade/getGradesOfAllEmployeesByActivity");
-const {
   getGradePercentageByCompany,
 } = require("../controllers/TestGrade/getGradePercentageByCompany");
 
@@ -81,8 +78,8 @@ router.get("/user/areas/:id", getUserAreas);
 router.get("/userStep", getUserSteps);
 
 router.get("/review", getReview);
-router.get("/reviews/activity", getReviewsByActivity); //!NO SE ESTA USANDO
-router.get("/reviews/user", getReviewsByUser); //!NO SE ESTA USANDO
+router.get("/reviews/activity/:userId/:activityId", getReviewsByActivity); //!NO SE ESTA USANDO
+router.get("/reviews/user/:adminId/:employeeId", getReviewsByUser); //!NO SE ESTA USANDO
 
 router.get("/admin/activities/:id", getActivitiesByAdminUser);
 router.get(
@@ -91,10 +88,6 @@ router.get(
 );
 router.get("/test", getTestGrade);
 router.get("/tests/:employeeId", getAllTestGradesByUser);
-router.get(
-  "/tests/activity/:adminId/:activityId",
-  getGradesOfAllEmployeesByActivity
-); //!NO SE ESTA USANDO (retorna un porcentaje) ELIMINAR
 router.get("/tests/company/:id", getGradePercentageByCompany); //!NO SE ESTA USANDO (retorna un porcentaje)
 
 //Session
@@ -170,7 +163,7 @@ router.delete("/activity/:id", deleteActivity);
 router.delete("/role/:id", deleteRole);
 router.delete("/step/:id", deleteStep);
 router.delete("/user/:companyUsersId", deleteUser); //!verifyRole("admin") Verificar para el caso de admin y superadmin, 
-router.delete("/reviews", deleteReview); //!NO SE ESTA USANDO
+router.delete("/reviews/:adminId/:reviewId", deleteReview); //!NO SE ESTA USANDO
 router.delete("/test/:userId/:id", deleteTestGrade);
 
 module.exports = { router };

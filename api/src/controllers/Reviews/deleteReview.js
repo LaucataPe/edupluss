@@ -3,7 +3,7 @@ const { catchedAsync } = require('../../utils');
 const { ClientError } = require("../../utils/index.js");
 
 const deleteReview = async (req, res) => {
-  const { adminId, reviewId } = req.body;
+  const { adminId, reviewId } = req.params;
 
   try {
     const adminUser = await User.findByPk(adminId);

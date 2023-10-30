@@ -3,7 +3,7 @@ const { catchedAsync } = require('../../utils');
 const { ClientError } = require("../../utils/index.js");
 
 const getReviewsByUser = async (req, res) => {
-  const { adminId, userId } = req.body;
+  const { adminId, employeeId } = req.params;
 
   try {
     const adminUser = await User.findByPk(adminId);
@@ -19,7 +19,7 @@ const getReviewsByUser = async (req, res) => {
           400
         );
     } else {
-        const employeeUser = await User.findByPk(userId);
+        const employeeUser = await User.findByPk(employeeId);
 
         if(!employeeUser) throw new Error("El empleado no existe.")
 
@@ -31,7 +31,7 @@ const getReviewsByUser = async (req, res) => {
         } else {
             const reviewsOfUser = await Review.findAll({ 
                 where: {
-                    userId: userId
+                    userId: employeeId
                 } 
             });
             if(reviewsOfUser.length === 0) {

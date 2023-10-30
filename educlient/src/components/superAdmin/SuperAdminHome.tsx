@@ -14,7 +14,6 @@ const SuperAdminHome = () => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const [isActivated, setIsActivated] = useState<boolean>(false);
-  const [company, setCompany] = useState<Empresa | object>({});
   const [currentName, setCurrentName] = useState<string>("");
   const [currentNIT, setCurrentNIT] = useState<number>(0);
   const [switchActiveValue, setSwitchActiveValue] = useState<boolean>(false);
@@ -39,6 +38,15 @@ const SuperAdminHome = () => {
     };
     getCompanies();
   }, [isActivated]);
+
+  useEffect(()=>{
+    setCurrentRow({
+      id: 0,
+      name: "",
+      nit: 0,
+      active: false,
+    })
+  },[showCreate])
 
   const openCreateCompany = () => {
     setShowCreate(true);
@@ -99,8 +107,8 @@ const SuperAdminHome = () => {
 
   const handleChangeEditCompany = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCompany({
-      ...company,
+    setCurrentRow({
+      ...currentRow,
       [name]: value,
     });
   };
@@ -108,19 +116,26 @@ const SuperAdminHome = () => {
   const handleSubmitEdit = async () => {
     try {
       const body = {
-        id: currentRow.id,
-        ...company,
+        ...currentRow,
         active: switchActiveValue,
       };
+      //@ts-ignore
+      body.nit = parseInt(body.nit)
+      
       const response = await axios.patch("http://localhost:3001/empresa/update", body);
       if(response){
         setIsActivated(!isActivated);
-        setCompany({});
+        setCurrentRow({
+          id: 0,
+          name: "",
+          nit: 0,
+          active: false,
+        })
         setShowEdit(false);
         toast.current?.show({
           severity: "success",
           summary: "Éxito",
-          detail: "Se ha editado la informacion de la empresa",
+          detail: "Se ha editado la información de la empresa.",
           life: 3000,
         });
       }else {
@@ -132,7 +147,7 @@ const SuperAdminHome = () => {
       toast.current?.show({
         severity: "error",
         summary: "Ups, algo salio mal!",
-        detail: "no se puedo crear la empresa",
+        detail: "No se pudo actualizar la empresa.",
         life: 3000,
       });
     }
@@ -140,15 +155,20 @@ const SuperAdminHome = () => {
 
   const handleSubmitCreate = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/empresa", company);
+      const body = {
+        ...currentRow,
+      };
+      //@ts-ignore
+      body.nit = parseInt(body.nit)
+
+      const response = await axios.post("http://localhost:3001/empresa", body);
       if (response) {
         setIsActivated(!isActivated);
         setShowCreate(false);
-        setCompany({});
         toast.current?.show({
           severity: "success",
           summary: "Éxito",
-          detail: "Se ha creado la empresa",
+          detail: "Se ha creado la empresa.",
           life: 3000,
         });
       }else {
@@ -160,7 +180,7 @@ const SuperAdminHome = () => {
       toast.current?.show({
         severity: "error",
         summary: "Ups, algo salio mal!",
-        detail: "no se puedo crear la empresa",
+        detail: "No se puedo crear la empresa.",
         life: 3000,
       });
     }
@@ -256,7 +276,8 @@ const SuperAdminHome = () => {
             id="nombre"
             name="name"
             onChange={handleChangeEditCompany}
-            placeholder={`Actual: ${currentName}`}
+            value={currentRow.name}
+            placeholder={`Nombre actual: ${currentName}`}
             required
           />
         </div>
@@ -268,7 +289,9 @@ const SuperAdminHome = () => {
             id="NIT"
             name="nit"
             onChange={handleChangeEditCompany}
-            placeholder={`Actual: ${currentNIT}`}
+            placeholder={`NIT actual: ${currentNIT}`}
+            //@ts-ignore
+            value={currentRow.nit}
             required
           />
         </div>

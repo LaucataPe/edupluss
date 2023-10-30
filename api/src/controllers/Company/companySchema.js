@@ -1,6 +1,9 @@
 const z = require("zod");
 
 const companySchema = z.object({
+  id: z.number({
+    required_error: "El id de la empresa es un valor requerido"
+  }),
   name: z.string({
     invalid_type_error: "El nombre debe ser una cadena de carácteres.",
   }),
@@ -17,7 +20,7 @@ const validateCompany = (input) => {
 };
 
 const validateUpdateCompany = (input) => {
-  return companySchema.partial().safeParse(input);
+  return companySchema.safeParse(input);
 };
 
 module.exports = {

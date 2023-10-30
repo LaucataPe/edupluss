@@ -100,8 +100,8 @@ function App() {
       axios
         .get(`http://localhost:3001/auth/token`, { headers })
         .then((response) => {
-          if (response.data.data) {            
-            if (response.data.data.user.tipo === "superadmin") {
+          if (response.data) {        
+            if (response.data.user?.tipo === "superadmin") {
               dispatch(setLogUser(response.data.user));
               setTokenValid(true);
             } else {           

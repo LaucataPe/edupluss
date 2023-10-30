@@ -36,6 +36,7 @@ function AddActivity() {
     roleId: currentRole.id ?? 0,
     orderId: Number(orderId),
   });
+  
   const [error, setError] = useState();
   const toast = useRef<Toast>(null);
 
@@ -66,6 +67,7 @@ function AddActivity() {
 
   const handleSubmit = async () => {
     if (activity.roleId !== 0) {
+      activity.orderId = activity.orderId + 1;
       try {
         const response = await axios.post(
           "http://localhost:3001/activity",
