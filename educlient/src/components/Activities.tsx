@@ -169,17 +169,17 @@ const Activities = () => {
     };
     fetchData();
   }, []);
-  useEffect(() => {
+   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3001/tests/${currentUser.id}`
-        );
-        if (response) {
-          setTestGrades(response.data);
-        } else {
-          console.error("No hay notas cargadas aún.");
-        }
+        setTimeout(async () => {
+          const response = await axios.get(`http://localhost:3001/tests/${currentUser.id}`);
+          if (response) {
+            setTestGrades(response.data);
+          } else {
+            console.error("No hay notas cargadas aún.");
+          }
+        }, 1000);
       } catch (error) {
         console.error("No hay notas cargadas aún.", error);
       }
