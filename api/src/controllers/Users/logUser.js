@@ -29,7 +29,7 @@ const logUser = async (req, res) => {
 
     const findCompany = await Company.findByPk(logUser.companyId);
 
-    if (!findCompany)
+    if (!findCompany && (logUser.tipo === "admin" || logUser.tipo === "empleado"))
       throw new Error('La empresa asociada a este usuario no se encontró');
 
     const token = await generateToken(logUser);

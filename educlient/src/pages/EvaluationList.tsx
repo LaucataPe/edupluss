@@ -84,6 +84,7 @@ function EvaluationList() {
               </p>
               <DataScroller
                 value={evaluationsList}
+                emptyMessage="No se encontraron evaluaciones."
                 itemTemplate={itemTemplate}
                 className="h-[100%] w-[100%]"
                 rows={1}

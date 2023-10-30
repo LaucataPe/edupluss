@@ -40,10 +40,10 @@ const Activities = () => {
   );
 
   const sortOptions = [
-    { label: "All", value: "all", color: "#4F46E5" },
-    { label: "Finished", value: "finished", color: "#69de92" },
-    { label: "Started", value: "started", color: "#eec137" },
-    { label: "Not started", value: "notStarted", color: " #85b2f9" },
+    { label: "Todos", value: "all", color: "#4F46E5" },
+    { label: "Completados", value: "finished", color: "#69de92" },
+    { label: "Empezados", value: "started", color: "#eec137" },
+    { label: "Sin empezar", value: "notStarted", color: " #85b2f9" },
   ];
 
   useEffect(() => {
@@ -181,7 +181,7 @@ const Activities = () => {
           console.error("No hay notas cargadas aún.");
         }
       } catch (error) {
-        console.error("Error al obtener datos de 'testGrades':", error);
+        console.error("No hay notas cargadas aún.", error);
       }
     };
     if (currentUser.id !== 0) {
@@ -197,7 +197,7 @@ const Activities = () => {
         );
         setNumberStepsByRole(response.data);
       } catch (error) {
-        console.error("Error al obtener datos de 'testGrades':", error);
+        console.error("Error al obtener la cantidad de pasos:", error);
       }
     };
     if (currentUser.id !== 0) {
@@ -388,9 +388,16 @@ const Activities = () => {
               <h4 className="m-0 flex align-items-center">
                 {testGrades.length > 0 && (
                   <span>
-                    {testGrades?.map((grade) => {
+                    {testGrades.map((grade) => {
                       if (grade.Activity.id === filteredValue.id) {
-                        return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
+                        if (
+                          grade.gradeValue !== null &&
+                          grade.maximunGradeValue !== null
+                        ) {
+                          return `Calificación: ${grade.gradeValue} / ${grade.maximunGradeValue}`;
+                        } else {
+                          return "La calificación aún no está disponible.";
+                        }
                       }
                       return null;
                     })}
@@ -497,6 +504,7 @@ const Activities = () => {
 
     return null;
   };
+
   return (
     <div className="grid list-demo">
       <div className="col-12">
@@ -582,6 +590,7 @@ const Activities = () => {
             }
             layout={layout}
             paginator
+            emptyMessage="No se han encontrado actividades para su cargo."
             rows={9}
             sortOrder={sortOrder}
             sortField={sortField}

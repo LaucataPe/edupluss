@@ -664,7 +664,7 @@ function Dashboard() {
               <div className="grid justify-center">
                 <div className="col-18 lg:col-6 xl:col-7 my-2">
                   <div className="card mb-0 p-1">
-                    <Link to="/admin">
+                    <Link to="/areas">
                       <div style={{ width: "100%", height: "400px" }}>
                         <Bar options={options2} data={data2} />
                       </div>

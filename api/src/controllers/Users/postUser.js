@@ -3,7 +3,7 @@ const { catchedAsync } = require('../../utils');
 const { encrypt } = require('../../utils/bcryptHandler');
 
 const createUser = async (req, res) => {
-  const { username, email, password, companyId, tipo, roleId } = req.body;
+  const { active, username, email, password, companyId, tipo, roleId } = req.body;
 
   try {
     const userFound = await User.findOne({ where: { email } });
@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
       email,
       password: passwordHash,
       companyId,
-      active: true,
+      active,
       roleId,
       tipo,
     });

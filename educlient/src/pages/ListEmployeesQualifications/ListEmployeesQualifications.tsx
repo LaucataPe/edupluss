@@ -148,6 +148,7 @@ function ListEmployeesQualifications() {
             `http://localhost:3001/test/${logUser.id}/${testGrade.idTestGrade}`
           );
           if (response.data) {
+            setIsUpdated(!isUpdated);
             toast.current?.show({
               severity: "success",
               summary: "Éxito",
@@ -650,8 +651,7 @@ function ListEmployeesQualifications() {
                   <ul className="m-0 gap-4 text-lg text-slate-950">
                     <li className=" pb-4 sm:hidden text-center">
                       <b className=" text-red-700 ">
-                        Para una mejor experiencia le recomendamos utilizar un
-                        dispositivo de mayor tamaño.
+                      Le recomendamos girar la pantalla horizontalmente para ver todos los campos de la tabla.
                       </b>
                     </li>
                     <li className=" py-1">

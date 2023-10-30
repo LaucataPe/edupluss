@@ -55,9 +55,8 @@ const Crud = () => {
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState("");
   const [activePassword, setActivePassword] = useState<boolean>(false);
-
-  const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<Demo.User[]>>(null);
+  const toast = useRef<Toast>(null);
 
   useEffect(() => {
     dispatch(getUsersByCompany(currentEmpresa));
@@ -112,6 +111,7 @@ const Crud = () => {
             user
           );
           if (data) {
+            //@ts-ignore
             dispatch(getUsersByCompany(user.companyId));
             toast.current?.show({
               severity: "success",
@@ -127,6 +127,7 @@ const Crud = () => {
         try {
           const { data } = await axios.post("http://localhost:3001/user", user);
           if (data) {
+            //@ts-ignore
             dispatch(getUsersByCompany(user.companyId));
             toast.current?.show({
               severity: "success",

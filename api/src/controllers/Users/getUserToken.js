@@ -15,6 +15,9 @@ const getByToken = async (req, res) => {
           findCompany,
         };
         return res.status(200).send(info);
+      } else {
+        //!Es un superadmin
+        return res.status(200).send(data);
       }
     } else {
       return res.status(200).send(data);

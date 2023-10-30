@@ -24,12 +24,13 @@ const getActivitiesByAdminUser = async (req, res) => {
             where: { companyId: companyId },
         });
     
-        let activities;
+        let activities = [];
         for (const role of roles) {
-            activities = await Activity.findAll({
+            const roleActivities = await Activity.findAll({
                 where: { roleId: role.id },
                 attributes: ['id', 'title', 'hasTest', "active"],
             });
+            activities = activities.concat(roleActivities);
         }
         let validActivities = activities.filter((activity)=>
           activity.active && activity.hasTest

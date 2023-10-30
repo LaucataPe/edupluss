@@ -81,21 +81,17 @@ function App() {
   };
 
   useEffect(() => {
-    // if(pathname !== '/' && !session){
-    // 	navigate('/login')
-    // }
-
     if (pathname !== "/" && pathname !== "/login" && !session) {
       navigate("/");
     }
-    // if(pathname === '/login' && session){
-    // 	navigate('/home')
-    // }
     if (pathname === "/login" && tokenValid) {
       navigate("/home");
     }
     if (pathname === "/home" && logUser.tipo === "admin") {
       navigate("/crud");
+    }
+    if (pathname === "/home" && logUser.tipo === "superadmin") {
+      navigate("/main");
     }
   }, [pathname]);
 
@@ -104,10 +100,15 @@ function App() {
       axios
         .get(`http://localhost:3001/auth/token`, { headers })
         .then((response) => {
-          if (response) {
-            dispatch(setLogUser(response.data.data.user));
-            dispatch(setEmpresa(response.data.findCompany));
-            setTokenValid(true);
+          if (response.data) {        
+            if (response.data.user?.tipo === "superadmin") {
+              dispatch(setLogUser(response.data.user));
+              setTokenValid(true);
+            } else {           
+              dispatch(setLogUser(response.data.data.user));
+              dispatch(setEmpresa(response.data.findCompany));
+              setTokenValid(true);
+            }  
           }
         })
 
@@ -134,7 +135,7 @@ function App() {
         <NavBar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}  />
       )}
       <div className="flex w-[100%]">
-        {pathAvailable && logUser.tipo === "admin" && (
+        {pathAvailable && (logUser?.tipo === "admin" || logUser?.tipo === "superadmin") && (
           <Sidebar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
         )}
 

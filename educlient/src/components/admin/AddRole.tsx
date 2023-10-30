@@ -138,7 +138,7 @@ function AddRole() {
       try {
         const response = await axios.post('http://localhost:3001/role', role)
         if(response){
-          toast.current?.show({ severity: 'success', summary: 'Eliminado!', detail: 'Cargo creado', life: 2000 });
+          toast.current?.show({ severity: 'success', summary: 'Éxito!', detail: 'Cargo creado', life: 2000 });
           await new Promise((resolve) => setTimeout(resolve, 1000));
           navigate(`/areas/${currentArea.id}`)
           setRole({
