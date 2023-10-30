@@ -89,7 +89,18 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
           <h2 className="font-normal m-0">
             {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
           </h2>
-
+          {logUser.tipo === "empleado" ? (
+            <div className="flex flex-row justify-content-center align-items-center gap-2">
+              <span>
+                {isDarkMode ? (
+                  <i className="pi pi-sun text-4xl" />
+                ) : (
+                  <i className="pi pi-moon text-3xl" />
+                )}
+              </span>
+              <InputSwitch checked={isDarkMode} onChange={toggleDarkMode} />
+            </div>
+          ) : null}
           <Avatar
             icon="pi pi-user"
             size="large"

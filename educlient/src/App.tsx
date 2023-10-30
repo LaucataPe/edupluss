@@ -130,7 +130,9 @@ function App() {
 
   return (
     <div className={isDarkMode ? "dark" : "light"}>
-      {pathAvailable && <NavBar />}
+      {pathAvailable && (
+        <NavBar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}  />
+      )}
       <div className="flex w-[100%]">
         {pathAvailable && logUser.tipo === "admin" && (
           <Sidebar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
