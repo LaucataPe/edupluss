@@ -113,7 +113,13 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
           </div>
 
           <h2 className="font-normal m-0">
-            {currentEmpresa ? currentEmpresa : "Selecciona la empresa"}
+            {logUser.tipo === "empleado" || logUser.tipo === "admin" ?
+            currentEmpresa ? 
+            currentEmpresa 
+            : 
+            "Selecciona la empresa" 
+            : 
+            null}
           </h2>
           {logUser.tipo === "empleado" ? (
             <div className="flex flex-row justify-content-center align-items-center gap-2">
