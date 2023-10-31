@@ -593,7 +593,7 @@ const Activities = () => {
             }
             layout={layout}
             paginator
-            emptyMessage="No se han encontrado actividades para su cargo."
+            emptyMessage="No se han encontrado actividades."
             rows={9}
             sortOrder={sortOrder}
             sortField={sortField}
