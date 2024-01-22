@@ -18,13 +18,11 @@ import { Link } from "react-router-dom";
 
 import { StyleClass } from "primereact/styleclass";
 import { Button } from "primereact/button";
-import { Ripple } from "primereact/ripple";
 import { NodeRef, Page } from "../utils/types/types";
 import { classNames } from "primereact/utils";
 import { Divider } from "primereact/divider";
 
 const LandingPage: Page = () => {
-  const [isHidden, setIsHidden] = useState(false);
   const menuRef = useRef<HTMLElement | null>(null);
 
   const [isAtTop, setIsAtTop] = useState(true);
@@ -45,9 +43,6 @@ const LandingPage: Page = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const toggleMenuItemClick = () => {
-    setIsHidden((prevState) => !prevState);
-  };
 
   const videoRef: any = useRef(null);
 
@@ -141,95 +136,76 @@ const LandingPage: Page = () => {
   };
   const pageFeatures = [
     {
-      title: "Enfoque Específico",
-      location: "Ubicación (si es aplicable)",
-      description: "Diseñado para la capacitación de personal",
+      title: "Rutas de Aprendizaje",
+      description: "Diseña rutas de aprendizaje específicas para cada cargo en tu empresa. Desde nuevos reclutas hasta roles de liderazgo",
       icon: "pi pi-flag flex justify-content-center	align-items-center",
-      background:
-        "linear-gradient(90deg, rgba(253, 228, 165, 1), rgba(187, 199, 205, 1)), linear-gradient(180deg, rgba(253, 228, 165, 1), rgba(187, 199, 205, 1))",
-      iconColor: "black",
+      background:"#3499FF",
+      iconColor: "white",
     },
     {
-      title: "Procesos",
-      location: "Ubicación (si es aplicable)",
-      description: "Personaliza los procesos de tu empresa",
-      icon: "pi pi-list flex justify-content-center	align-items-center",
-      background:
-        "linear-gradient(90deg, rgba(145, 226, 237, 1), rgba(251, 199, 145, 1)), linear-gradient(180deg, rgba(253, 228, 165, 1), rgba(172, 180, 223, 1))",
-      iconColor: "#036d16",
-    },
-    {
-      title: "Cargos",
-      location: "Ubicación (si es aplicable)",
-      description: "Establece los cargos específicos de tu empresa",
-      iconColor: "#6d3f03",
+      title: "Retención de Talento:",
+      description: "Una formación personalizada y continua es clave para retener a los mejores talentos.",
       icon: "pi pi-users flex justify-content-center	align-items-center",
-      background:
-        "linear-gradient(90deg, rgba(145, 226, 237, 1), rgba(172, 180, 223, 1)), linear-gradient(180deg, rgba(172, 180, 223, 1), rgba(246, 158, 188, 1))",
+      background:"#3499FF",
+      iconColor: "white",
     },
     {
-      title: "Gestión de usuarios",
-      location: "Ubicación (si es aplicable)",
-      description: "Ten control sobre tus empleados en la plataforma",
-      icon: "pi pi-id-card flex justify-content-center	align-items-center",
-      background:
-        "linear-gradient(90deg, rgba(187, 199, 205, 1), rgba(251, 199, 145, 1)), linear-gradient(180deg, rgba(253, 228, 165, 1), rgba(145, 210, 204, 1))",
-      iconColor: "#034a6d",
+      title: "Ahorra tiempo y Recursos",
+      description: "Optimiza tus procesos de formación, ahorra tiempo y recursos para enfocarte en lo que realmente importa: el crecimiento de tu equipo.",
+      icon: "pi pi-chart-line flex justify-content-center	align-items-center",
+      background:"#3499FF",
+      iconColor: "white",
     },
     {
-      title: "Interfaz Intuitiva",
-      location: "Ubicación (si es aplicable)",
-      description: "Será muy sencillo hacer uso de Edupluss",
-      icon: "pi pi-star flex justify-content-center	align-items-center",
-      background:
-        "linear-gradient(90deg, rgba(187, 199, 205, 1), rgba(246, 158, 188, 1)), linear-gradient(180deg, rgba(145, 226, 237, 1), rgba(160, 210, 250, 1))",
-      iconColor: "#8b9500",
+      title: "Accesibilidad",
+      description: "Conéctate al conocimiento en cualquier lugar y momento con tan solo tener conexión a internet.",
+      iconColor: "white",
+      icon: "pi pi-wifi flex justify-content-center	align-items-center",
+      background:"#3499FF",
     },
     {
-      title: "Dark Mode",
-      location: "Ubicación (si es aplicable)",
-      description: "Podrás hacer uso del modo oscuro",
-      icon: "pi pi-moon flex justify-content-center	align-items-center",
-      background:
-        "linear-gradient(90deg, rgba(251, 199, 145, 1), rgba(246, 158, 188, 1)), linear-gradient(180deg, rgba(172, 180, 223, 1), rgba(212, 162, 221, 1))",
-      iconColor: "#022b7e",
+      title: "Hazlo Sencillo",
+      description: "Publica tus programas de capacitación de manera sencilla y eficiente, manteniendo un control total sobre el progreso de tus empleados en tiempo real.",
+      icon: "pi pi-thumbs-up flex justify-content-center	align-items-center", 
+      background:"#3499FF",
+      iconColor: "white",
+    },
+    {
+      title: "Evaluación contínua",
+      description: "Evalúa el progreso con precisión. Nuestra herramienta proporciona insights valiosos para perfeccionar la calidad del aprendizaje de manera continua.",
+      icon: "pi pi-book flex justify-content-center	align-items-center",
+      background:"#3499FF",
+      iconColor: "white",
     },
     {
       title: "Youtube",
-      location: "Ubicación (si es aplicable)",
-      description: "Incluye videos de Youtube o sube los tuyos",
+      description: "Carga videos de YouTube en la plataforma. Enriquece el aprendizaje de tus empleados con contenido visual impactante.",
       icon: "pi pi-youtube flex justify-content-center	align-items-center",
-      background:
-        "linear-gradient(90deg, rgba(145, 210, 204, 1), rgba(160, 210, 250, 1)), linear-gradient(180deg, rgba(187, 199, 205, 1), rgba(145, 210, 204, 1))",
-      iconColor: "#c20202",
+      background:"#3499FF",
+      iconColor: "white",
     },
     {
       title: "Privacidad",
-      location: "Ubicación (si es aplicable)",
-      description: "Tu información será solo para ti",
+      description: "En nuestra plataforma, los videos que compartas serán privados, asegurando que la información estará resguarda de manera segura.",
       icon: "pi pi-lock flex justify-content-center	align-items-center",
-      background:
-        "linear-gradient(90deg, rgba(160, 210, 250, 1), rgba(212, 162, 221, 1)), linear-gradient(180deg, rgba(246, 158, 188, 1), rgba(212, 162, 221, 1))",
-      iconColor: "#7b7b4e",
+      background:"#3499FF",
+      iconColor: "white",
     },
   ];
 
   // Ahora cada elemento de pageFeatures tiene su fondo con opacidad 1.
 
   return (
-    <div className="surface-0 flex justify-content-center">
-      <div id="home" className="landing-wrapper overflow-hidden">
+    <div>
+      <div id="home">
         <header
           id="navbar"
-          className={`py-2  cursor-auto px-4 max-w-[1505px] mx-0 ${
+          className={`py-2  cursor-auto px-4 mx-0 ${
             isAtTop ? "bg-[#ffffff]" : "bg-[#ffffff]"
-          } hover:bg-[#ffffff] z-10 lg:px-8 flex items-center justify-between fixed lg:fixed transition-all duration-700 ease-in-out ${
-            isAtTop
-              ? "translate-y-0"
-              : "translate-y-[-95px] hover:translate-y-0"
+          } hover:bg-[#ffffff] z-10 lg:px-8 flex items-center justify-between fixed lg:fixed transition-all duration-700 ease-in-out translate-y-[-65px]
           } hover:shadow-xl hover:transition-shadow-duration-700-ease-in-out w-screen`}
         >
-          <img src={logo} alt="Sakai Logo" className="mr-0 lg:mr-2 h-[80px]" />
+          <img src={logo} alt="Edupluss Logo" className="mr-0 lg:mr-2 h-[80px]" />
           <StyleClass
             nodeRef={menuRef as NodeRef}
             selector="@next"
@@ -243,10 +219,7 @@ const LandingPage: Page = () => {
             ></i>
           </StyleClass>
           <div
-            className={classNames(
-              "surface-0 flex-grow-1 justify-end gap-2 hidden lg:flex absolute lg:static w-full px-6 lg:px-0 z-2 bg-[#ffffff]",
-              { hidden: isHidden }
-            )}
+            className={classNames("surface-0 flex-grow-1 justify-end gap-2 hidden lg:flex absolute lg:static w-full px-6 lg:px-0 z-2 bg-[#ffffff]")}
             style={{ top: "100%" }}
           >
             <ul className="list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row cursor-pointer">
@@ -265,7 +238,7 @@ const LandingPage: Page = () => {
                   onClick={() => handleScrollToSection("section2")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <motion.div whileTap={{ scale: 0.65 }}>Demo</motion.div>
+                  <motion.div whileTap={{ scale: 0.65 }}>Video</motion.div>
                 </Link>
               </li>
               <li>
@@ -274,7 +247,7 @@ const LandingPage: Page = () => {
                   onClick={() => handleScrollToSection("section3")}
                   className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3"
                 >
-                  <motion.div whileTap={{ scale: 0.65 }}>Pasos</motion.div>
+                  <motion.div whileTap={{ scale: 0.65 }}>Proceso</motion.div>
                 </Link>
               </li>
               <li>
@@ -403,27 +376,23 @@ const LandingPage: Page = () => {
             transition={{ duration: 1 }}
           >
             <div className="grid justify-content-center">
-              <div className="flex flex-column-reverse lg:flex-row col-12 text-center mt-8 mb-28 lg:max-w-7xl max-w-xl ">
+              <div className="flex flex-column-reverse lg:flex-row col-12 mt-8 mb-28 lg:max-w-7xl max-w-xl ">
                 <div
-                  className="flex bg-black border-2 border-blue-100 rounded-lg overflow-hidden shadow-2xl transform scale-100 xl:hover:scale-125 lg:hover:scale-110 transition-transform duration-500 ease-in-out"
+                  className="flex bg-black h-[300px] border-2 w-[100%] border-blue-100 rounded-lg overflow-hidden shadow-2xl transform scale-100 xl:hover:scale-125 lg:hover:scale-110 transition-transform duration-500 ease-in-out"
                   onClick={handleVideoClick}
                 >
-                  <video
-                    ref={videoRef}
-                    src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-                    autoPlay
-                    controls
-                  ></video>
+                  <iframe src="https://www.youtube.com/embed/hWKdQ51Q81k?si=nQuJ0SKeSiC-lVms" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  className="w-[100%]"></iframe>
                 </div>
 
                 <div className="mx-5 px-5 py-12 lg:py-0">
                   <h2 className="text-900 font-semibold mb-2">
-                    Desarrolla las habilidades y aptitudes de tus empleados
+                    Transforma el aprendizaje en el trabajo
                   </h2>
                   <span className="text-600 text-2xl">
-                    Capacita a tu equipo de trabajo creando rutas de aprendizaje
-                    para cada uno de ellos, llevando el control de su progreso y
-                    evaluando sus conocimientos
+                    Edupluss es más que un LMS. Es tu aliado estratégico en el 
+                    desarrollo profesional de tus empleados. Creamos una experiencia 
+                    de aprendizaje personalizada que se adapta a las necesidades específicas de tu empresa.
                   </span>
                 </div>
               </div>
@@ -439,26 +408,26 @@ const LandingPage: Page = () => {
             animate={planCards}
             transition={{ duration: 1 }}
           >
+            <h2 className="text-center m-0"><span className="text-blue-500 xs:text-2xl">Empodera</span> a tu equipo paso a paso</h2>
             <div className="grid justify-content-center lg:mx-8 ">
               <div className="flex flex-column lg:flex-row col-12 text-center mt-8 mb-28 lg:max-w-7xl max-w-md ">
-                <div className="shadow-2xl m-4 flex card-container ">
+                <div className="shadow-2xl m-4 flex card-container w-[33%]">
                   <div className="card p-5 flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
                     <h2 className="font-semibold flex ">
                       <img
                         src={planning1}
                         alt="Admin Image"
-                        className="w-120 md:w-120"
+                        className="w-100 md:w-120"
                       />
                     </h2>
                     <span className="text-xl flex-column">
                       <h3 className="font-bold">1. Planea</h3>
-                      Capacita a tu equipo de trabajo creando rutas de
-                      aprendizaje para cada uno de ellos, llevando el control de
-                      su progreso y evaluando sus conocimientos
+                      Diseña planes de aprendizaje para cada cargo, garantizando que cada 
+                      empleado obtenga la formación necesaria para alcanzar su máximo potencial.
                     </span>
                   </div>
                 </div>
-                <div className="shadow-2xl m-4 flex card-container">
+                <div className="shadow-2xl m-4 flex card-container w-[33%]">
                   <div className="card p-5 flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
                     <h2 className=" font-semibold flex ">
                       <img
@@ -469,15 +438,14 @@ const LandingPage: Page = () => {
                     </h2>
                     <span className="text-xl flex-column">
                       <h3 className="font-bold">2. Ejecuta</h3>
-                      Capacita a tu equipo de trabajo creando rutas de
-                      aprendizaje para cada uno de ellos, llevando el control de
-                      su progreso y evaluando sus conocimientos
+                        Publica programas de capacitación de forma sencilla, manteniendo 
+                        control total del progreso de tus empleados en tiempo real.
                     </span>
                   </div>
                 </div>
-                <div className="shadow-2xl m-4 flex card-container">
+                <div className="shadow-2xl m-4 flex card-container w-[33%]">
                   <div className="card p-5 flex flex-column justify-between transform transition-transform scale-100 md:hover:scale-105 cursor-pointer">
-                    <h2 className=" font-semibold flex">
+                    <h2 className="font-semibold flex">
                       <img
                         src={eval1}
                         alt="Admin Image"
@@ -486,9 +454,8 @@ const LandingPage: Page = () => {
                     </h2>
                     <span className="text-xl flex-column">
                       <h3 className="font-bold">3. Evalúa</h3>
-                      Capacita a tu equipo de trabajo creando rutas de
-                      aprendizaje para cada uno de ellos, llevando el control de
-                      su progreso y evaluando sus conocimientos
+                      Evalúa el conocimiento de tu equipo con pruebas personalizadas, 
+                      obteniendo insights sobre el progreso y eficacia de la formación.
                     </span>
                   </div>
                 </div>
@@ -503,7 +470,7 @@ const LandingPage: Page = () => {
           <div className="grid justify-center">
             <div className="col-12 text-center mt-8 mb-4">
               <h2 className="text-900 font-normal mb-2">
-                Características principales
+              <span className="text-blue-500 xs:text-2xl">Características</span> principales
               </h2>
               <span className="text-600 text-2xl">
                 Tus empleados más eficientes que nunca...
@@ -537,7 +504,7 @@ const LandingPage: Page = () => {
                     color: item.iconColor,
                   }}
                 >
-                  <h3 className="font-semibold capitalize">{item.title}</h3>
+                  <h3 className="font-semibold">{item.title}</h3>
                   <p className="font-normal !mt-0">{item.location}</p>
                   <p className="!mt-1 !font-normal text-gray-700 dark:text-white/75">
                     {item.description}
@@ -690,7 +657,7 @@ const LandingPage: Page = () => {
             </div>
           </motion.div>
         </section>
-        <footer className="py-4 px-4 mx-0 bg-stone-950 w-full">
+        <footer className="py-4 px-4 mx-0 bg-stone-950">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-around gap-4">
             <div className="md:col-span-1 lg:col-span-2 ">
               <div className="flex justify-start items-center md:items-center">
@@ -711,15 +678,15 @@ const LandingPage: Page = () => {
               </p>
               <p className="text-white font-medium text-md text-600 py-1">
                 <i className="pi pi-map pr-2 text-md "></i>
-                Bogota - Colombia, Carrera 7 113 43 of 1103
+                Bogota - Colombia
               </p>
               <p className="text-white font-medium text-md text-600 py-1">
                 <i className="pi pi-phone pr-2 text-md "></i>
-                3144116769 - 3132462447
+                313 382 3170
               </p>
               <p className="text-white font-medium text-md text-600 py-1">
                 <i className="pi pi-inbox pr-2 text-md "></i>
-                admin@contabilidadya.com
+                colkrea1@gmail.com
               </p>
               <div className="text-white py-1">
                 <i className="pi pi-facebook pr-6 text-2xl "></i>
@@ -817,8 +784,8 @@ const LandingPage: Page = () => {
           </div>
         </footer>
         <div className="flex justify-center text-white bg-black w-full py-4">
-          PLUSSS100 - es una marca registrada - Copyright 2018. Desarrollado por
-          <a href="/">&nbsp;Contabilidadya SAS</a>
+          Edupluss - es una marca registrada - Copyright 2023. Desarrollado por
+          <a href="/">&nbsp;Colkrea SAS</a>
         </div>
       </div>
     </div>

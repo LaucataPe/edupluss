@@ -14,12 +14,11 @@ import SidebarWrapper, { SidebarItem } from "./SidebarItems";
 const Sidebar = ({ isDarkMode, toggleDarkMode }: any) => {
   const expanded = useSelector((state: RootState) => state.utils.handleSideBar);
 
-  console.log(expanded, "expandido?");
   return (
     <SidebarWrapper>
       <SidebarItem icon={<BarChart3 />} text={"Dashboard"} url={"/dashboard"} />
       <SidebarItem icon={<Users />} text={"Usuarios"} url={"/crud"} />
-      <SidebarItem icon={<UserCheck />} text={"Progresos"} url={"/progress"} />
+      <SidebarItem icon={<UserCheck />} text={"Progreso"} url={"/progress"} />
       <SidebarItem
         icon={<ListChecks />}
         text={"Evaluaciones"}

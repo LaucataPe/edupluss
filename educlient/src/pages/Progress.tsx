@@ -60,7 +60,7 @@ function Progress() {
 
   useEffect(() => {
     try {
-      dispatch(getCompanyRoles(currentEmpresa));
+      currentEmpresa && dispatch(getCompanyRoles(currentEmpresa));
     } catch (error) {
       console.error(error);
       alert("No se han encontrado roles");
@@ -69,7 +69,7 @@ function Progress() {
 
   useEffect(() => {
     try {
-      dispatch(getUsersByCompany(currentEmpresa));
+      currentEmpresa && dispatch(getUsersByCompany(currentEmpresa));
     } catch (error) {
       console.error(error);
       alert("No se han encontrado usuarios por empresa");
@@ -208,12 +208,10 @@ function Progress() {
 
   return (
     <div className="flex">
-      <div className="container">
+      <div className="w-[100%]">
         <div className="card my-3 mx-3">
-          <div className="w-[100%]">
             <div className="p-5">
-              <h3 className="text-xl font-semibold">
-                Progreso general de Actividades:{" "}
+              <h2 className="text-blue-500">Progreso general por usuario</h2>
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <Button
                     rounded
@@ -241,7 +239,6 @@ function Progress() {
                     style={{ marginLeft: "10px" }}
                   ></Button>
                 </div>
-              </h3>
 
               {showProgressModal && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-80">
@@ -334,7 +331,6 @@ function Progress() {
                   ))}
               </div>
             </div>
-          </div>
         </div>
       </div>
     </div>

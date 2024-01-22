@@ -35,13 +35,17 @@ function AddActivity() {
     title: "",
     roleId: currentRole.id ?? 0,
     orderId: Number(orderId),
+    hasTest: false,
+    formURL: '',
+    excelURL: '',
+    numberSteps: 0
   });
   
   const [error, setError] = useState();
   const toast = useRef<Toast>(null);
 
   useEffect(() => {
-    if (roles.length === 0) {
+    if (roles.length === 0 && logUser.companyId) {
       dispatch(getCompanyRoles(logUser.companyId));
     }
     const findRole = roles.find((role) => role.id === Number(roleId));
@@ -60,7 +64,12 @@ function AddActivity() {
       }
       const findActivity = activities.find((act) => act.id === Number(actId));
       if (findActivity) {
-        setActivity({ title: findActivity.title, roleId: findActivity.roleId });
+        setActivity({ title: findActivity.title, roleId: findActivity.roleId,
+        orderId: Number(orderId),
+        hasTest: false,
+        formURL: '',
+        excelURL: '',
+        numberSteps: 0});
       }
     }
   }, [actId, roles]);
@@ -82,7 +91,12 @@ function AddActivity() {
         }
         setActivity({
           title: "",
-          roleId: 0,
+          roleId: currentRole.id ?? 0,
+          orderId: Number(orderId),
+          hasTest: false,
+          formURL: '',
+          excelURL: '',
+          numberSteps: 0
         });
       } catch (error: any) {
         setError(error);
@@ -119,7 +133,12 @@ function AddActivity() {
         }
         setActivity({
           title: "",
-          roleId: 0,
+          roleId: currentRole.id ?? 0,
+          orderId: Number(orderId),
+          hasTest: false,
+          formURL: '',
+          excelURL: '',
+          numberSteps: 0
         });
       } catch (error: any) {
         setError(error);

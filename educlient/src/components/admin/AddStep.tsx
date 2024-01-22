@@ -176,6 +176,7 @@ function AddStep() {
 
       // Esperar a que se cargue el archivo de video si es necesario
       if (videoFile) {
+        console.log('Entro');        
         updatedStep.video = await handleVideoUpload(videoFile);
       }
       let response = await axios.post(
@@ -387,6 +388,14 @@ function AddStep() {
                 ""
               )}
             </div>
+            <InputText
+              name="file"
+              type="file"
+              onChange={(e) => setStep({ ...step, file: e.target.files?.[0] })}
+              disabled={stepId ? !changeFile : false}
+              accept=".pdf,.doc,.docx,.xls,.xlsx,image/jpeg,image/png,image/gif"
+              className="mb-2"
+            />
             <p>Seleccionar diseño:</p>
             <div className="flex">
               <div>
@@ -400,7 +409,7 @@ function AddStep() {
                       setStep({ ...step, design: e.target.value })
                     }
                   />
-                  Columna
+                   Columna
                 </label>
                 <img src={col} />
               </div>
@@ -415,18 +424,11 @@ function AddStep() {
                       setStep({ ...step, design: e.target.value })
                     }
                   />
-                  Fila
+                   Fila
                 </label>
                 <img src={row} />
               </div>
             </div>
-            <InputText
-              name="file"
-              type="file"
-              onChange={(e) => setStep({ ...step, file: e.target.files?.[0] })}
-              disabled={stepId ? !changeFile : false}
-              accept=".pdf,.doc,.docx,.xls,.xlsx,image/jpeg,image/png,image/gif"
-            />
             <Button
               label={stepId ? "Editar" : "Crear Paso"}
               severity="info"
