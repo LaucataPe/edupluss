@@ -267,177 +267,163 @@ function AddStep() {
   };
   return (
     <>
-      <Link to={`/actvitySteps/${id}`}>
-        <Button
-          icon="pi pi-angle-double-left"
-          label="Atrás"
-          rounded
-          severity="secondary"
-          className="mt-3 mx-3 mb-2"
-        />
-      </Link>
-      <form>
-        <div className="card p-fluid mx-3">
-          <h5>Paso #{stepNumber}</h5>
-          <div className="field">
-            <label>Título:</label>
-            <InputText
-              name="title"
-              type="text"
-              placeholder="Ingrese el título para este paso"
-              value={step.title}
-              onChange={(e) => handleInputs(e)}
-              className={errors.title ? "p-invalid" : ""}
-            />
-            <p className="font-semibold text-red-600">
-              {errors.title ? errors.title : ""}
-            </p>
-          </div>
-          <div className="field">
-            <label>Descripción:</label>
-            <InputTextarea
-              name="description"
-              rows={2}
-              placeholder="Ingrese una breve descripción"
-              value={step.description}
-              onChange={(e) => handleDescription(e)}
-              className={errors.description ? "p-invalid" : ""}
-            />
-            <p className="font-semibold text-red-600">
-              {errors.description ? errors.description : ""}
-            </p>
-          </div>
-          <div className="field">
-            <div className="flex my-3">
-              <label className="m-0">
-                {stepId ? "Cambiar Video:" : "Agregar Video:"}
-              </label>
-              {stepId && (
-                <input
-                  type="checkbox"
-                  checked={changeVideo}
-                  onChange={() => setChangeVideo(!changeVideo)}
-                  className="mx-2"
-                />
-              )}
-            </div>
-            <div className="flex items-center my-2">
-              Archivo
-              <InputSwitch
-                checked={videoOrigin}
-                onChange={(e) => handleVideoOrigin(e.value ?? false)}
-                className="mx-2"
-                disabled={stepId ? !changeVideo : false}
-              />
-              Url
-            </div>
+		<Link to={`/actvitySteps/${id}`}>
+			<Button icon="pi pi-angle-double-left" label="Atrás" rounded severity="secondary" className="mt-3 mx-3 mb-2" />
+		</Link>
+		<form>
+			<div className="card p-fluid mx-3">
+				<h5>Paso #{stepNumber}</h5>
+				<div className="field">
+					<label>Título:</label>
+					<InputText name="title" type="text" placeholder="Ingrese el título para este paso"value={step.title}
+						onChange={(e) => handleInputs(e)} className={errors.title ? "p-invalid" : ""}/>
+					<p className="font-semibold text-red-600">{errors.title ? errors.title : ""}</p>
+				</div>
+				<div className="field">
+					<label>Descripción:</label>
+					<InputTextarea name="description" rows={2} placeholder="Ingrese una breve descripción" value={step.description}
+						onChange={(e) => handleDescription(e)} className={errors.description ? "p-invalid" : ""}/>
+					<p className="font-semibold text-red-600">{errors.description ? errors.description : ""}</p>
+				</div>
+				<div className="field">
+					<div className="flex my-3">
+					<label className="m-0">
+						{stepId ? "Cambiar Video:" : "Agregar Video:"}
+					</label>
+					{stepId && (
+						<input
+						type="checkbox"
+						checked={changeVideo}
+						onChange={() => setChangeVideo(!changeVideo)}
+						className="mx-2"
+						/>
+					)}
+					</div>
+					<div className="flex items-center my-2">
+					Archivo
+					<InputSwitch
+						checked={videoOrigin}
+						onChange={(e) => handleVideoOrigin(e.value ?? false)}
+						className="mx-2"
+						disabled={stepId ? !changeVideo : false}
+					/>
+					Url
+					</div>
 
-            {videoOrigin ? (
-              <InputText
-                name="video"
-                type="text"
-                placeholder="Ingrese una url"
-                value={videoURL}
-                onChange={(e) => handleVideoURL(e)}
-                className={errors.video ? "p-invalid" : ""}
-                disabled={stepId ? !changeVideo : false}
-              />
-            ) : (
-              <input
-                type="file"
-                name="video"
-                onChange={(e) => handleVideo(e)}
-                accept="video/*"
-                size={16000000}
-                disabled={stepId ? !changeVideo : false}
-                className="mb-2"
-              />
-            )}
-            <p className="font-semibold text-red-600">
-              {errors.video ? errors.video : ""}
-            </p>
-          </div>
-          <div className="field">
-            <p>Seleccionar diseño:</p>
-            <div className="flex">
-              <div>
-                <label className="flex justify-content-center">
-                  <input
-                    type="radio"
-                    name="design"
-                    value="col"
-                    checked={step.design === "col"}
-                    onChange={(e) =>
-                      setStep({ ...step, design: e.target.value })
-                    }
-                  />
-                   Columna
-                </label>
-                <img src={col} />
-              </div>
-              <div>
-                <label className="flex justify-content-center">
-                  <input
-                    type="radio"
-                    name="design"
-                    value="row"
-                    checked={step.design === "row"}
-                    onChange={(e) =>
-                      setStep({ ...step, design: e.target.value })
-                    }
-                  />
-                   Fila
-                </label>
-                <img src={row} />
-              </div>
-              <div className="flex my-3 items-center">
-              <label className="m-0">
-                {stepId && step.file
-                  ? "Cambiar Archivo Descargable:"
-                  : "Agregar Archivo Descargable:"}
-              </label>
-              {stepId && (
-                <input
-                  type="checkbox"
-                  checked={changeFile}
-                  onChange={() => setChangeFile(!changeFile)}
-                  className="mx-2"
-                />
-              )}
-              {stepId && step.file && !(step.file instanceof File) ? (
-                <div className="flex items-center ml-5">
-                  <p className="text-red-600 m-0">Eliminar archivo actual</p>
-                  <Button
-                    icon="pi pi-times"
-                    rounded
-                    severity="danger"
-                    text
-                    onClick={deleteDownloadFile}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-            </div>
-            <Button
-              label={stepId ? "Editar" : "Crear Paso"}
-              severity="info"
-              outlined
-              type="submit"
-              className=" mt-4"
-              onClick={(e) => {
-                !stepId ? handleSubmit(e) : handleEdit(e);
-              }}
-              disabled={Object.keys(errors).length > 0 ? true : false}
-              loading={isLoading}
-            />
-          </div>
-        </div>
-      </form>
-      <p className="font-semibold text-red-600">
-        {errors.send ? errors.send : ""}
-      </p>
+					{videoOrigin ? (
+					<InputText
+						name="video"
+						type="text"
+						placeholder="Ingrese una url"
+						value={videoURL}
+						onChange={(e) => handleVideoURL(e)}
+						className={errors.video ? "p-invalid" : ""}
+						disabled={stepId ? !changeVideo : false}
+					/>
+					) : (
+					<input
+						type="file"
+						name="video"
+						onChange={(e) => handleVideo(e)}
+						accept="video/*"
+						size={16000000}
+						disabled={stepId ? !changeVideo : false}
+						className="mb-2"
+					/>
+					)}
+					<p className="font-semibold text-red-600">
+					{errors.video ? errors.video : ""}
+					</p>
+				</div>
+				<div className="field">
+					<div className="flex my-3 items-center">
+					<label className="m-0">
+						{stepId && step.file
+						? "Cambiar Archivo Descargable:"
+						: "Agregar Archivo Descargable:"}
+					</label>
+					{stepId && (
+						<input
+						type="checkbox"
+						checked={changeFile}
+						onChange={() => setChangeFile(!changeFile)}
+						className="mx-2"
+						/>
+					)}
+					{stepId && step.file && !(step.file instanceof File) ? (
+						<div className="flex items-center ml-5">
+						<p className="text-red-600 m-0">Eliminar archivo actual</p>
+						<Button
+							icon="pi pi-times"
+							rounded
+							severity="danger"
+							text
+							onClick={deleteDownloadFile}
+						/>
+						</div>
+					) : (
+						""
+					)}
+					</div>
+					<InputText
+					name="file"
+					type="file"
+					onChange={(e) => setStep({ ...step, file: e.target.files?.[0] })}
+					disabled={stepId ? !changeFile : false}
+					accept=".pdf,.doc,.docx,.xls,.xlsx,image/jpeg,image/png,image/gif"
+					className="mb-2"
+					/>
+					<p>Seleccionar diseño:</p>
+					<div className="flex">
+					<div>
+						<label className="flex justify-content-center">
+						<input
+							type="radio"
+							name="design"
+							value="col"
+							checked={step.design === "col"}
+							onChange={(e) =>
+							setStep({ ...step, design: e.target.value })
+							}
+						/>
+						Columna
+						</label>
+						<img src={col} />
+					</div>
+					<div>
+						<label className="flex justify-content-center">
+						<input
+							type="radio"
+							name="design"
+							value="row"
+							checked={step.design === "row"}
+							onChange={(e) =>
+							setStep({ ...step, design: e.target.value })
+							}
+						/>
+						Fila
+						</label>
+						<img src={row} />
+					</div>
+					</div>
+					<Button
+					label={stepId ? "Editar" : "Crear Paso"}
+					severity="info"
+					outlined
+					type="submit"
+					className=" mt-4"
+					onClick={(e) => {
+						!stepId ? handleSubmit(e) : handleEdit(e);
+					}}
+					disabled={Object.keys(errors).length > 0 ? true : false}
+					loading={isLoading}
+					/>
+				</div>
+			</div>
+		</form>
+		<p className="font-semibold text-red-600">
+			{errors.send ? errors.send : ""}
+		</p>
     </>
   );
 }
