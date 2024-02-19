@@ -358,43 +358,6 @@ function AddStep() {
             </p>
           </div>
           <div className="field">
-            <div className="flex my-3 items-center">
-              <label className="m-0">
-                {stepId && step.file
-                  ? "Cambiar Archivo Descargable:"
-                  : "Agregar Archivo Descargable:"}
-              </label>
-              {stepId && (
-                <input
-                  type="checkbox"
-                  checked={changeFile}
-                  onChange={() => setChangeFile(!changeFile)}
-                  className="mx-2"
-                />
-              )}
-              {stepId && step.file && !(step.file instanceof File) ? (
-                <div className="flex items-center ml-5">
-                  <p className="text-red-600 m-0">Eliminar archivo actual</p>
-                  <Button
-                    icon="pi pi-times"
-                    rounded
-                    severity="danger"
-                    text
-                    onClick={deleteDownloadFile}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-            <InputText
-              name="file"
-              type="file"
-              onChange={(e) => setStep({ ...step, file: e.target.files?.[0] })}
-              disabled={stepId ? !changeFile : false}
-              accept=".pdf,.doc,.docx,.xls,.xlsx,image/jpeg,image/png,image/gif"
-              className="mb-2"
-            />
             <p>Seleccionar diseño:</p>
             <div className="flex">
               <div>
@@ -427,6 +390,35 @@ function AddStep() {
                 </label>
                 <img src={row} />
               </div>
+              <div className="flex my-3 items-center">
+              <label className="m-0">
+                {stepId && step.file
+                  ? "Cambiar Archivo Descargable:"
+                  : "Agregar Archivo Descargable:"}
+              </label>
+              {stepId && (
+                <input
+                  type="checkbox"
+                  checked={changeFile}
+                  onChange={() => setChangeFile(!changeFile)}
+                  className="mx-2"
+                />
+              )}
+              {stepId && step.file && !(step.file instanceof File) ? (
+                <div className="flex items-center ml-5">
+                  <p className="text-red-600 m-0">Eliminar archivo actual</p>
+                  <Button
+                    icon="pi pi-times"
+                    rounded
+                    severity="danger"
+                    text
+                    onClick={deleteDownloadFile}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
             </div>
             <Button
               label={stepId ? "Editar" : "Crear Paso"}
