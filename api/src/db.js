@@ -3,23 +3,23 @@ const { Sequelize } = require("sequelize");
 const fs = require("fs");
 const path = require("path");
 const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
-const sequelize = new Sequelize(
+/*const sequelize = new Sequelize(
   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/edupluss`,
   {
     logging: false, // set to console.log to see the raw SQL queries
     native: false, // lets Sequelize know we can use pg-native for ~30% more speed
   }
-);
+);*/
 
-// const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-//   host: DB_HOST,
-//   dialect: 'mysql',
-//   dialectOptions: {
-//     supportBigNumbers: true,
-//     bigNumberStrings: true,
-//     json: true
-//   }
-// });
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  dialect: 'mysql',
+  dialectOptions: {
+    supportBigNumbers: true,
+    bigNumberStrings: true,
+    json: true
+  }
+});
 
 async function probandoDb() {
   try {
