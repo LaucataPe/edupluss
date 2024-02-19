@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { RootState } from "../../redux/store";
 import { useAppDispatch } from "../../hooks/typedSelectors";
 import { getActivitiesByRole } from "../../redux/features/activitiesSlice";
-import { FaUser } from "react-icons/fa";
+import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Role } from "../../utils/interfaces";
 import { setCurrentRole } from "../../redux/features/roleSlice";
 import { Button } from "primereact/button";
@@ -94,6 +94,65 @@ function Roles() {
     </>
   );
 
+  const generateSubMenu = (roles: Role[], roleId: number | null): { role: Role; items: any }[] => {
+    const subordinates = roles.filter((role) => role.fatherRoleId === roleId);
+  
+    return subordinates.map((subordinate) => {
+      const subMenu = {
+        role: subordinate,
+        items: generateSubMenu(roles, subordinate.id ?? null) ?? [],
+      };
+      return subMenu;
+    });
+  };
+  
+  const generatePanelMenuModel = (roles: Role[]): { role: Role; items: any }[] => {
+    const topLevelRoles = roles.filter((role) => !role.fatherRoleId);
+  
+    return topLevelRoles?.map((role) => ({
+      role,
+      items: generateSubMenu(roles, role.id ?? null),
+    }));
+  };
+
+  const headerTemplate = (role: Role) => {
+
+    return (
+        <div className="flex h-12">
+            <div className="flex align-items-center justify-items-center">
+                <p>{role.name}</p>
+            </div>
+                <Button rounded text severity="info" icon="pi pi-plus" className="mr-2" 
+					onClick={() => navigate(`/addRole/${currentArea.id}?fatherId=${role.id}`)}></Button>
+            <div className="absolute right-2">
+				<Link to={`/activities/${role.id}`}>
+					<Button rounded severity="info" icon="pi pi-arrow-right" className="mr-2"
+					onClick={() => handleRoleClick(role)}></Button>
+				</Link>
+				<Button rounded className="mr-2" icon="pi pi-eye" onClick={() => handleLook(role)}></Button>
+				<Link to={`/editRole/${currentArea.id}/${role.id}`}>
+					<Button rounded severity="success" className="mr-1" icon="pi pi-pencil"></Button>
+				</Link>
+				<Button rounded text severity="danger" icon="pi pi-times" onClick={() => dialogHandler(role.id ?? 0)}></Button>
+            </div>
+        </div>
+    );
+  };
+  
+  const cargos = generatePanelMenuModel(roles);
+
+  const recursion = (items: { role: Role; items: any }[]) => {
+	return items?.map((role) => {
+	  return (
+		<Accordion key={role.role.id}>
+		  <AccordionTab header={headerTemplate(role.role)} className="my-2" key={role.role.id}>
+			{role.items && recursion(role.items)}
+		  </AccordionTab>
+		</Accordion>
+	  );
+	});
+  };
+    
   return (
     <>
       {/*Mapea todos los roles*/}
@@ -101,63 +160,21 @@ function Roles() {
             <div className="flex justify-between items-center mb-4 mx-2">
                 <h2 className="text-blue-500 m-0">{currentArea.name}</h2>
                 <div className="h-[50px] flex flex-row-reverse mx-4 gap-2">                      
-                    <Button className="hover:bg-blue-500 hover:text-white focus:shadow-none" label=" + Crear Cargo" severity="info"
+                    <Button className="hover:bg-blue-500 hover:text-white focus:shadow-none" label=" + Crear Director" severity="info"
                         rounded outlined onClick={() => navigate(`/addRole/${currentArea.id}`)}></Button>
                 </div>
             </div>
-            <div className="flex flex-wrap">
-                {roles.map((role) => (
-                    <div
-                    key={role.id}
-                    onClick={() => handleRoleClick(role)}
-                    className="relative border-1 surface-border border-round mx-1 my-2 text-center py-5 w-[300px]"
-                    >
-                    <Button
-                        rounded
-                        text
-                        severity="danger"
-                        className="absolute top-0 right-0"
-                        icon="pi pi-times"
-                        onClick={() => dialogHandler(role.id ?? 0)}
-                    ></Button>
-                    <div className="mb-3 flex justify-center">
-                        <FaUser className="text-8xl text-center" />
-                    </div>
-                    <div>
-                        <h4 className="p-mb-1">{role.name}</h4>
-                        <div className="car-buttons mt-5">
-                        <Button
-                            rounded
-                            className="mr-2"
-                            icon="pi pi-eye"
-                            onClick={() => handleLook(role)}
-                        ></Button>
-                        <Link to={`/editRole/${currentArea.id}/${role.id}`}>
-                            <Button
-                            rounded
-                            severity="success"
-                            className="mr-2"
-                            icon="pi pi-pencil"
-                            ></Button>
-                        </Link>
-                        <Link to={`/activities/${role.id}`}>
-                            <Button
-                            rounded
-                            severity="info"
-                            icon="pi pi-arrow-right"
-                            ></Button>
-                        </Link>
-                        </div>
-                    </div>
-                    </div>
-                ))}
-                {roles.length === 0 ? (
-                    <p className="text-2xl text-blue-500 m-10">
-                    Aún no hay cargos en esta área{" "}
-                    </p>
-                ) : (
-                    ""
-                )}
+            <div className="flex flex-wrap w-[100%]">
+				{cargos.length ? cargos.map((role) => {
+					return (
+						<Accordion className="w-[100%]" key={role.role.id}>
+							<AccordionTab header={headerTemplate(role.role)} className="my-2" key={role.role.id}>
+								{role.items && recursion(role.items)}
+							</AccordionTab>
+						</Accordion>
+					)
+				}): 
+				<p className="text-2xl mt-5">Aún no hay cargos en esta área</p>}              
             </div>
       </div>
 
@@ -182,14 +199,14 @@ function Roles() {
             <p>Remoto: {role?.remote ? "Sí" : "No"}</p>
           </TabPanel>
           <TabPanel header="Técnicas">
-            <ul>
-              {role?.hardSkills.map((skill) => (
-                <li>- {skill}</li>
+            <ul key={role?.id}>
+              {role?.hardSkills.map((skill, i) => (
+                <li key={i}>- {skill}</li>
               ))}
             </ul>
           </TabPanel>
           <TabPanel header="Blandas">
-            <ul>
+            <ul key={role?.id ? role.id + 1 : 1}>
               {role?.softSkills &&
                 role?.softSkills.map((skill) => <li>- {skill}</li>)}
               {role?.softSkills?.length === 0 &&
