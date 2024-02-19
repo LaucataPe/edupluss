@@ -265,7 +265,6 @@ function AddStep() {
       setIsLoading(false);
     }
   };
-  console.log(step);
   return (
     <>
       <Link to={`/actvitySteps/${id}`}>
