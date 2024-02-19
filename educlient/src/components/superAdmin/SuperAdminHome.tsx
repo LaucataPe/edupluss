@@ -82,11 +82,7 @@ const SuperAdminHome = () => {
 
   const activeTemplate = (row: Empresa) => {
     return (
-      <span
-        className={`p-badge ${
-          row.active ? "p-badge-success" : "p-badge-secondary"
-        }`}
-      >
+      <span className={`p-badge ${row.active ? "p-badge-success" : "p-badge-secondary"}`}>
         {row.active ? "Sí" : "No"}
       </span>
     );
@@ -211,15 +207,11 @@ const SuperAdminHome = () => {
   };
 
   return (
-    <section className="relative md:px-2 bg-white h-[calc(100vh-96px)]">
+    <section className="relative md:px-2 bg-white h-[calc(100vh-96px)] card">
       <Toast ref={toast} />
 
-      <DataTable
-        value={companies}
-        scrollable
-        header={tableHeader}
-        globalFilter={filter}
-        className="datatable-responsive p-datatable-responsive  overflow-auto"
+      <DataTable value={companies} scrollable header={tableHeader} globalFilter={filter}
+        className="datatable-responsive p-datatable-responsive overflow-auto"
       >
         <Column field="id" header="ID" sortable />
         <Column field="name" header="Empresa" sortable />
@@ -228,17 +220,11 @@ const SuperAdminHome = () => {
         <Column body={actionBodyTemplate}></Column>
       </DataTable>
 
-      <Dialog
-        visible={showCreate}
-        header="Crear nueva empresa"
-        style={{ width: "400px" }}
-        onHide={() => setShowCreate(false)}
+      <Dialog visible={showCreate} header="Crear nueva empresa" style={{ width: "400px" }} onHide={() => setShowCreate(false)}
         footer={editCompanyfooter("create")}
       >
         <div className="flex flex-col py-2">
-          <label htmlFor="nombre" className="mb-2">
-            Nombre de la empresa
-          </label>
+          <label htmlFor="nombre" className="mb-2">Nombre de la empresa</label>
           <InputText
             id="nombre"
             name="name"
@@ -248,9 +234,7 @@ const SuperAdminHome = () => {
           />
         </div>
         <div className="flex flex-col py-2">
-          <label htmlFor="NIT" className="mb-2">
-            NIT
-          </label>
+          <label htmlFor="NIT" className="mb-2">NIT</label>
           <InputText
             id="NIT"
             name="nit"
@@ -269,9 +253,7 @@ const SuperAdminHome = () => {
         footer={editCompanyfooter("edit")}
       >
         <div className="flex flex-col py-2">
-          <label htmlFor="nombre" className="mb-2">
-            Nombre de la empresa
-          </label>
+          <label htmlFor="nombre" className="mb-2">Nombre de la empresa</label>
           <InputText
             id="nombre"
             name="name"
@@ -282,9 +264,7 @@ const SuperAdminHome = () => {
           />
         </div>
         <div className="flex flex-col py-2">
-          <label htmlFor="NIT" className="mb-2">
-            NIT
-          </label>
+          <label htmlFor="NIT" className="mb-2">NIT</label>
           <InputText
             id="NIT"
             name="nit"
@@ -296,9 +276,7 @@ const SuperAdminHome = () => {
           />
         </div>
         <div className="flex py-2">
-          <label htmlFor="active" className="mr-2">
-            Activo
-          </label>
+          <label htmlFor="active" className="mr-2">Activo</label>
           <InputSwitch
             id="active"
             checked={switchActiveValue}

@@ -18,6 +18,10 @@ function AddRole() {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    const fatherId = params.get('fatherId');
+
     const roles = useSelector((state: RootState) => state.roles.roles)
     const areas = useSelector((state: RootState) => state.areas.areas)
     const currentEmpresa = useSelector((state: RootState) => state.activities.selectEmpresa)
@@ -41,7 +45,8 @@ function AddRole() {
         salary: '',
         experience: [],
         remote: false,
-        areaId: currentArea.id
+        areaId: currentArea.id,
+        fatherRoleId: Number(fatherId) ?? null
     })
     const toast = useRef<Toast>(null);
 
@@ -149,7 +154,8 @@ function AddRole() {
             salary: '',
             experience: [],
             remote: false,
-            areaId: currentArea.id
+            areaId: currentArea.id,
+            fatherRoleId: Number(fatherId) ?? null
         })
         } 
         
@@ -174,7 +180,8 @@ function AddRole() {
             salary: '',
             experience: [],
             remote: false,
-            areaId: currentArea.id
+            areaId: currentArea.id,
+            fatherRoleId: Number(fatherId) ?? null
         })
         } 
         

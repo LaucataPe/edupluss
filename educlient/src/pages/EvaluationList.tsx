@@ -42,7 +42,7 @@ function EvaluationList() {
         return (
           <React.Fragment>
             <div className="my-2 w-[62vw] lg:w-[58vw] xl:w-[64vw]">
-                <p className=" text-lg md:text-3xl xl:text-4xl text-black">Evaluación de: {title}</p>
+                <p className=" text-lg md:text-3xl xl:text-4xl">Evaluación de: {title}</p>
             </div>
           </React.Fragment>
         );
@@ -79,9 +79,7 @@ function EvaluationList() {
         <div className="flex">
           <div className="col-12 align-items-center ml-2 sm:ml-0">
             <div className="card grid grid-cols-2 overflow-hidden h-[700px] md:h-[900px]">
-              <p className=" text-xl md:text-4xl  text-cyan-800">
-                Evaluaciones:
-              </p>
+              <h2 className="text-blue-500">Evaluaciones:</h2>
               <DataScroller
                 value={evaluationsList}
                 emptyMessage="No se encontraron evaluaciones."

@@ -69,6 +69,7 @@ export interface Role {
   experience?: Array<Number>;
   remote?: boolean;
   areaId?: number;
+  fatherRoleId?: number;
 }
 
 export interface Activity {

@@ -36,7 +36,11 @@ module.exports = (database) => {
     remote: {
       type: DataTypes.BOOLEAN,
       allowNull: false
-    }
+    },
+    fatherRoleId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
   },{
     timestamps: false
   });

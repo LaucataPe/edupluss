@@ -16,7 +16,6 @@ const Sidebar = ({ isDarkMode, toggleDarkMode }: any) => {
   const expanded = useSelector((state: RootState) => state.utils.handleSideBar);
   const logUser = useSelector((state: RootState) => state.user.logUser);
 
-  //console.log(expanded, "expandido?");
   return (
     <SidebarWrapper>
       {
@@ -24,7 +23,7 @@ const Sidebar = ({ isDarkMode, toggleDarkMode }: any) => {
        <>
       <SidebarItem icon={<BarChart3 />} text={"Dashboard"} url={"/dashboard"} />
       <SidebarItem icon={<Users />} text={"Usuarios"} url={"/crud"} />
-      <SidebarItem icon={<UserCheck />} text={"Progresos"} url={"/progress"} />
+      <SidebarItem icon={<UserCheck />} text={"Progreso"} url={"/progress"} />
       <SidebarItem
         icon={<ListChecks />}
         text={"Evaluaciones"}

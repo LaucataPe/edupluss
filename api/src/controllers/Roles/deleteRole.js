@@ -15,7 +15,7 @@ const deleteRole = async (req, res) => {
     });
 
     if (!role) {
-      throw new Error('Cargo no encontrada');
+      throw new Error('Cargo no encontrado');
     }
 
     // Eliminar en cascada: primero eliminar los pasos, luego las actividades, luego los roles y finalmente el área

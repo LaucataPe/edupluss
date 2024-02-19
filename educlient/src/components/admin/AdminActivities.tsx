@@ -5,7 +5,7 @@ import { useAppDispatch } from "../../hooks/typedSelectors";
 import { getActivitiesByRole } from "../../redux/features/activitiesSlice";
 import { Button } from "primereact/button";
 import { Activity } from "../../utils/interfaces";
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -25,9 +25,8 @@ function AdminActivities() {
   const dispatch = useAppDispatch();
   const [activitiesList, setActivitiesList] = useState<Activity[]>([]);
 
-  const activities = useSelector(
-    (state: RootState) => state.activities.activities
-  );
+  const activities = useSelector((state: RootState) => state.activities.activities);
+  const currentArea = useSelector((state: RootState) => state.areas.areas)[0];
   const activityChanges = useSelector((state: RootState) => state.utils);
   const [enableDrag, setEnableDrag] = useState<Boolean>(true);
   const toast = useRef<Toast>(null);
@@ -54,17 +53,16 @@ function AdminActivities() {
       });
     }
   }, [activityChanges.activityCreatedModal]);
+  
   useEffect(() => {
-    if (activities.length === 0 && roleId) {
       dispatch(getActivitiesByRole(Number(roleId)));
-    }
   }, [roleId]);
 
   useEffect(() => {
     setActivitiesList([...activities].sort((a, b) => a.orderId - b.orderId));
   }, [activities]);
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!active.id !== over.id) {
       setActivitiesList((people) => {
@@ -86,7 +84,7 @@ function AdminActivities() {
           life: 1500,
         });
       if (!enableDrag) {
-        let newActivitiesOrderList = [];
+        let newActivitiesOrderList: { id?: number, orderId: number }[] = [];
         activitiesList.forEach((e, i) => {
           newActivitiesOrderList.push({ id: e.id, orderId: i });
         });
@@ -105,7 +103,7 @@ function AdminActivities() {
     <>
       <Toast className="top-0 left-1/3 " ref={toast} />
       <div className="card p-fluid h-[720px] overflow-auto relative m-3">
-        <Link to={`/areas`}>
+        <Link to={`/areas/${currentArea?.id}`}>
           <Button icon="pi pi-angle-double-left" className="z-50 absolute top-1 left-1" rounded severity="secondary"/>
         </Link>
         <div className="flex justify-between items-center my-2 mx-3">

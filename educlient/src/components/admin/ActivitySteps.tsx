@@ -319,19 +319,22 @@ function ActivitySteps() {
     <>
       <Toast ref={toast} />
 
-      <div className="list-demo relative">
-        <div className="col-12 m-2">
-          <div className="card h-[820px] mb-6 overflow-auto">
-            <div className="py-4">
+      <div className="relative">
+        <div className="m-3">
+          <div className="card h-[800px] mb-6 overflow-auto">
+            <div className="py-4 flex justify-end">
               <Link to={`/activities/${role.id}`}>
                 <Button
                   icon="pi pi-angle-double-left"
-                  label="Atrás"
-                  className="mt-3 mx-2"
+                  className="absolute top-2 left-6"
                   rounded
                   severity="secondary"
                 />
               </Link>
+              <Button label={ currentActivity?.formURL && currentActivity.excelURL ? "+ Editar Test" : "+ Agregar Test"}
+                severity="warning" rounded outlined onClick={() => setShowAddTestModal(true)}
+              />
+              <Link to={`/addStep/${id}`}><Button label="+ Crear Paso" severity="info" outlined rounded className="mx-2"/></Link> 
             </div>
             <DataView
               value={steps}
@@ -343,25 +346,6 @@ function ActivitySteps() {
             ></DataView>
           </div>
         </div>
-        <Link to={`/addStep/${id}`}>
-          <Button
-            label="+ Crear Paso"
-            severity="info"
-            rounded
-            className="absolute right-4 my-2 bottom-14"
-          />
-        </Link>
-        <Button
-          label={
-            currentActivity?.formURL && currentActivity.excelURL
-              ? "+ Editar Test"
-              : "+ Agregar Test"
-          }
-          severity="info"
-          rounded
-          className="absolute left-6 my-2 bottom-14"
-          onClick={() => setShowAddTestModal(true)}
-        />
       </div>
 
       <Dialog
