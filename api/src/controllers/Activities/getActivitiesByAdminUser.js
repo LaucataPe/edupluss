@@ -28,13 +28,12 @@ const getActivitiesByAdminUser = async (req, res) => {
         for (const role of roles) {
             const roleActivities = await Activity.findAll({
                 where: { roleId: role.id },
-                attributes: ['id', 'title', 'hasTest', "active"],
+                attributes: ['id', 'title', "active"],
             });
             activities = activities.concat(roleActivities);
         }
-        let validActivities = activities.filter((activity)=>
-          activity.active && activity.hasTest
-        )
+        let validActivities = activities.filter((activity)=> activity.active)
+
         res.status(200).json(validActivities);
     }
   } catch (error) {
