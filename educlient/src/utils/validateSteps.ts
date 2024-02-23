@@ -22,11 +22,7 @@ import { CreateStep } from "./interfaces";
     } else if (step.description.trim().length > 500) {
       errors.description = 'La descripción no puede tener más de 500 caracteres.';
     }
-  
-    if (!step.video) {
-      errors.video = 'El video es obligatorio.';
-    }
-  
+     
     return errors;
   };
   

@@ -6,7 +6,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Activity from "./pages/Activity";
 import NavBar from "./components/Navbar";
 import Home from "./pages/Home";
-//import SelectEmpresa from "./components/SelectEmpresa";
 import AddStep from "./components/admin/AddStep";
 import AddActivity from "./components/admin/AddActivity";
 import ActivitySteps from "./components/admin/ActivitySteps";

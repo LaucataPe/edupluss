@@ -66,7 +66,7 @@ function Login() {
     <>
       <div className="flex align-items-center xl:justify-content-start justify-content-center relative bg-[#FAFAFA]">
         <div
-          className="flex flex-col w-[40rem] my-4 xl:my-[100px] p-4 xl:py-8 xl:px-8 sm:px-8 xl:bg-[#FAFAFA] bg-[#ffffff]"
+          className="flex flex-col w-[40rem] my-4 xl:my-[100px] p-4 xl:py-8 xl:px-8 sm:px-8 z-10"
           style={{ borderRadius: "53px" }}
         >
           <div className="hidden xl:block py-0">
@@ -134,7 +134,7 @@ function Login() {
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 50" className="fixed right-0 top-0 z-0 max-h-screen hidden xl:block">
             <circle cx="75" cy="35" r="70" fill="#007bff" />
           </svg>
-          <img src={rightBackground} alt="rightBackground" className="h-[70%] fixed right-[8%] top-[15%] z-10 hidden xl:block"
+          <img src={rightBackground} alt="rightBackground" className="h-[65%] fixed right-[8%] top-[15%] z-1 hidden xl:block"
           />
         </div>
       </div>

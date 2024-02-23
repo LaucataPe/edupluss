@@ -1,6 +1,5 @@
 //@ts-nocheck
 import React, { use, useEffect, useState } from "react";
-import { Button } from "primereact/button";
 import axios from "axios";
 import {
   Chart as ChartJS,
@@ -15,9 +14,13 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2"; // Añade Scatter aquí si aún no lo has importado
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { RootState } from "../redux/store";
+import { getUsersByCompany } from "../redux/features/userSlice";
+import { useAppDispatch } from "../hooks/typedSelectors";
+import { User } from "../utils/interfaces";
+import { getEmpresaActivities } from "../redux/features/activitiesSlice";
 
 ChartJS.register(
   CategoryScale,
@@ -32,11 +35,14 @@ ChartJS.register(
 );
 function Dashboard() {
   const logUser = useSelector((state: RootState) => state.user.logUser);
+  const companyUsers = useSelector((state: RootState) => state.user.users);
+  const activities = useSelector((state: RootState) => state.activities.activities);
   const [chartKey, setChartKey] = useState(0);
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const dispatch = useAppDispatch();
   const [totalUsers, setTotalUsers] = useState(null);
   const [activitiesInfo, setActivitiesInfo] = useState(null);
   const [stepsInfo, setStepsInfo] = useState(null);
@@ -51,62 +57,66 @@ function Dashboard() {
   const [areas, setAreas] = useState([]);
   const [roles, setRoles] = useState([]);
   const [employeesByArea, setEmployeesByArea] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/users");
-        const users = response.data;
-
-        // Filtra los usuarios con active = true
-        const activeUsers = users.filter((user) => user.active === true && user.id !== logUser.id);
-
-        // Establece el total de usuarios activos en el estado
-        setTotalUsers(activeUsers);
-        setTotalActiveUsers(activeUsers.length);
-      } catch (error) {
-        console.error("Error al obtener datos de usuarios:", error);
-      }
-    };
-
-    fetchData();
-  }, [logUser]);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        // Realiza una solicitud GET para obtener la lista de actividades
-        const response = await axios.get("http://localhost:3001/activities");
-        const activities = response.data;
-        // Calcula la cantidad total de actividades
-        const total = activities.length;
-
-        // Establece la cantidad total de actividades en el estado
-        setTotalActivities(total);
-        setActivitiesInfo(activities);
-        const totalSteps: any = {};
-
-        activities.forEach((activity: any) => {
-          const { roleId, numberSteps } = activity;
-          if (roleId in totalSteps) {
-            totalSteps[roleId] += numberSteps;
-          } else {
-            totalSteps[roleId] = numberSteps;
+      if(logUser.companyId){
+        try {
+          await dispatch(getUsersByCompany(logUser.companyId)) 
+          // Filtra los usuarios con active = true
+          if(companyUsers.length){
+            const activeUsers = companyUsers.filter((user) => user.active === true && user.id !== logUser.id);
+            console.log(activeUsers);
+            
+            // Establece el total de usuarios activos en el estado
+            setTotalUsers(activeUsers);
+            setTotalActiveUsers(activeUsers.length);
           }
-        });
-
-        // Establece el objeto totalStepsByRoleId en el estado
-        setTotalStepsByRoleId(totalSteps);
-      } catch (error) {
-        console.error("Error al obtener datos de actividades:", error);
+        } catch (error) {
+          console.error("Error al obtener datos de usuarios:", error);
+        }
       }
     };
 
     fetchData();
-  }, []);
+  }, [logUser, companyUsers.length]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if(logUser.id){
+        try {
+          await dispatch(getEmpresaActivities(logUser.id)) 
+          console.log(activities);
+          
+          const total = activities.length;
+
+          setTotalActivities(total);
+          setActivitiesInfo(activities);
+          const totalSteps: any = {};
+
+          activities.forEach((activity: any) => {
+            const { roleId, numberSteps } = activity;
+            if (roleId in totalSteps) {
+              totalSteps[roleId] += numberSteps;
+            } else {
+              totalSteps[roleId] = numberSteps;
+            }
+          });
+
+          // Establece el objeto totalStepsByRoleId en el estado
+          setTotalStepsByRoleId(totalSteps);
+        } catch (error) {
+          console.error("Error al obtener las actividades:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [logUser.id]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/userStep");
+        const response = await axios.get("http://localhost:3001userStep");
         const userSteps = response.data;
         setUserSteps(userSteps);
         const count = {};
@@ -274,7 +284,7 @@ function Dashboard() {
 
           for (const area of areas) {
             const response = await axios.get(
-              `http://localhost:3001/roles/${area.id}`
+              `http://localhost:3001roles/${area.id}`
             );
             const roles = response.data;
             allRoles.push(...roles);
@@ -417,98 +427,106 @@ function Dashboard() {
     }
   }, [windowDimensions]);
   //Notificaciones
-  const now = new Date();
-  const twentyFourHoursAgo = new Date(now - 24 * 60 * 60 * 1000);
-  const fiveMinutesAgo = new Date(now - 5 * 60 * 1000);
-  const totalChanges = {};
-
-  userSteps.forEach((step, index) => {
-    const createdAt = new Date(step.createdAt);
-    const timeDifference = now - createdAt;
-
-    if (timeDifference <= 24 * 60 * 60 * 1000) {
-      const timeParts = {
-        days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor(
-          (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        ),
-        minutes: Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((timeDifference % (1000 * 60)) / 1000),
-      };
-
-      const userId = step.UserId; // Obtener el ID del usuario que realizó el paso
-      const user = totalUsers?.find((user) => user.id === userId);
-      const activityInfo = activitiesInfo[index];
-      const activityName = activityInfo
-        ? activityInfo?.title
-        : "Actividad no encontrada";
-
-      const hoursDifference = timeParts.hours;
-      const minutesDifference = timeParts.minutes;
-      const daysDifference = timeParts.days;
-      let timeAgo = "";
-
-      switch (true) {
-        case hoursDifference === 0:
-          timeAgo =
-            timeParts.days !== 0
-              ? timeParts.days === 1
-                ? `hace 1 día`
-                : `hace ${daysDifference} días`
-              : minutesDifference === 1
-              ? `hace 1 minuto`
-              : `hace ${minutesDifference} minutos`;
-          break;
-        case hoursDifference === 1:
-          timeAgo = `hace 1 hora`;
-          if (minutesDifference !== 0) {
-            timeAgo += `, ${minutesDifference} minutos`;
-          }
-          break;
-        default:
-          timeAgo =
-            timeParts.days !== 0
-              ? timeParts.days === 1
-                ? `hace 1 día`
-                : `hace ${daysDifference} días`
-              : minutesDifference === 1
-              ? `hace 1 minuto`
-              : `hace ${minutesDifference} minutos`;
-          if (hoursDifference !== 0) {
-            timeAgo += `, ${hoursDifference} horas`;
-          }
-      }
-
-      const message = `El usuario ${
-        user?.username || "Usuario desconocido"
-      } completó la actividad "${activityName}" ${timeAgo}.`;
-
-      if (Object.values(timeParts).some((part) => part > 0)) {
-        totalChanges[index + 1] = {
-          user: user?.username || "Usuario desconocido",
-          step: index + 1,
-          activity: activityName,
-          date: createdAt,
-          message: message,
-        };
-      }
+  useEffect(() => {
+    if(userSteps.length && activitiesInfo.length){
+      getNotifications();
     }
-  });
+  }, [userSteps && activitiesInfo]);
 
   const todayNotifications = [];
   const yesterdayNotifications = [];
   const momentNotifications = [];
 
-  for (const stepIndex in totalChanges) {
-    const change = totalChanges[stepIndex];
-    const date = new Date(change.date);
+  const getNotifications = () => {
+    console.log('Notificaciones');
+        
+    const now = new Date();
+    const twentyFourHoursAgo = new Date(now - 24 * 60 * 60 * 1000);
+    const fiveMinutesAgo = new Date(now - 5 * 60 * 1000);
+    const totalChanges = {};
+  
+    userSteps.forEach((step, index) => {
+      const createdAt = new Date(step.createdAt);
+      const timeDifference = now - createdAt;
+  
+      if (timeDifference <= 24 * 60 * 60 * 1000) {
+        const timeParts = {
+          days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor(
+            (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          ),
+          minutes: Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((timeDifference % (1000 * 60)) / 1000),
+        };
+  
+        const userId = step.UserId; // Obtener el ID del usuario que realizó el paso
+        const user = totalUsers?.find((user) => user.id === userId);
+        const activityInfo = activitiesInfo?.[index];
+        const activityName = activityInfo ? activityInfo?.title : "Actividad no encontrada";
+  
+        const hoursDifference = timeParts.hours;
+        const minutesDifference = timeParts.minutes;
+        const daysDifference = timeParts.days;
+        let timeAgo = "";
+  
+        switch (true) {
+          case hoursDifference === 0:
+            timeAgo =
+              timeParts.days !== 0
+                ? timeParts.days === 1
+                  ? `hace 1 día`
+                  : `hace ${daysDifference} días`
+                : minutesDifference === 1
+                ? `hace 1 minuto`
+                : `hace ${minutesDifference} minutos`;
+            break;
+          case hoursDifference === 1:
+            timeAgo = `hace 1 hora`;
+            if (minutesDifference !== 0) {
+              timeAgo += `, ${minutesDifference} minutos`;
+            }
+            break;
+          default:
+            timeAgo =
+              timeParts.days !== 0
+                ? timeParts.days === 1
+                  ? `hace 1 día`
+                  : `hace ${daysDifference} días`
+                : minutesDifference === 1
+                ? `hace 1 minuto`
+                : `hace ${minutesDifference} minutos`;
+            if (hoursDifference !== 0) {
+              timeAgo += `, ${hoursDifference} horas`;
+            }
+        }
+  
+        const message = `El usuario ${
+          user?.username || "Usuario desconocido"
+        } completó la actividad "${activityName}" ${timeAgo}.`;
+  
+        if (Object.values(timeParts).some((part) => part > 0)) {
+          totalChanges[index + 1] = {
+            user: user?.username || "Usuario desconocido",
+            step: index + 1,
+            activity: activityName,
+            date: createdAt,
+            message: message,
+          };
+        }
+      }
+    });
 
-    if (date >= fiveMinutesAgo && date <= now) {
-      momentNotifications.push(change);
-    } else if (date >= twentyFourHoursAgo && date < fiveMinutesAgo) {
-      todayNotifications.push(change);
-    } else if (date < twentyFourHoursAgo) {
-      yesterdayNotifications.push(change);
+    for (const stepIndex in totalChanges) {
+      const change = totalChanges[stepIndex];
+      const date = new Date(change.date);
+  
+      if (date >= fiveMinutesAgo && date <= now) {
+        momentNotifications.push(change);
+      } else if (date >= twentyFourHoursAgo && date < fiveMinutesAgo) {
+        todayNotifications.push(change);
+      } else if (date < twentyFourHoursAgo) {
+        yesterdayNotifications.push(change);
+      }
     }
   }
 
