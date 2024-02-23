@@ -36,7 +36,9 @@ ChartJS.register(
 function Dashboard() {
   const logUser = useSelector((state: RootState) => state.user.logUser);
   const companyUsers = useSelector((state: RootState) => state.user.users);
-  const activities = useSelector((state: RootState) => state.activities.activities);
+  const activities = useSelector(
+    (state: RootState) => state.activities.activities
+  );
   const [chartKey, setChartKey] = useState(0);
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
@@ -60,14 +62,16 @@ function Dashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if(logUser.companyId){
+      if (logUser.companyId) {
         try {
-          await dispatch(getUsersByCompany(logUser.companyId)) 
+          await dispatch(getUsersByCompany(logUser.companyId));
           // Filtra los usuarios con active = true
-          if(companyUsers.length){
-            const activeUsers = companyUsers.filter((user) => user.active === true && user.id !== logUser.id);
+          if (companyUsers.length) {
+            const activeUsers = companyUsers.filter(
+              (user) => user.active === true && user.id !== logUser.id
+            );
             console.log(activeUsers);
-            
+
             // Establece el total de usuarios activos en el estado
             setTotalUsers(activeUsers);
             setTotalActiveUsers(activeUsers.length);
@@ -83,11 +87,11 @@ function Dashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if(logUser.id){
+      if (logUser.id) {
         try {
-          await dispatch(getEmpresaActivities(logUser.id)) 
+          await dispatch(getEmpresaActivities(logUser.id));
           console.log(activities);
-          
+
           const total = activities.length;
 
           setTotalActivities(total);
@@ -428,7 +432,7 @@ function Dashboard() {
   }, [windowDimensions]);
   //Notificaciones
   useEffect(() => {
-    if(userSteps.length && activitiesInfo.length){
+    if (userSteps.length && activitiesInfo.length) {
       getNotifications();
     }
   }, [userSteps && activitiesInfo]);
@@ -438,37 +442,41 @@ function Dashboard() {
   const momentNotifications = [];
 
   const getNotifications = () => {
-    console.log('Notificaciones');
-        
+    console.log("Notificaciones");
+
     const now = new Date();
     const twentyFourHoursAgo = new Date(now - 24 * 60 * 60 * 1000);
     const fiveMinutesAgo = new Date(now - 5 * 60 * 1000);
     const totalChanges = {};
-  
+
     userSteps.forEach((step, index) => {
       const createdAt = new Date(step.createdAt);
       const timeDifference = now - createdAt;
-  
+
       if (timeDifference <= 24 * 60 * 60 * 1000) {
         const timeParts = {
           days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
           hours: Math.floor(
             (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
           ),
-          minutes: Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60)),
+          minutes: Math.floor(
+            (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+          ),
           seconds: Math.floor((timeDifference % (1000 * 60)) / 1000),
         };
-  
+
         const userId = step.UserId; // Obtener el ID del usuario que realizó el paso
         const user = totalUsers?.find((user) => user.id === userId);
         const activityInfo = activitiesInfo?.[index];
-        const activityName = activityInfo ? activityInfo?.title : "Actividad no encontrada";
-  
+        const activityName = activityInfo
+          ? activityInfo?.title
+          : "Actividad no encontrada";
+
         const hoursDifference = timeParts.hours;
         const minutesDifference = timeParts.minutes;
         const daysDifference = timeParts.days;
         let timeAgo = "";
-  
+
         switch (true) {
           case hoursDifference === 0:
             timeAgo =
@@ -499,11 +507,11 @@ function Dashboard() {
               timeAgo += `, ${hoursDifference} horas`;
             }
         }
-  
+
         const message = `El usuario ${
           user?.username || "Usuario desconocido"
         } completó la actividad "${activityName}" ${timeAgo}.`;
-  
+
         if (Object.values(timeParts).some((part) => part > 0)) {
           totalChanges[index + 1] = {
             user: user?.username || "Usuario desconocido",
@@ -519,7 +527,7 @@ function Dashboard() {
     for (const stepIndex in totalChanges) {
       const change = totalChanges[stepIndex];
       const date = new Date(change.date);
-  
+
       if (date >= fiveMinutesAgo && date <= now) {
         momentNotifications.push(change);
       } else if (date >= twentyFourHoursAgo && date < fiveMinutesAgo) {
@@ -528,7 +536,7 @@ function Dashboard() {
         yesterdayNotifications.push(change);
       }
     }
-  }
+  };
 
   return (
     <div className="flex">
@@ -550,7 +558,9 @@ function Dashboard() {
                         Usuarios activos:
                       </span>
                       <div className="text-900 font-medium text-xl text-center">
-                        {totalActiveUsers ? totalActiveUsers : "Buscando..."}
+                        {totalActiveUsers
+                          ? totalActiveUsers
+                          : "Sin información"}
                       </div>
                     </div>
                   </div>
@@ -584,9 +594,7 @@ function Dashboard() {
                         Actividades activas:
                       </span>
                       <div className="text-900 font-medium text-xl text-center">
-                        {totalActivities
-                          ? totalActivities
-                          : "Esperando usuarios..."}
+                        {totalActivities ? totalActivities : "Sin información"}
                       </div>
                     </div>
                   </div>
@@ -620,7 +628,7 @@ function Dashboard() {
                         Graduados:{" "}
                       </span>
                       <div className="text-900 font-medium  text-xl text-center">
-                        {graduatedCount ? graduatedCount : "Buscando..."}
+                        {graduatedCount ? graduatedCount : "Sin información"}
                       </div>
                     </div>
                   </div>
@@ -658,7 +666,7 @@ function Dashboard() {
                           ? ((graduatedCount / remainingCount) * 100).toFixed(
                               2
                             ) + "%"
-                          : "No disponible."}
+                          : "Sin información"}
                       </div>
                     </div>
                   </div>
@@ -728,9 +736,7 @@ function Dashboard() {
                 )}
                 {todayNotifications?.length > 0 && (
                   <div>
-                    <span className="block text-600 font-medium mb-3">
-                      Hoy
-                    </span>
+                    <span className="block text-600 font-medium mb-3">Hoy</span>
                     <ul className="p-0 mx-0 mt-0 mb-4 list-none">
                       {todayNotifications?.map((notification, index) => (
                         <li
