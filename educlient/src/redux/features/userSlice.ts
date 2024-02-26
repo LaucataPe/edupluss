@@ -20,7 +20,7 @@ const initialState:initState = {
         companyId: 0,
 		tipo: '',
 		avatarImage: '',
-		roleId: 0,
+		roleId: null,
 		active: false
     },
     status: 'idle'

@@ -142,9 +142,14 @@ User.hasMany(Review, {
  }); */
 
 User.beforeUpdate((user) => {
-  if (user.tipo !== "empleado" && user.roleId) {
-    throw new Error("Solo los usuarios de tipo: empleado pueden tener un rol");
-  }
+try {
+  user.tipo === "admin" && user.roleId ? (user.roleId = null) : null;
+} catch (error) {
+  throw new Error(
+    "Solo los usuarios de tipo: empleado pueden tener un rol",
+    error
+  );
+}
 });
 
 

@@ -102,19 +102,19 @@ const Crud = () => {
 
     if (user.username.trim() && user.email.trim() && user.tipo.trim()) {
       if (user.id !== 0) {
-        // Filtra las propiedades con cadenas no vacías o null
+        if (user.tipo.trim().toLowerCase() === "admin") {
+          user.roleId = null;
+        }
         user = Object.fromEntries(
           Object.entries(user).filter(
             ([_, value]) => value !== "" && value !== null
           )
         ) as Demo.User;
-
         try {
           const { data } = await axios.patch(
             "http://localhost:3001/user/patch",
             user
           );
-          console.log(data);
           if (data) {
             //@ts-ignore
             dispatch(getUsersByCompany(user.companyId));
