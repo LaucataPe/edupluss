@@ -70,8 +70,6 @@ function Dashboard() {
             const activeUsers = companyUsers.filter(
               (user) => user.active === true && user.id !== logUser.id
             );
-            console.log(activeUsers);
-
             // Establece el total de usuarios activos en el estado
             setTotalUsers(activeUsers);
             setTotalActiveUsers(activeUsers.length);
@@ -90,8 +88,6 @@ function Dashboard() {
       if (logUser.id) {
         try {
           await dispatch(getEmpresaActivities(logUser.id));
-          console.log(activities);
-
           const total = activities.length;
 
           setTotalActivities(total);
@@ -120,13 +116,13 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3001userStep");
-        const userSteps = response.data;
+        const response = await axios.get("http://localhost:3001/userStep");
+        const userSteps = response?.data;
         setUserSteps(userSteps);
         const count = {};
 
         userSteps.forEach((userStep: any) => {
-          const userId = userStep.UserId;
+          const userId = userStep?.UserId;
 
           if (userId in count) {
             count[userId] += 1;
@@ -288,7 +284,7 @@ function Dashboard() {
 
           for (const area of areas) {
             const response = await axios.get(
-              `http://localhost:3001roles/${area.id}`
+              `http://localhost:3001/roles/${area.id}`
             );
             const roles = response.data;
             allRoles.push(...roles);
@@ -300,13 +296,13 @@ function Dashboard() {
           const calculatedEmployeesByArea = {};
 
           areas.forEach((area) => {
-            calculatedEmployeesByArea[area.name] = 0;
+            calculatedEmployeesByArea[area?.name] = 0;
           });
 
           totalUsers.forEach((user) => {
-            const role = allRoles.find((r) => r.id === user.roleId);
+            const role = allRoles.find((r) => r.id === user?.roleId);
             if (role) {
-              const area = areas.find((a) => a.id === role.areaId);
+              const area = areas.find((a) => a.id === role?.areaId);
               if (area) {
                 calculatedEmployeesByArea[area.name]++;
               }
@@ -442,8 +438,6 @@ function Dashboard() {
   const momentNotifications = [];
 
   const getNotifications = () => {
-    console.log("Notificaciones");
-
     const now = new Date();
     const twentyFourHoursAgo = new Date(now - 24 * 60 * 60 * 1000);
     const fiveMinutesAgo = new Date(now - 5 * 60 * 1000);

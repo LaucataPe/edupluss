@@ -293,9 +293,7 @@ const Crud = () => {
             {findArea.name}
           </span>
         )}
-        {!findArea && (
-          <span className="p-badge p-mr-1 h-auto">No encontrada</span>
-        )}
+        {!findArea && <span className="p-badge p-mr-1 h-auto">Ninguna</span>}
       </>
     );
   };
@@ -310,7 +308,7 @@ const Crud = () => {
           </span>
         )}
         {!findRole && (
-          <span className="p-badge p-badge-info h-auto">No encontrado</span>
+          <span className="p-badge p-badge-info h-auto">Ninguno</span>
         )}
       </>
     );
