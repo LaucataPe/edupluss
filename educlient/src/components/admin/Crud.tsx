@@ -18,7 +18,6 @@ import { RootState } from "../../redux/store";
 import { fetchCompanyAreas } from "../../redux/features/areaSlice";
 import axios from "axios";
 import { getCompanyRoles } from "../../redux/features/roleSlice";
-import { cp } from "fs";
 
 const Crud = () => {
   const dispatch = useAppDispatch();
@@ -38,7 +37,7 @@ const Crud = () => {
     tipo: "",
     avatarImage: "",
     companyId: currentEmpresa,
-    roleId: 0,
+    roleId: null,
   };
   interface InputValue {
     name: string;
@@ -59,7 +58,7 @@ const Crud = () => {
   const toast = useRef<Toast>(null);
 
   useEffect(() => {
-    if(currentEmpresa){
+    if (currentEmpresa) {
       dispatch(getUsersByCompany(currentEmpresa));
       dispatch(fetchCompanyAreas(currentEmpresa));
       dispatch(getCompanyRoles(currentEmpresa));
@@ -105,13 +104,17 @@ const Crud = () => {
       if (user.id !== 0) {
         // Filtra las propiedades con cadenas no vacías o null
         user = Object.fromEntries(
-          Object.entries(user).filter(([_, value]) => value !== "" && value !== null)
+          Object.entries(user).filter(
+            ([_, value]) => value !== "" && value !== null
+          )
         ) as Demo.User;
+
         try {
           const { data } = await axios.patch(
             "http://localhost:3001/user/patch",
             user
           );
+          console.log(data);
           if (data) {
             //@ts-ignore
             dispatch(getUsersByCompany(user.companyId));
@@ -371,11 +374,7 @@ const Crud = () => {
   );
   const deleteUserDialogFooter = (
     <>
-      <Button
-        label="No"
-        icon="pi pi-times"
-        onClick={hideDeleteUserDialog}
-      />
+      <Button label="No" icon="pi pi-times" onClick={hideDeleteUserDialog} />
       <Button label="Sí" icon="pi pi-check" text onClick={deleteUser} />
     </>
   );
@@ -407,10 +406,7 @@ const Crud = () => {
             <div className="col-lg-12">
               <div className="card">
                 <Toast ref={toast} />
-                <Toolbar
-                  className="mb-4"
-                  left={leftToolbarTemplate}
-                ></Toolbar>
+                <Toolbar className="mb-4" left={leftToolbarTemplate}></Toolbar>
 
                 <DataTable
                   ref={dt}
@@ -489,9 +485,7 @@ const Crud = () => {
                   visible={userDialog}
                   style={{ width: "450px" }}
                   header={
-                    user.id !== 0
-                      ? "Edición de Usuario"
-                      : "Creación de Usuario"
+                    user.id !== 0 ? "Edición de Usuario" : "Creación de Usuario"
                   }
                   modal
                   className="p-fluid"
@@ -556,27 +550,7 @@ const Crud = () => {
                       disabled={user.id !== 0 ? !activePassword : false}
                     ></Password>
                     {submitted && !user.password && (
-                      <small className="p-error">
-                        Ingrese una contraseña
-                      </small>
-                    )}
-                  </div>
-                  <div className="field">
-                    <label>Cargo</label>
-                    <Dropdown
-                      id="roles"
-                      value={user.roleId}
-                      options={roles}
-                      onChange={onRoleChange}
-                      placeholder="Seleccionar cargo"
-                      optionLabel="name"
-                      optionValue="id"
-                      filter
-                    />
-                    {submitted && user.roleId === 0 && (
-                      <small className="p-error">
-                        Debe seleccionar un cargo
-                      </small>
+                      <small className="p-error">Ingrese una contraseña</small>
                     )}
                   </div>
                   <div className="field">
@@ -594,7 +568,26 @@ const Crud = () => {
                       </small>
                     )}
                   </div>
-
+                  {user.tipo !== "admin" && (
+                    <div className="field">
+                      <label>Cargo</label>
+                      <Dropdown
+                        id="roles"
+                        value={user.tipo === "admin" ? null : user.roleId}
+                        options={roles}
+                        onChange={onRoleChange}
+                        placeholder="Seleccionar cargo"
+                        optionLabel="name"
+                        optionValue="id"
+                        filter
+                      />
+                      {submitted && user.roleId === 0 && (
+                        <small className="p-error">
+                          Debe seleccionar un cargo
+                        </small>
+                      )}
+                    </div>
+                  )}
                   <div className="field flex">
                     <label className="pr-3">Activo</label>
                     <InputSwitch
