@@ -86,7 +86,6 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       if (logUser.id) {
-        console.log(logUser);
         try {
           const response = await axios.get(
             `http://localhost:3001/activities/${logUser.companyId}`
