@@ -86,13 +86,14 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       if (logUser.id) {
+        console.log(logUser);
         try {
-        const response = await axios.get(
-          `http://localhost:3001/activities`
-        );
-        const activities = response.data;
-        // Calcula la cantidad total de actividades
-        const total = activities.length;
+          const response = await axios.get(
+            `http://localhost:3001/activities/${logUser.companyId}`
+          );
+          const activities = response.data;
+          // Calcula la cantidad total de actividades
+          const total = activities.length;
           setTotalActivities(total);
           setActivitiesInfo(activities);
           const totalSteps: any = {};
