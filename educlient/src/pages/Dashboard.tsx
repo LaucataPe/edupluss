@@ -87,9 +87,12 @@ function Dashboard() {
     const fetchData = async () => {
       if (logUser.id) {
         try {
-          await dispatch(getEmpresaActivities(logUser.id));
-          const total = activities.length;
-
+        const response = await axios.get(
+          `http://localhost:3001/activities`
+        );
+        const activities = response.data;
+        // Calcula la cantidad total de actividades
+        const total = activities.length;
           setTotalActivities(total);
           setActivitiesInfo(activities);
           const totalSteps: any = {};
