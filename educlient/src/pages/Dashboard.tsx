@@ -183,13 +183,15 @@ function Dashboard() {
 
   useEffect(() => {
     if (totalUsers && logUser) {
-      const usersWithCompanyId1 = totalUsers.filter(
-        (user) => user.companyId === logUser.companyId && user.id !== logUser.id
+      const usersWithLogUserCompanyId = totalUsers.filter(
+        (user) =>
+          user.companyId === logUser.companyId &&
+          user.id !== logUser.id &&
+          user.tipo !== "admin"
       );
-
       // Almacenar las etiquetas en el estado
-      const usernames = usersWithCompanyId1.map((user) => user.username);
-      const usersWithProgress = usersWithCompanyId1.map((user) => {
+      const usernames = usersWithLogUserCompanyId.map((user) => user.username);
+      const usersWithProgress = usersWithLogUserCompanyId.map((user) => {
         const userId = user.id;
         const completedSteps = userIdCount[userId] || 0;
         const totalSteps = totalStepsByRoleId[user.roleId] || 0;
@@ -203,6 +205,7 @@ function Dashboard() {
           progreso: Math.round(progress), // Redondear el progreso a un número entero
         };
       });
+
       setUsersWithProgress(usersWithProgress);
       setLabels(usernames);
     }
