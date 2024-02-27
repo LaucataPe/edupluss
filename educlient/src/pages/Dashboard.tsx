@@ -64,6 +64,7 @@ function Dashboard() {
 
   const [roles, setRoles] = useState([]);
   const [employeesByArea, setEmployeesByArea] = useState([]);
+  const [totalChanges, setTotalChanges] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,8 +100,7 @@ function Dashboard() {
           const activities = response.data;
           // Calcula la cantidad total de actividades
           const total = activities.length;
-          setTotalActivities(total);
-          setActivitiesInfo(activities);
+
           const totalSteps: any = {};
 
           activities.forEach((activity: any) => {
@@ -111,7 +111,8 @@ function Dashboard() {
               totalSteps[roleId] = numberSteps;
             }
           });
-
+          setTotalActivities(total);
+          setActivitiesInfo(activities);
           // Establece el objeto totalStepsByRoleId en el estado
           setTotalStepsByRoleId(totalSteps);
         } catch (error) {
@@ -203,8 +204,10 @@ function Dashboard() {
           user.tipo !== "admin"
       );
       // Almacenar las etiquetas en el estado
-      const usernames = usersWithLogUserCompanyId.map((user:any) => user.username);
-      const usersWithProgress = usersWithLogUserCompanyId.map((user:any) => {
+      const usernames = usersWithLogUserCompanyId.map(
+        (user: any) => user.username
+      );
+      const usersWithProgress = usersWithLogUserCompanyId.map((user: any) => {
         const userId = user.id; //@ts-ignore
         const completedSteps = userIdCount[userId] || 0; //@ts-ignore
         const totalSteps = totalStepsByRoleId[user.roleId] || 0;
@@ -457,89 +460,104 @@ function Dashboard() {
   }, [windowDimensions]);
   //Notificaciones
 
-  const now = new Date();
+  const now: any = new Date();
   const twentyFourHoursAgo = new Date(now - 24 * 60 * 60 * 1000);
   const fiveMinutesAgo = new Date(now - 5 * 60 * 1000);
-  const totalChanges = {};
-  userSteps.forEach((step?, index) => {
-    const createdAt = new Date(step?.createdAt);
-    const timeDifference = now - createdAt;
+  useEffect(() => {
+    if (
+      userSteps &&
+      userSteps.length > 0 &&
+      totalUsers && //@ts-ignore
+      totalUsers.length > 0
+    ) {
+      const now: any = new Date();
+      const newTotalChanges: any = [];
 
-    if (timeDifference <= 24 * 60 * 60 * 1000) {
-      const timeParts = {
-        days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor(
-          (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        ),
-        minutes: Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((timeDifference % (1000 * 60)) / 1000),
-      };
+      userSteps.forEach((step, index) => {
+        //@ts-ignore
+        const createdAt: any = new Date(step.createdAt);
+        const timeDifference = now - createdAt;
 
-      const userId = step?.UserId; // Obtener el ID del usuario que realizó el paso
-      const user = totalUsers?.find((user) => user.id === userId);
-      const activityInfo = activitiesInfo[index];
-      const activityName = activityInfo
-        ? activityInfo?.title
-        : "Actividad no encontrada";
+        if (timeDifference <= 24 * 60 * 60 * 1000) {
+          const timeParts = {
+            days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
+            hours: Math.floor(
+              (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            ),
+            minutes: Math.floor(
+              (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+            ),
+            seconds: Math.floor((timeDifference % (1000 * 60)) / 1000),
+          };
+          //@ts-ignore
+          const userId = step?.UserId; //@ts-ignore
+          const user = totalUsers.find((user) => user.id === userId);
+          const activityInfo = activitiesInfo?.[index];
+          const activityName = activityInfo //@ts-ignore
+            ? activityInfo.title
+            : "Actividad no encontrada";
 
-      const hoursDifference = timeParts.hours;
-      const minutesDifference = timeParts.minutes;
-      const daysDifference = timeParts.days;
-      let timeAgo = "";
+          const hoursDifference = timeParts.hours;
+          const minutesDifference = timeParts.minutes;
+          const daysDifference = timeParts.days;
+          let timeAgo = "";
 
-      switch (true) {
-        case hoursDifference === 0:
-          timeAgo =
-            timeParts.days !== 0
-              ? timeParts.days === 1
-                ? `hace 1 día`
-                : `hace ${daysDifference} días`
-              : minutesDifference === 1
-              ? `hace 1 minuto`
-              : `hace ${minutesDifference} minutos`;
-          break;
-        case hoursDifference === 1:
-          timeAgo = `hace 1 hora`;
-          if (minutesDifference !== 0) {
-            timeAgo += `, ${minutesDifference} minutos`;
+          switch (true) {
+            case hoursDifference === 0:
+              timeAgo =
+                timeParts.days !== 0
+                  ? timeParts.days === 1
+                    ? `hace 1 día`
+                    : `hace ${daysDifference} días`
+                  : minutesDifference === 1
+                  ? `hace 1 minuto`
+                  : `hace ${minutesDifference} minutos`;
+              break;
+            case hoursDifference === 1:
+              timeAgo = `hace 1 hora`;
+              if (minutesDifference !== 0) {
+                timeAgo += `, ${minutesDifference} minutos`;
+              }
+              break;
+            default:
+              timeAgo =
+                timeParts.days !== 0
+                  ? timeParts.days === 1
+                    ? `hace 1 día`
+                    : `hace ${daysDifference} días`
+                  : minutesDifference === 1
+                  ? `hace 1 minuto`
+                  : `hace ${minutesDifference} minutos`;
+              if (hoursDifference !== 0) {
+                timeAgo += `, ${hoursDifference} horas`;
+              }
           }
-          break;
-        default:
-          timeAgo =
-            timeParts.days !== 0
-              ? timeParts.days === 1
-                ? `hace 1 día`
-                : `hace ${daysDifference} días`
-              : minutesDifference === 1
-              ? `hace 1 minuto`
-              : `hace ${minutesDifference} minutos`;
-          if (hoursDifference !== 0) {
-            timeAgo += `, ${hoursDifference} horas`;
+
+          const message = `El usuario ${
+            user?.username || "Usuario desconocido"
+          } completó la actividad "${activityName}" ${timeAgo}.`;
+
+          if (Object.values(timeParts).some((part) => part > 0)) {
+            newTotalChanges[index + 1] = {
+              user: user?.username || "Usuario desconocido",
+              step: index + 1,
+              activity: activityName,
+              date: createdAt,
+              message: message,
+            };
           }
-      }
+        }
+      });
 
-      const message = `El usuario ${
-        user?.username || "Usuario desconocido"
-      } completó la actividad "${activityName}" ${timeAgo}.`;
-
-      if (Object.values(timeParts).some((part) => part > 0)) {
-        totalChanges[index + 1] = {
-          user: user?.username || "Usuario desconocido",
-          step: index + 1,
-          activity: activityName,
-          date: createdAt,
-          message: message,
-        };
-      }
+      setTotalChanges(newTotalChanges);
     }
-  });
-
-  const todayNotifications = [];
-  const yesterdayNotifications = [];
-  const momentNotifications = [];
+  }, [userSteps, totalUsers, activitiesInfo]);
+  const todayNotifications: any = [];
+  const yesterdayNotifications: any = [];
+  const momentNotifications: any = [];
 
   for (const stepIndex in totalChanges) {
-    const change = totalChanges[stepIndex];
+    const change = totalChanges[stepIndex]; //@ts-ignore
     const date = new Date(change.date);
 
     if (date >= fiveMinutesAgo && date <= now) {
@@ -705,6 +723,7 @@ function Dashboard() {
                 <div className="card mb-0 p-1">
                   <Link to="/areas">
                     <div style={{ width: "100%", height: "400px" }}>
+                      {/*@ts-ignore*/}
                       <Bar options={options2} data={data2} />
                     </div>
                   </Link>
@@ -714,6 +733,7 @@ function Dashboard() {
                 <div className="card mb-0">
                   <Link to="/progress">
                     <div style={{ width: "100%", height: "400px" }}>
+                      {/*@ts-ignore*/}
                       <Bar options={options} data={data} />
                     </div>
                   </Link>
@@ -729,21 +749,23 @@ function Dashboard() {
                       Últimas actualizaciones
                     </span>
                     <ul className="p-0 mx-0 mt-0 mb-4 list-none">
-                      {momentNotifications?.map((notification, index) => (
-                        <li
-                          key={index}
-                          className="flex align-items-center py-2 border-bottom-1 surface-border"
-                        >
-                          <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                            <i className="pi pi-book text-xl text-blue-500" />
-                          </div>
-                          <span className="text-900 line-height-3">
-                            El usuario {notification.user} realizó el paso{" "}
-                            {notification.step} de esta actividad{" "}
-                            {notification.activity}
-                          </span>
-                        </li>
-                      ))}
+                      {momentNotifications?.map(
+                        (notification: any, index: any) => (
+                          <li
+                            key={index}
+                            className="flex align-items-center py-2 border-bottom-1 surface-border"
+                          >
+                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
+                              <i className="pi pi-book text-xl text-blue-500" />
+                            </div>
+                            <span className="text-900 line-height-3">
+                              El usuario {notification.user} realizó el paso{" "}
+                              {notification.step} de esta actividad{" "}
+                              {notification.activity}
+                            </span>
+                          </li>
+                        )
+                      )}
                     </ul>
                   </div>
                 )}
@@ -751,21 +773,23 @@ function Dashboard() {
                   <div>
                     <span className="block text-600 font-medium mb-3">Hoy</span>
                     <ul className="p-0 mx-0 mt-0 mb-4 list-none">
-                      {todayNotifications?.map((notification, index) => (
-                        <li
-                          key={index}
-                          className="flex align-items-center py-2 border-bottom-1 surface-border"
-                        >
-                          <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                            <i className="pi pi-book text-xl text-blue-500" />
-                          </div>
-                          <span className="text-900 line-height-3">
-                            El usuario {notification.user} realizó el paso{" "}
-                            {notification.step} de esta actividad{" "}
-                            {notification.activity}
-                          </span>
-                        </li>
-                      ))}
+                      {todayNotifications?.map(
+                        (notification: any, index: any) => (
+                          <li
+                            key={index}
+                            className="flex align-items-center py-2 border-bottom-1 surface-border"
+                          >
+                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
+                              <i className="pi pi-book text-xl text-blue-500" />
+                            </div>
+                            <span className="text-900 line-height-3">
+                              El usuario {notification.user} realizó el paso{" "}
+                              {notification.step} de esta actividad{" "}
+                              {notification.activity}
+                            </span>
+                          </li>
+                        )
+                      )}
                     </ul>
                   </div>
                 )}
@@ -776,21 +800,23 @@ function Dashboard() {
                       YESTERDAY
                     </span>
                     <ul className="p-0 m-0 list-none">
-                      {yesterdayNotifications.map((notification, index) => (
-                        <li
-                          key={index}
-                          className="flex align-items-center py-2 border-bottom-1 surface-border"
-                        >
-                          <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
-                            <i className="pi pi-dollar text-xl text-blue-500" />
-                          </div>
-                          <span className="text-900 line-height-3">
-                            El usuario {notification.user} realizó el paso{" "}
-                            {notification.step} de esta actividad{" "}
-                            {notification.activity}
-                          </span>
-                        </li>
-                      ))}
+                      {yesterdayNotifications.map(
+                        (notification: any, index: any) => (
+                          <li
+                            key={index}
+                            className="flex align-items-center py-2 border-bottom-1 surface-border"
+                          >
+                            <div className="w-3rem h-3rem flex align-items-center justify-content-center bg-blue-100 border-circle mr-3 flex-shrink-0">
+                              <i className="pi pi-dollar text-xl text-blue-500" />
+                            </div>
+                            <span className="text-900 line-height-3">
+                              El usuario {notification.user} realizó el paso{" "}
+                              {notification.step} de esta actividad{" "}
+                              {notification.activity}
+                            </span>
+                          </li>
+                        )
+                      )}
                     </ul>
                   </div>
                 )}
