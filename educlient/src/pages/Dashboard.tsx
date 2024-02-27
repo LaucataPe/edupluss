@@ -470,88 +470,98 @@ function Dashboard() {
       totalUsers && //@ts-ignore
       totalUsers.length > 0
     ) {
-      const now: any = new Date();
-      const newTotalChanges: any = [];
+      const updateTotalChanges = () => {
+        const now: any = new Date();
+        const newTotalChanges: any = [];
 
-      userSteps.forEach((step, index) => {
-        //@ts-ignore
-        const createdAt: any = new Date(step.createdAt);
-        const timeDifference = now - createdAt;
-
-        if (timeDifference <= 24 * 60 * 60 * 1000) {
-          const timeParts = {
-            days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
-            hours: Math.floor(
-              (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-            ),
-            minutes: Math.floor(
-              (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-            ),
-            seconds: Math.floor((timeDifference % (1000 * 60)) / 1000),
-          };
+        userSteps.forEach((step, index) => {
           //@ts-ignore
-          const userId = step?.UserId; //@ts-ignore
-          const user = totalUsers.find((user) => user.id === userId);
-          const activityInfo = activitiesInfo?.[index];
-          const activityName = activityInfo //@ts-ignore
-            ? activityInfo.title
-            : "Actividad no encontrada";
+          const createdAt: any = new Date(step.createdAt);
+          const timeDifference = now - createdAt;
 
-          const hoursDifference = timeParts.hours;
-          const minutesDifference = timeParts.minutes;
-          const daysDifference = timeParts.days;
-          let timeAgo = "";
-
-          switch (true) {
-            case hoursDifference === 0:
-              timeAgo =
-                timeParts.days !== 0
-                  ? timeParts.days === 1
-                    ? `hace 1 día`
-                    : `hace ${daysDifference} días`
-                  : minutesDifference === 1
-                  ? `hace 1 minuto`
-                  : `hace ${minutesDifference} minutos`;
-              break;
-            case hoursDifference === 1:
-              timeAgo = `hace 1 hora`;
-              if (minutesDifference !== 0) {
-                timeAgo += `, ${minutesDifference} minutos`;
-              }
-              break;
-            default:
-              timeAgo =
-                timeParts.days !== 0
-                  ? timeParts.days === 1
-                    ? `hace 1 día`
-                    : `hace ${daysDifference} días`
-                  : minutesDifference === 1
-                  ? `hace 1 minuto`
-                  : `hace ${minutesDifference} minutos`;
-              if (hoursDifference !== 0) {
-                timeAgo += `, ${hoursDifference} horas`;
-              }
-          }
-
-          const message = `El usuario ${
-            user?.username || "Usuario desconocido"
-          } completó la actividad "${activityName}" ${timeAgo}.`;
-
-          if (Object.values(timeParts).some((part) => part > 0)) {
-            newTotalChanges[index + 1] = {
-              user: user?.username || "Usuario desconocido",
-              step: index + 1,
-              activity: activityName,
-              date: createdAt,
-              message: message,
+          if (timeDifference <= 24 * 60 * 60 * 1000) {
+            const timeParts = {
+              days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
+              hours: Math.floor(
+                (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+              ),
+              minutes: Math.floor(
+                (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+              ),
+              seconds: Math.floor((timeDifference % (1000 * 60)) / 1000),
             };
-          }
-        }
-      });
+            //@ts-ignore
+            const userId = step?.UserId; //@ts-ignore
+            const user = totalUsers.find((user) => user.id === userId);
+            const activityInfo = activitiesInfo?.[index];
+            const activityName = activityInfo //@ts-ignore
+              ? activityInfo.title
+              : "Actividad no encontrada";
 
-      setTotalChanges(newTotalChanges);
+            const hoursDifference = timeParts.hours;
+            const minutesDifference = timeParts.minutes;
+            const daysDifference = timeParts.days;
+            let timeAgo = "";
+
+            switch (true) {
+              case hoursDifference === 0:
+                timeAgo =
+                  timeParts.days !== 0
+                    ? timeParts.days === 1
+                      ? `hace 1 día`
+                      : `hace ${daysDifference} días`
+                    : minutesDifference === 1
+                    ? `hace 1 minuto`
+                    : `hace ${minutesDifference} minutos`;
+                break;
+              case hoursDifference === 1:
+                timeAgo = `hace 1 hora`;
+                if (minutesDifference !== 0) {
+                  timeAgo += `, ${minutesDifference} minutos`;
+                }
+                break;
+              default:
+                timeAgo =
+                  timeParts.days !== 0
+                    ? timeParts.days === 1
+                      ? `hace 1 día`
+                      : `hace ${daysDifference} días`
+                    : minutesDifference === 1
+                    ? `hace 1 minuto`
+                    : `hace ${minutesDifference} minutos`;
+                if (hoursDifference !== 0) {
+                  timeAgo += `, ${hoursDifference} horas`;
+                }
+            }
+
+            const message = `El usuario ${
+              user?.username || "Usuario desconocido"
+            } completó la actividad "${activityName}" ${timeAgo}.`;
+
+            if (Object.values(timeParts).some((part) => part > 0)) {
+              newTotalChanges[index + 1] = {
+                user: user?.username || "Usuario desconocido",
+                step: index + 1,
+                activity: activityName,
+                date: createdAt,
+                message: message,
+              };
+            }
+          }
+        });
+
+        setTotalChanges(newTotalChanges);
+      };
+      updateTotalChanges();
+      const intervalId = setInterval(
+        updateTotalChanges,
+        Math.floor(500 + Math.random() * 1500)
+      );
+
+      return () => clearInterval(intervalId);
     }
   }, [userSteps, totalUsers, activitiesInfo]);
+
   const todayNotifications: any = [];
   const yesterdayNotifications: any = [];
   const momentNotifications: any = [];
