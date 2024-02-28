@@ -18,6 +18,7 @@ import { uploadFile } from "../../firebase/config";
 
 import col from "../../assets/col.png";
 import row from "../../assets/row.png";
+import { handleVideoUpload } from "../../utils/cloudinary";
 
 function AddStep() {
   const dispatch = useAppDispatch();
@@ -138,30 +139,8 @@ function AddStep() {
     setStep({ ...step, file: "" });
     setErrors(validate({ ...step }));
   };
-  const handleVideoUpload = async (file: File) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("tags", "codeinfuse, medium, gist");
-      formData.append("upload_preset", "edupluss"); // Reemplaza con tu upload preset de Cloudinary
-      formData.append("api_key", "177349447724448");
 
-      const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dlzrjejko/video/upload",
-        formData,
-        {
-          headers: { "X-Requested-With": "XMLHttpRequest" },
-        }
-      );
-      return response.data.secure_url;
-    } catch (error) {
-      console.error("Error uploading video:", error);
-    }
-  };
-
-  const handleSubmit = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setIsLoading(true);
     try {
@@ -176,7 +155,14 @@ function AddStep() {
 
       // Esperar a que se cargue el archivo de video si es necesario
       if (videoFile) {      
-        updatedStep.video = await handleVideoUpload(videoFile);
+        try {
+          updatedStep.video = await handleVideoUpload(videoFile);
+        } catch (error: any) {
+            setErrors({
+              ...errors,
+              video: `Se presentó un error al subir el video: ${error.message}`,
+            });
+        }
       }
       let response = await axios.post(
         `http://localhost:3001/step`,
@@ -228,8 +214,15 @@ function AddStep() {
       }
 
       // Esperar a que se cargue el archivo de video si es necesario
-      if (videoFile) {
-        updatedStep.video = await handleVideoUpload(videoFile);
+      if (videoFile) {      
+        try {
+          updatedStep.video = await handleVideoUpload(videoFile);
+        } catch (error: any) {
+            setErrors({
+              ...errors,
+              video: `Se presentó un error al subir el video: ${error.message}`,
+            });
+        }
       }
 
       let response = await axios.put(

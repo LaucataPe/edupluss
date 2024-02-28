@@ -41,7 +41,6 @@ function AddActivity() {
     numberSteps: 0,
     companyId: logUser.companyId
   });
-  console.log(logUser)
   const [error, setError] = useState();
   const toast = useRef<Toast>(null);
 
