@@ -175,8 +175,7 @@ function AddStep() {
       }
 
       // Esperar a que se cargue el archivo de video si es necesario
-      if (videoFile) {
-        console.log('Entro');        
+      if (videoFile) {      
         updatedStep.video = await handleVideoUpload(videoFile);
       }
       let response = await axios.post(

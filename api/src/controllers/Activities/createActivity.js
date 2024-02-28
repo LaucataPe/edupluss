@@ -1,7 +1,7 @@
 const { Activity, Role } = require("../../db");
 const { catchedAsync } = require("../../utils");
 const createActivity = async (req, res) => {
-  const { title, roleId, orderId } = req.body;
+  const { title, roleId, orderId, companyId } = req.body;
   try {
     const role = await Role.findByPk(roleId);
     if (role) {
@@ -10,6 +10,7 @@ const createActivity = async (req, res) => {
         title,
         roleId,
         active: true,
+        companyId,
       });
       res.status(200).json(newActivity);
     } else {

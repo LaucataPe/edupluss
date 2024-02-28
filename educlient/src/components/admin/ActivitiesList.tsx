@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Button } from "primereact/button";
 import { useState } from "react";
 import { useAppDispatch } from "../../hooks/typedSelectors";

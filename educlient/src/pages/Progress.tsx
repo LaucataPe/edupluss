@@ -210,51 +210,54 @@ function Progress() {
     <div className="flex">
       <div className="w-[100%]">
         <div className="card my-3 mx-3">
-            <div className="p-5">
-              <h2 className="text-blue-500">Progreso general por usuario</h2>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <Button
-                    rounded
-                    severity="info"
-                    icon="pi pi-arrow-left"
-                    onClick={() => {
-                      if (currentPage > 1) {
-                        setCurrentPage((prevPage) => prevPage - 1);
-                      }
-                    }}
-                    disabled={currentPage === 1}
-                    className="btn btn-primary"
-                  ></Button>
-                  <Button
-                    rounded
-                    severity="info"
-                    icon="pi pi-arrow-right"
-                    onClick={() => {
-                      if (currentPage < totalPages) {
-                        setCurrentPage((prevPage) => prevPage + 1);
-                      }
-                    }}
-                    disabled={currentPage === totalPages}
-                    className="btn btn-primary"
-                    style={{ marginLeft: "10px" }}
-                  ></Button>
-                </div>
+          <div className="p-5">
+            <h2 className="text-blue-500">Progreso general por usuario</h2>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                rounded
+                severity="info"
+                icon="pi pi-arrow-left"
+                onClick={() => {
+                  if (currentPage > 1) {
+                    setCurrentPage((prevPage) => prevPage - 1);
+                  }
+                }}
+                disabled={currentPage === 1}
+                className="btn btn-primary"
+              ></Button>
+              <Button
+                rounded
+                severity="info"
+                icon="pi pi-arrow-right"
+                onClick={() => {
+                  if (currentPage < totalPages) {
+                    setCurrentPage((prevPage) => prevPage + 1);
+                  }
+                }}
+                disabled={currentPage === totalPages}
+                className="btn btn-primary"
+                style={{ marginLeft: "10px" }}
+              ></Button>
+            </div>
 
-              {showProgressModal && (
-                <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-80">
-                  <div className="dark:bg-[whitesmoke] bg-[#040d19] p-0 rounded-md shadow-md">
-                    <ProgressModal
-                      activities={activities}
-                      closeModal={closeProgressModal}
-                      userSteps={userSteps}
-                      selectedUser={selectedUserId}
-                    />
-                  </div>
+            {showProgressModal && (
+              <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-80">
+                <div className="dark:bg-[whitesmoke] bg-[#040d19] p-0 rounded-md shadow-md">
+                  <ProgressModal
+                    activities={activities}
+                    closeModal={closeProgressModal}
+                    userSteps={userSteps}
+                    selectedUser={selectedUserId}
+                  />
                 </div>
-              )}
+              </div>
+            )}
 
-              <div className="flex">
-                {Object.entries(usersByRole)
+            <div className="flex">
+              {Object.keys(usersByRole).length === 0 ? (
+                <div>No se encontro ningún progreso.</div>
+              ) : (
+                Object.entries(usersByRole)
                   .slice(
                     (currentPage - 1) * itemsPerPage,
                     currentPage * itemsPerPage
@@ -328,9 +331,10 @@ function Progress() {
                         )}
                       </div>
                     </div>
-                  ))}
-              </div>
+                  ))
+              )}
             </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export const AxiosInterceptor = () => {

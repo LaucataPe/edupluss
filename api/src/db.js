@@ -11,15 +11,15 @@ const sequelize = new Sequelize(
   }
 );
 
-// const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-//   host: DB_HOST,
-//   dialect: 'mysql',
-//   dialectOptions: {
-//     supportBigNumbers: true,
-//     bigNumberStrings: true,
-//     json: true
-//   }
-// });
+/*const sequelize = new Sequelize('DB_NAME', DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  dialect: 'mysql',
+  dialectOptions: {
+    supportBigNumbers: true,
+    bigNumberStrings: true,
+    json: true
+  }
+});*/
 
 async function probandoDb() {
   try {
@@ -59,8 +59,18 @@ sequelize.models = Object.fromEntries(capsEntries);
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
 
-const { Company, Step, Activity, User, Area, Role, UserStep, TestGrade, Review, Subscription } =
-  sequelize.models;
+const {
+  Company,
+  Step,
+  Activity,
+  User,
+  Area,
+  Role,
+  UserStep,
+  TestGrade,
+  Review,
+  Subscription,
+} = sequelize.models;
 console.log(sequelize.models);
 
 // Aca vendrian las relaciones
@@ -76,8 +86,8 @@ Company.hasMany(User, {
   foreignKey: "companyId",
 });
 
-User.belongsTo(Company, { 
-  foreignKey: 'companyId' 
+User.belongsTo(Company, {
+  foreignKey: "companyId",
 });
 
 Area.hasMany(Role, {
@@ -97,7 +107,7 @@ Role.hasMany(User, {
 });
 
 User.belongsTo(Role, {
-  foreignKey: 'roleId',
+  foreignKey: "roleId",
 });
 
 User.belongsToMany(Step, {
@@ -113,52 +123,55 @@ Step.belongsToMany(User, {
 });
 
 Activity.hasMany(TestGrade, {
-  foreignKey: 'activityId', 
+  foreignKey: "activityId",
 });
 
 TestGrade.belongsTo(Activity, {
-  foreignKey: 'activityId',
+  foreignKey: "activityId",
 });
 
 User.hasMany(TestGrade, {
-  foreignKey: 'userId',
+  foreignKey: "userId",
 });
 
 TestGrade.belongsTo(User, {
-  foreignKey: 'userId',
+  foreignKey: "userId",
 });
 
-Activity.hasMany(Review, { 
-  foreignKey: 'activityId', 
+Activity.hasMany(Review, {
+  foreignKey: "activityId",
 });
 
-User.hasMany(Review, { 
-  foreignKey: 'userId', 
+User.hasMany(Review, {
+  foreignKey: "userId",
 });
 
-
- /* User.hasMany(UserActivityStep, {
+/* User.hasMany(UserActivityStep, {
    foreignKey: 'userId'
  }); */
+Activity.belongsTo(Company, {
+  foreignKey: "companyId",
+});
 
 User.beforeUpdate((user) => {
-  if (user.tipo !== "empleado" && user.roleId) {
-    throw new Error("Solo los usuarios de tipo: empleado pueden tener un rol");
+  try {
+    user.tipo === "admin" && user.roleId ? (user.roleId = null) : null;
+  } catch (error) {
+    throw new Error(
+      "Solo los usuarios de tipo: empleado pueden tener un rol",
+      error
+    );
   }
 });
 
-
 Subscription.belongsTo(Company, {
-  foreignKey: 'companyId',
-  onDelete: 'CASCADE', // Esto eliminará la suscripción si se elimina la empresa
+  foreignKey: "companyId",
+  onDelete: "CASCADE", // Esto eliminará la suscripción si se elimina la empresa
 });
-
 
 Company.hasMany(Subscription, {
-  foreignKey: 'companyId',
+  foreignKey: "companyId",
 });
-
-
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');

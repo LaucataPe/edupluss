@@ -1,8 +1,9 @@
+//@ts-nocheck
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Empresa, User } from "../../utils/interfaces";
 import { useAppDispatch } from "../../hooks/typedSelectors";
-import { fetchUsers, getUsersByCompany } from "../../redux/features/userSlice";
+import { getUsersByCompany } from "../../redux/features/userSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { getCompanyRoles } from "../../redux/features/roleSlice";
@@ -506,9 +507,7 @@ let [user, setUser] = useState<Demo.User>(emptyUser);
                   ref={dt}
                   value={filteredUsers.length >= 0 && flag === false ? filteredUsers : users}
                   selection={selectedUsers}
-                  onSelectionChange={(e) =>
-                    setSelectedUsers(e.value as Demo.User[])
-                  }
+                  onSelectionChange={(e) => setSelectedUsers(e.value as Demo.User[])}
                   dataKey="id"
                   paginator
                   rows={10}

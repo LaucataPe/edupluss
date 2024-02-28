@@ -5,6 +5,7 @@ const { generateToken } = require('../../utils/jwtHandler');
 
 const patchUser = async(data) => {
   const { email } = data;   
+  console.log(data)
     try {
         const getUser = await User.findByPk(data.id);
     

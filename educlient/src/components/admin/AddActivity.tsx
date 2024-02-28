@@ -38,9 +38,10 @@ function AddActivity() {
     hasTest: false,
     formURL: '',
     excelURL: '',
-    numberSteps: 0
+    numberSteps: 0,
+    companyId: logUser.companyId
   });
-  
+  console.log(logUser)
   const [error, setError] = useState();
   const toast = useRef<Toast>(null);
 
@@ -64,12 +65,16 @@ function AddActivity() {
       }
       const findActivity = activities.find((act) => act.id === Number(actId));
       if (findActivity) {
-        setActivity({ title: findActivity.title, roleId: findActivity.roleId,
-        orderId: Number(orderId),
-        hasTest: false,
-        formURL: '',
-        excelURL: '',
-        numberSteps: 0});
+        setActivity({
+          title: findActivity.title,
+          roleId: findActivity.roleId,
+          orderId: Number(orderId),
+          hasTest: false,
+          formURL: "",
+          excelURL: "",
+          numberSteps: 0,
+          companyId: logUser.companyId,
+        });
       }
     }
   }, [actId, roles]);
@@ -94,9 +99,10 @@ function AddActivity() {
           roleId: currentRole.id ?? 0,
           orderId: Number(orderId),
           hasTest: false,
-          formURL: '',
-          excelURL: '',
-          numberSteps: 0
+          formURL: "",
+          excelURL: "",
+          numberSteps: 0,
+          companyId: logUser.companyId,
         });
       } catch (error: any) {
         setError(error);
@@ -136,9 +142,10 @@ function AddActivity() {
           roleId: currentRole.id ?? 0,
           orderId: Number(orderId),
           hasTest: false,
-          formURL: '',
-          excelURL: '',
-          numberSteps: 0
+          formURL: "",
+          excelURL: "",
+          numberSteps: 0,
+          companyId: logUser.companyId,
         });
       } catch (error: any) {
         setError(error);

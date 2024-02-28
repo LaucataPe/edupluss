@@ -83,6 +83,7 @@ export interface Activity {
   roleId: number;
   active?: boolean;
   orderId:number;
+  companyId:number;
 }
 
 export interface UserStep {
