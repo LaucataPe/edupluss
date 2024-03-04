@@ -21,6 +21,7 @@ import { getUsersByCompany } from "../redux/features/userSlice";
 import { useAppDispatch } from "../hooks/typedSelectors";
 // import { User } from "../utils/interfaces";
 // import { getEmpresaActivities } from "../redux/features/activitiesSlice";
+import { Demo } from "../utils/types/demo"
 
 ChartJS.register(
   CategoryScale,
@@ -35,34 +36,24 @@ ChartJS.register(
 );
 function Dashboard() {
   const logUser = useSelector((state: RootState) => state.user.logUser);
-  const companyUsers = useSelector((state: RootState) => state.user.users); //@ts-ignore
-
-  const activities = useSelector(
-    (state: RootState) => state.activities.activities
-  );
+  const companyUsers = useSelector((state: RootState) => state.user.users);
   const [chartKey, setChartKey] = useState(0);
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   });
   const dispatch = useAppDispatch();
-  const [totalUsers, setTotalUsers] = useState(null);
+ const [totalUsers, setTotalUsers] = useState<Demo.User[]>([]);
   const [activitiesInfo, setActivitiesInfo] = useState(null);
-  //@ts-ignore
-  const [stepsInfo, setStepsInfo] = useState(null);
   const [totalActiveUsers, setTotalActiveUsers] = useState(null);
   const [totalActivities, setTotalActivities] = useState(null);
   const [totalStepsByRoleId, setTotalStepsByRoleId] = useState({});
   const [userSteps, setUserSteps] = useState([]);
   const [userIdCount, setUserIdCount] = useState({});
-  const [graduatedUsers, setGraduatedUsers] = useState([]); //@ts-ignore
+  const [graduatedUsers, setGraduatedUsers] = useState([]); 
+  const [usersWithProgress, setUsersWithProgress] = useState([]);
 
-  const [labels, setLabels] = useState([]);
-  const [usersWithProgress, setUsersWithProgress] = useState([]); //@ts-ignore
-
-  const [areas, setAreas] = useState([]); //@ts-ignore
-
-  const [roles, setRoles] = useState([]);
+  const [areas, setAreas] = useState([]);
   const [employeesByArea, setEmployeesByArea] = useState([]);
   const [totalChanges, setTotalChanges] = useState([]);
 
@@ -77,7 +68,6 @@ function Dashboard() {
               (user) => user?.active === true && user?.id !== logUser.id
             );
             // Establece el total de usuarios activos en el estado
-            //@ts-ignore
             setTotalUsers(activeUsers); //@ts-ignore
             setTotalActiveUsers(activeUsers.length);
           }
@@ -152,24 +142,11 @@ function Dashboard() {
     fetchData();
   }, []);
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/steps");
-        const steps = response.data;
-        setStepsInfo(steps);
-      } catch (error) {
-        console.error("Error al obtener datos de steps:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     if (totalUsers && totalStepsByRoleId && userIdCount) {
       // Comparación para determinar si un usuario ha "graduado"
-      //@ts-ignore
+
       const graduatedUsers = totalUsers.map((user) => {
+        //@ts-ignore
         const roleIdExists = user.roleId in totalStepsByRoleId;
         const isEmployee = user.tipo === "empleado"; // Verifica si el usuario es "empleado"
 
@@ -182,7 +159,7 @@ function Dashboard() {
             (user.id in userIdCount ? userIdCount[user.id] : 0) >= //@ts-ignore
               totalStepsByRoleId[user.roleId],
         };
-      });
+      }); //@ts-ignore
       setGraduatedUsers(graduatedUsers);
     }
   }, [totalUsers, totalStepsByRoleId, userIdCount]);
@@ -203,10 +180,6 @@ function Dashboard() {
           user.id !== logUser.id &&
           user.tipo !== "admin"
       );
-      // Almacenar las etiquetas en el estado
-      const usernames = usersWithLogUserCompanyId.map(
-        (user: any) => user.username
-      );
       const usersWithProgress = usersWithLogUserCompanyId.map((user: any) => {
         const userId = user.id; //@ts-ignore
         const completedSteps = userIdCount[userId] || 0; //@ts-ignore
@@ -221,9 +194,8 @@ function Dashboard() {
           progreso: Math.round(progress), // Redondear el progreso a un número entero
         };
       });
-
+      //@ts-ignore
       setUsersWithProgress(usersWithProgress);
-      setLabels(usernames);
     }
   }, [totalUsers, userIdCount, totalStepsByRoleId, logUser]);
   const data = {
