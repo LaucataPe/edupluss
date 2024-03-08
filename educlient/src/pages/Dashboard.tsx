@@ -21,7 +21,12 @@ import { getUsersByCompany } from "../redux/features/userSlice";
 import { useAppDispatch } from "../hooks/typedSelectors";
 // import { User } from "../utils/interfaces";
 // import { getEmpresaActivities } from "../redux/features/activitiesSlice";
-import { Demo } from "../utils/types/demo"
+import { Demo } from "../utils/types/demo";
+
+import { io } from "socket.io-client";
+
+const socket = io("https://localhost:3001");
+// Resto de tu lógica del cliente Socket.IO aquí
 
 ChartJS.register(
   CategoryScale,
@@ -43,19 +48,24 @@ function Dashboard() {
     height: window.innerHeight,
   });
   const dispatch = useAppDispatch();
- const [totalUsers, setTotalUsers] = useState<Demo.User[]>([]);
+  const [totalUsers, setTotalUsers] = useState<Demo.User[]>([]);
   const [activitiesInfo, setActivitiesInfo] = useState(null);
   const [totalActiveUsers, setTotalActiveUsers] = useState(null);
   const [totalActivities, setTotalActivities] = useState(null);
   const [totalStepsByRoleId, setTotalStepsByRoleId] = useState({});
   const [userSteps, setUserSteps] = useState([]);
   const [userIdCount, setUserIdCount] = useState({});
-  const [graduatedUsers, setGraduatedUsers] = useState([]); 
+  const [graduatedUsers, setGraduatedUsers] = useState([]);
   const [usersWithProgress, setUsersWithProgress] = useState([]);
 
   const [areas, setAreas] = useState([]);
   const [employeesByArea, setEmployeesByArea] = useState([]);
   const [totalChanges, setTotalChanges] = useState([]);
+  //Socket.io:
+  const [messages, setMessages] = useState<{ body: string; from: string }[]>(
+    []
+  );
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -550,7 +560,29 @@ function Dashboard() {
       yesterdayNotifications.push(change);
     }
   }
+  //Socket.io:
 
+  useEffect(() => {
+    socket.on("message", receiveMessage);
+
+    return () => {
+      socket.off("message", receiveMessage);
+    };
+  }, []);
+
+  const receiveMessage = (message: any) =>
+    setMessages((state) => [message, ...state]);
+
+  const handleioSubmit = (event: any) => {
+    event.preventDefault();
+    const newMessage = {
+      body: message,
+      from: "Me",
+    };
+    setMessages((state) => [newMessage, ...state]);
+    setMessage("");
+    socket.emit("message", newMessage.body);
+  };
   return (
     <div className="flex">
       <div className="card my-3 mx-3">
@@ -802,6 +834,35 @@ function Dashboard() {
                     </ul>
                   </div>
                 )}
+              </div>
+              <div>
+                <form onSubmit={handleioSubmit} className="bg-zinc-900 p-10">
+                  <h1 className="text-2xl font-bold my-2">Chat React</h1>
+                  <input
+                    name="message"
+                    type="text"
+                    placeholder="Write your message..."
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="border-2 border-zinc-500 p-2 w-full text-black"
+                    value={message}
+                    autoFocus
+                  />
+
+                  <ul className="h-80 overflow-y-auto">
+                    {messages.map((message, index) => (
+                      <li
+                        key={index}
+                        className={`my-2 p-2 table text-sm rounded-md ${
+                          message.from === "Me"
+                            ? "bg-sky-700 ml-auto"
+                            : "bg-black"
+                        }`}
+                      >
+                        <b>{message.from}</b>:{message.body}
+                      </li>
+                    ))}
+                  </ul>
+                </form>
               </div>
             </div>
             {/* <div className="flex justify-center">
