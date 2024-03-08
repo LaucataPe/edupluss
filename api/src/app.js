@@ -1,4 +1,3 @@
-const fs = require("fs");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
@@ -7,8 +6,6 @@ const { router } = require("./routes/index");
 const cors = require("cors");
 const { PORT } = require("./config/varEnv.js");
 const verifyJWT = require("./Middlewares/verifyJWT");
-const httpServer = require("http").createServer();
-
 const server = express();
 
 server.set("port", PORT);
@@ -32,27 +29,5 @@ server.use((req, res, next) => {
 
 server.use("/", verifyJWT, router);
 
-const io = require("socket.io")(httpServer, {
-  cors: {
-    origin: "http://localhost:5173",
-  },
-});
-
-io.on("connection", (socket) => {
-  console.log(`hello! ${socket.decoded_token.name}`);
-  // Now this socket is authenticated and you can handle events from it.
-});
-
-httpServer.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
-// Error catching endware.
-server.use((err, req, res, next) => {
-  // eslint-disable-line no-unused-vars
-  const status = err.status || 500;
-  const message = err.message || err;
-  console.error(err);
-  res.status(status).json({ message });
-});
 
 module.exports = server;
