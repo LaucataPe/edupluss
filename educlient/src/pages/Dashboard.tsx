@@ -24,9 +24,13 @@ import { useAppDispatch } from "../hooks/typedSelectors";
 import { Demo } from "../utils/types/demo";
 
 import { io } from "socket.io-client";
+const userToken = localStorage.getItem("token");
 
-const socket = io("https://localhost:3001");
-// Resto de tu lógica del cliente Socket.IO aquí
+const socket = io("/", {
+  extraHeaders: {
+    Authorization: `Bearer ${userToken}`,
+  },
+});
 
 ChartJS.register(
   CategoryScale,

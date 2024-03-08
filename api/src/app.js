@@ -7,9 +7,7 @@ const { router } = require("./routes/index");
 const cors = require("cors");
 const { PORT } = require("./config/varEnv.js");
 const verifyJWT = require("./Middlewares/verifyJWT");
-const http = require("http");
-const { resolve, dirname } = require("path");
-const { Server: SocketServer } = require("socket.io");
+const httpServer = require("http").createServer();
 
 const server = express();
 
@@ -32,8 +30,22 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use("/", router);
+server.use("/", verifyJWT, router);
 
+const io = require("socket.io")(httpServer, {
+  cors: {
+    origin: "http://localhost:5173",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log(`hello! ${socket.decoded_token.name}`);
+  // Now this socket is authenticated and you can handle events from it.
+});
+
+httpServer.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
 // Error catching endware.
 server.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars
@@ -41,32 +53,6 @@ server.use((err, req, res, next) => {
   const message = err.message || err;
   console.error(err);
   res.status(status).json({ message });
-});
-
-const ioserver = http.createServer(server);
-const io = new SocketServer(ioserver, {
-  cors: {
-    origin: "https://localhost:5173/",
-    methods: ["GET", "POST"],
-    credentials: true,
-    key: fs.readFileSync("server.key"),
-    cert: fs.readFileSync("server.cert"),
-  },
-});
-ioserver.listen(5173, () => {
-  console.log("Server is running on port 8080");
-});
-
-server.use(express.urlencoded({ extended: false }));
-
-io.on("connection", (socket) => {
-  console.log(`El usuario ${socket.id} se ha conectado`);
-  socket.on("message", (body) => {
-    socket.broadcast.emit("message", {
-      body,
-      from: socket.id.slice(8),
-    });
-  });
 });
 
 module.exports = server;
