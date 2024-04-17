@@ -11,6 +11,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../hooks/typedSelectors'
 import { getRolesByArea, setCurrentRole } from '../../redux/features/roleSlice'
 import { fetchCompanyAreas, setCurrentArea } from '../../redux/features/areaSlice'
+import { InputNumber, InputNumberChangeEvent } from 'primereact/inputnumber'
 //import { getTimeFromString } from '../../utils/services'
 
 function AddRole() {
@@ -100,7 +101,7 @@ function AddRole() {
       setRole({
         ...role,
         remote: value
-      });
+      }); 
     };
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: keyof Role) => {
@@ -110,7 +111,9 @@ function AddRole() {
       });
     };
 
-    
+    const onSalaryChange = (e: InputNumberChangeEvent) => {
+      setRole({...role, salary: e.value?.toString()});
+    };
 
     //Habilidades
 
@@ -205,11 +208,11 @@ function AddRole() {
                       <label>Salario</label>
                       <div className='p-inputgroup'>
                         <span className="p-inputgroup-addon">$</span>
-                        <InputText id="email2" type="text" value={role.salary} onChange={(e) => onInputChange(e, 'salary')}/>
+                        <InputNumber value={Number(role.salary)} onChange={(e) => onSalaryChange(e)} locale="de-DE"></InputNumber>
                       </div>                  
                   </div>
                   <div className="field col-2">
-                      <label htmlFor="email2">Remoto</label><br />
+                      <label>Remoto</label><br />
                       <InputSwitch checked={role.remote ? role.remote : false } onChange={(e) => onSwitchChange(e)} />
                   </div>
               </div>
