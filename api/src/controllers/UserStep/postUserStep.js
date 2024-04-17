@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
     } else if (error instanceof ClientError) {
       throw new ClientError(error.message, error.status);
     } else {
-      throw new ClientError("Server error, please come back later", 500);
+      throw new Error(error);
     }
   }
 };

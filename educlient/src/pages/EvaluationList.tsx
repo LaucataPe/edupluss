@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ListEvaluation } from "../utils/interfaces";
+import { Activity, ListEvaluation } from "../utils/interfaces";
 
 
 function EvaluationList() {
@@ -20,7 +20,8 @@ function EvaluationList() {
             const response = await axios(`http://localhost:3001/admin/activities/${logUser.id}`);
     
             if (response.data) {
-                setEvaluationsList(response.data);
+                const test = response.data.filter((act: Activity) => act.hasTest)
+                setEvaluationsList(test);
             } else {
               console.error("La empresa no tiene actividades creadas.");
             }

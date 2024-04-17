@@ -28,7 +28,6 @@ const getActivitiesByAdminUser = async (req, res) => {
         for (const role of roles) {
             const roleActivities = await Activity.findAll({
                 where: { roleId: role.id },
-                attributes: ['id', 'title', "active"],
             });
             activities = activities.concat(roleActivities);
         }
