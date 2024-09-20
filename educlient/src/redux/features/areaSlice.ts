@@ -22,8 +22,8 @@ const initialState:initState = {
 ///
 export const fetchCompanyAreas = createAsyncThunk('areas/fetchCompanyAreas', async (id: number) => {
 	try {
-		const {data} = await axios(`http://localhost:3001/areas/${id}`);
-		const active = data.filter((area: Area) => area.active === true)
+		const {data} = await axios(`https://api.colkrea.com/${id}`);
+		const active = data.filter((area: Area) => area.active)
 		return active;
 	} catch (error: any) {
 		throw new Error(error.message);
@@ -32,7 +32,7 @@ export const fetchCompanyAreas = createAsyncThunk('areas/fetchCompanyAreas', asy
 
 export const getUserAreas = createAsyncThunk('areas/getUserAreas', async (id: number) => {
 	try {
-		const {data} = await axios(`http://localhost:3001/user/areas/${id}`);
+		const {data} = await axios(`https://api.colkrea.com/${id}`);
 		return data;
 	} catch (error: any) {
 		throw new Error(error.message);
