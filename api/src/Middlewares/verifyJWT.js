@@ -3,7 +3,8 @@ require("dotenv").config();
 
 const verifyJWT = (req, res, next) => {
   //////unprotected routes//////
-  if (req.url === "/logUser") {
+  const unprotectedRoutes = ["/logUser", "/refresh", "/logout"];
+  if (unprotectedRoutes.includes(req.url)) {
     next();
     return;
   }
@@ -12,9 +13,10 @@ const verifyJWT = (req, res, next) => {
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) return res.status(403).json({ error: "token is invalid" });
-    req.userId = decoded.user.id;
-    req.userRole = decoded.user.tipo;
-    req.companyId = decoded.user.companyId;
+    req.userId = decoded.id;
+    req.userRole = decoded.tipo;
+    req.companyId = decoded.companyId;
+    req.roleId = decoded.roleId;
     next();
   });
 };

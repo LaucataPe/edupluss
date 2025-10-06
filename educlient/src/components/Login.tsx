@@ -34,11 +34,12 @@ function Login() {
           toast.current?.show({
             severity: "success",
             summary: "Éxito",
-            detail: "Usuario actualizado",
+            detail: "Usuario autenticado",
             life: 3000,
           });
-          const token = data.token;
-          window.localStorage.setItem("token", token);
+          // Save both access token and refresh token
+          window.localStorage.setItem("accessToken", data.accessToken);
+          window.localStorage.setItem("refreshToken", data.refreshToken);
           
           if(data.user.tipo === "superadmin"){
             dispatch(setLogUser(data.user));
@@ -56,8 +57,17 @@ function Login() {
           navigate("/home");
         }
       } catch (error: any) {
-        console.log(error.response.data);
-        setError(error.response.data);
+        console.log(error.response?.data);
+        // Handle error message correctly
+        const errorMessage = error.response?.data?.error || error.response?.data || "Error al iniciar sesión";
+        setError(errorMessage);
+
+        toast.current?.show({
+          severity: "error",
+          summary: "Error",
+          detail: errorMessage,
+          life: 5000,
+        });
       }
     }
   };

@@ -53,9 +53,22 @@ function NavBar({ isDarkMode, toggleDarkMode }: any) {
     menu.current?.toggle(event);
   };
 
-  const logOut = () => {
+  const logOut = async () => {
+    const refreshToken = window.localStorage.getItem("refreshToken");
+
+    // Call logout endpoint to invalidate refresh token
+    if (refreshToken) {
+      try {
+        await axios.post("http://localhost:3001/logout", { refreshToken });
+      } catch (error) {
+        console.error("Error during logout:", error);
+      }
+    }
+
+    // Clear tokens from localStorage
     dispatch(resetActivities());
-    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("accessToken");
+    window.localStorage.removeItem("refreshToken");
     window.location.replace("/");
   };
   const handleClick = () => {

@@ -73,7 +73,7 @@ function App() {
 
   const [tokenValid, setTokenValid] = useState<Boolean>(false);
 
-  const session = window.localStorage.getItem("token");
+  const session = window.localStorage.getItem("accessToken");
 
   const headers = {
     Authorization: `Bearer ${session}`,

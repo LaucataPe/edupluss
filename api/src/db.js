@@ -70,6 +70,7 @@ const {
   TestGrade,
   Review,
   Subscription,
+  RefreshToken,
 } = sequelize.models;
 console.log(sequelize.models);
 
@@ -171,6 +172,15 @@ Subscription.belongsTo(Company, {
 
 Company.hasMany(Subscription, {
   foreignKey: "companyId",
+});
+
+User.hasMany(RefreshToken, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+});
+
+RefreshToken.belongsTo(User, {
+  foreignKey: "userId",
 });
 
 module.exports = {

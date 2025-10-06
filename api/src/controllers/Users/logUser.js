@@ -1,6 +1,6 @@
-const { User, Company } = require('../../db');
+const { User, Company, RefreshToken } = require('../../db');
 const { verified } = require('../../utils/bcryptHandler');
-const { generateToken } = require('../../utils/jwtHandler');
+const { generateAccessToken, generateRefreshToken } = require('../../utils/jwtHandler');
 const { catchedAsync } = require('../../utils');
 
 const logUser = async (req, res) => {
@@ -32,11 +32,24 @@ const logUser = async (req, res) => {
     if (!findCompany && (logUser.tipo === "admin" || logUser.tipo === "empleado"))
       throw new Error('La empresa asociada a este usuario no se encontró');
 
-    const token = await generateToken(logUser);
+    // Generate access token (15min) and refresh token (7 days)
+    const accessToken = generateAccessToken(logUser);
+    const refreshToken = generateRefreshToken();
+
+    // Save refresh token to database
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+
+    await RefreshToken.create({
+      token: refreshToken,
+      userId: logUser.id,
+      expiresAt,
+    });
 
     const data = {
       user: logUser,
-      token,
+      accessToken,
+      refreshToken,
       company: findCompany,
     };
 

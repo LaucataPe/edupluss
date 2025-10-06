@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const verifyRole = require("../Middlewares/verifyRole");
+const { loginLimiter, refreshLimiter } = require("../Middlewares/rateLimiter");
 
 //GET Controllers
 const { getEmpresaAreas } = require("../controllers/Company/getEmpresaArea");
@@ -96,6 +97,8 @@ router.get("/auth/token", getByToken);
 //POST Controllers
 const { createUser } = require("../controllers/Users/postUser");
 const { logUser } = require("../controllers/Users/logUser");
+const { refreshAccessToken } = require("../controllers/Users/refreshToken");
+const { logoutUser } = require("../controllers/Users/logoutUser");
 const { createCompany } = require("../controllers/Company/createEmpresa");
 const { createArea } = require("../controllers/Areas/createArea");
 const { createRole } = require("../controllers/Roles/createRole");
@@ -109,7 +112,9 @@ const { realizarPago } = require("../controllers/payU/payU");
 //POST
 router.post("/empresa", createCompany);
 router.post("/user", createUser);
-router.post("/logUser", logUser);
+router.post("/logUser", loginLimiter, logUser);
+router.post("/refresh", refreshLimiter, refreshAccessToken);
+router.post("/logout", logoutUser);
 router.post("/area", createArea);
 router.post("/role", createRole);
 router.post("/activity", createActivity);
